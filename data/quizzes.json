@@ -1,0 +1,752 @@
+[
+  {
+    "location_slug": "kuruvungna-springs",
+    "title": "The Tongva at Kuruvungna",
+    "passing_score": 70,
+    "points_reward": 50,
+    "questions": [
+      {
+        "question_text": "What does the name 'Kuruvungna' mean in the Tongva language?",
+        "question_type": "multiple_choice",
+        "option_a": "A place near the water",
+        "option_b": "A place where we are in the sun",
+        "option_c": "The meeting of two rivers",
+        "option_d": "Sacred ground of the elders",
+        "correct_answer": "b",
+        "explanation": "Kuruvungna means 'a place where we are in the sun.' Names like this reveal how the Tongva embedded their relationship with the landscape into language itself.",
+        "order_index": 0
+      },
+      {
+        "question_text": "What type of structure did the Tongva people build for shelter?",
+        "question_type": "multiple_choice",
+        "option_a": "Adobe brick houses",
+        "option_b": "Log cabins",
+        "option_c": "Dome-shaped homes called 'ap' made from willow and tule",
+        "option_d": "Stone longhouses",
+        "correct_answer": "c",
+        "explanation": "The Tongva built dome-shaped homes called 'ap' using willow poles and tule reeds — materials abundant near wetlands and springs.",
+        "order_index": 1
+      },
+      {
+        "question_text": "True or False: The Tongva people only arrived in the Los Angeles Basin after European contact.",
+        "question_type": "true_false",
+        "option_a": "True",
+        "option_b": "False",
+        "correct_answer": "b",
+        "explanation": "The Tongva had lived in the Los Angeles Basin for thousands of years before any European contact. Archaeological evidence dates their presence to at least 3,000 BCE.",
+        "order_index": 2
+      },
+      {
+        "question_text": "Which European group most directly disrupted the Tongva village at Kuruvungna?",
+        "question_type": "multiple_choice",
+        "option_a": "British fur traders",
+        "option_b": "French explorers",
+        "option_c": "Spanish Franciscan missionaries",
+        "option_d": "Portuguese sailors",
+        "correct_answer": "c",
+        "explanation": "The founding of Mission San Gabriel in 1771 brought Spanish Franciscan missionaries who began drawing Tongva people into the mission system, disrupting village life.",
+        "order_index": 3
+      }
+    ]
+  },
+  {
+    "location_slug": "ballona-wetlands",
+    "title": "Ballona Wetlands and Tongva Coastal Life",
+    "passing_score": 70,
+    "points_reward": 50,
+    "questions": [
+      {
+        "question_text": "What did the Tongva call their ocean-going canoes?",
+        "question_type": "multiple_choice",
+        "option_a": "Kayak",
+        "option_b": "Tomol",
+        "option_c": "Dugout",
+        "option_d": "Pirogue",
+        "correct_answer": "b",
+        "explanation": "The Tongva built plank canoes called 'tomol' from redwood or pine planks sewn together with plant fiber and sealed with tar. They used them to trade with people as far away as the Channel Islands.",
+        "order_index": 0
+      },
+      {
+        "question_text": "What plant material found in wetlands was essential for Tongva basket weaving?",
+        "question_type": "multiple_choice",
+        "option_a": "Bamboo",
+        "option_b": "Cattail",
+        "option_c": "Tule reeds",
+        "option_d": "Kelp",
+        "correct_answer": "c",
+        "explanation": "Tule reeds were one of the most versatile plants the Tongva used — for baskets, mats, and the covering of their 'ap' homes.",
+        "order_index": 1
+      },
+      {
+        "question_text": "How much of the original Ballona Wetlands remains today?",
+        "question_type": "multiple_choice",
+        "option_a": "About 90%",
+        "option_b": "About 50%",
+        "option_c": "About 10%",
+        "option_d": "None — it was completely destroyed",
+        "correct_answer": "c",
+        "explanation": "More than 90% of the original wetlands were drained or developed during the 20th century. The remaining ~577 acres were purchased by California in 2003 for restoration.",
+        "order_index": 2
+      },
+      {
+        "question_text": "True or False: Shell beads from the Channel Islands were used as a form of currency in Tongva trade networks.",
+        "question_type": "true_false",
+        "option_a": "True",
+        "option_b": "False",
+        "correct_answer": "a",
+        "explanation": "Shell beads — particularly from Olivella shells — functioned as a regional currency across Tongva and neighboring Indigenous trading networks.",
+        "order_index": 3
+      }
+    ]
+  },
+  {
+    "location_slug": "san-gabriel-foothills",
+    "title": "Tongva Lifeways in the Foothills",
+    "passing_score": 70,
+    "points_reward": 50,
+    "questions": [
+      {
+        "question_text": "What was the primary dietary staple of the Tongva people in the foothills?",
+        "question_type": "multiple_choice",
+        "option_a": "Corn (maize)",
+        "option_b": "Buffalo meat",
+        "option_c": "Acorns",
+        "option_d": "Salmon",
+        "correct_answer": "c",
+        "explanation": "Acorns from the abundant oak trees of the foothills were the dietary staple of the Tongva. Women ground them into flour using stone mortars and leached out the bitter tannins with water.",
+        "order_index": 0
+      },
+      {
+        "question_text": "What was the name of the first Spanish land expedition to pass through the Los Angeles area?",
+        "question_type": "multiple_choice",
+        "option_a": "The De Anza Expedition",
+        "option_b": "The Portolá Expedition",
+        "option_c": "The Coronado Expedition",
+        "option_d": "The Serra Expedition",
+        "correct_answer": "b",
+        "explanation": "The Portolá Expedition of 1769 was the first overland European crossing of California. Led by Gaspar de Portolá, it noted large Tongva settlements in the San Gabriel Valley.",
+        "order_index": 1
+      },
+      {
+        "question_text": "True or False: The Tongva lived in fixed, permanent settlements year-round.",
+        "question_type": "true_false",
+        "option_a": "True",
+        "option_b": "False",
+        "correct_answer": "b",
+        "explanation": "The Tongva practiced seasonal movement — moving between the coast in summer and foothill acorn groves in fall, following food sources throughout the year.",
+        "order_index": 2
+      },
+      {
+        "question_text": "What was the title of the hereditary leader of a Tongva village?",
+        "question_type": "multiple_choice",
+        "option_a": "Chief",
+        "option_b": "Tomyaar",
+        "option_c": "Sachem",
+        "option_d": "Alcalde",
+        "correct_answer": "b",
+        "explanation": "Each Tongva village was led by a hereditary chief called a 'tomyaar,' who managed relations with neighboring villages and oversaw community decisions.",
+        "order_index": 3
+      }
+    ]
+  },
+  {
+    "location_slug": "el-pueblo",
+    "title": "The Founding of Los Angeles",
+    "passing_score": 70,
+    "points_reward": 50,
+    "questions": [
+      {
+        "question_text": "In what year was El Pueblo de la Reina de Los Ángeles officially founded?",
+        "question_type": "multiple_choice",
+        "option_a": "1769",
+        "option_b": "1776",
+        "option_c": "1781",
+        "option_d": "1821",
+        "correct_answer": "c",
+        "explanation": "El Pueblo de la Reina de Los Ángeles was founded on September 4, 1781, by Governor Felipe de Neve and 44 settlers.",
+        "order_index": 0
+      },
+      {
+        "question_text": "Which best describes the racial makeup of the original founding settlers (pobladores)?",
+        "question_type": "multiple_choice",
+        "option_a": "Entirely Spanish-born soldiers",
+        "option_b": "Mostly French and British traders",
+        "option_c": "A diverse mix of Indigenous, African, and Spanish ancestry",
+        "option_d": "Only converted Indigenous people",
+        "correct_answer": "c",
+        "explanation": "The 44 founding pobladores came primarily from Sonora and Sinaloa and were of mixed Indigenous, African, and Spanish heritage — reflecting the demographics of New Spain's frontier.",
+        "order_index": 1
+      },
+      {
+        "question_text": "True or False: Los Angeles was part of Spain when it was founded in 1781.",
+        "question_type": "true_false",
+        "option_a": "True",
+        "option_b": "False",
+        "correct_answer": "a",
+        "explanation": "Los Angeles was founded in 1781 as part of New Spain (Spanish colonial Mexico). It did not become part of Mexico until 1821 when Mexico gained independence from Spain.",
+        "order_index": 2
+      },
+      {
+        "question_text": "What is preserved today near the site of the original Los Angeles plaza?",
+        "question_type": "multiple_choice",
+        "option_a": "The Getty Center",
+        "option_b": "Olvera Street",
+        "option_c": "Union Station",
+        "option_d": "The Bradbury Building",
+        "correct_answer": "b",
+        "explanation": "Olvera Street, near the original Plaza, was converted into a Mexican marketplace in 1930 and preserves some of the oldest structures in Los Angeles.",
+        "order_index": 3
+      }
+    ]
+  },
+  {
+    "location_slug": "mission-san-gabriel",
+    "title": "Mission San Gabriel and the Mission System",
+    "passing_score": 70,
+    "points_reward": 50,
+    "questions": [
+      {
+        "question_text": "In what year was Mission San Gabriel Arcángel founded?",
+        "question_type": "multiple_choice",
+        "option_a": "1769",
+        "option_b": "1771",
+        "option_c": "1781",
+        "option_d": "1800",
+        "correct_answer": "b",
+        "explanation": "Mission San Gabriel was founded on September 8, 1771, by Franciscan priests Ángel Fernández de Somera and Pedro Benito Cambón.",
+        "order_index": 0
+      },
+      {
+        "question_text": "What happened to the Tongva population after the founding of the missions?",
+        "question_type": "multiple_choice",
+        "option_a": "It grew significantly due to improved food supply",
+        "option_b": "It remained stable for over a century",
+        "option_c": "It declined by an estimated 75% or more due to disease and forced labor",
+        "option_d": "It was relocated to reservations in Northern California",
+        "correct_answer": "c",
+        "explanation": "Epidemic diseases and the brutal conditions of the mission system devastated the Tongva. Estimates suggest the Indigenous population of the LA Basin fell by 75% or more within a century of Spanish contact.",
+        "order_index": 1
+      },
+      {
+        "question_text": "What did the Mexican government do with the missions in 1833?",
+        "question_type": "multiple_choice",
+        "option_a": "Expanded them and built new ones",
+        "option_b": "Transferred them to the United States",
+        "option_c": "Secularized them and redistributed land to private ranchers",
+        "option_d": "Handed them back to Indigenous peoples",
+        "correct_answer": "c",
+        "explanation": "In 1833, the Mexican government secularized the missions, transferring their land to private ranchers. The Tongva neophytes were technically freed but left landless and impoverished.",
+        "order_index": 2
+      },
+      {
+        "question_text": "True or False: Mission San Gabriel was the least productive mission in California.",
+        "question_type": "true_false",
+        "option_a": "True",
+        "option_b": "False",
+        "correct_answer": "b",
+        "explanation": "Mission San Gabriel was actually the MOST productive mission in California, known for its wine, tallow, hides, and grain production — all built on forced Indigenous labor.",
+        "order_index": 3
+      }
+    ]
+  },
+  {
+    "location_slug": "fort-moore-hill",
+    "title": "The American Takeover of Los Angeles",
+    "passing_score": 70,
+    "points_reward": 50,
+    "questions": [
+      {
+        "question_text": "What treaty officially transferred California from Mexico to the United States?",
+        "question_type": "multiple_choice",
+        "option_a": "The Treaty of Paris",
+        "option_b": "The Gadsden Purchase",
+        "option_c": "The Treaty of Guadalupe Hidalgo",
+        "option_d": "The Adams-Onís Treaty",
+        "correct_answer": "c",
+        "explanation": "The Treaty of Guadalupe Hidalgo, signed February 2, 1848, ended the Mexican-American War and transferred California (and other territories) to the United States.",
+        "order_index": 0
+      },
+      {
+        "question_text": "On what date was the American flag first raised over Los Angeles at Fort Moore?",
+        "question_type": "multiple_choice",
+        "option_a": "July 4, 1776",
+        "option_b": "September 4, 1781",
+        "option_c": "July 4, 1847",
+        "option_d": "January 1, 1850",
+        "correct_answer": "c",
+        "explanation": "The American flag was raised over Los Angeles on July 4, 1847 — Independence Day — at Fort Moore, in a symbolic act of American possession.",
+        "order_index": 1
+      },
+      {
+        "question_text": "True or False: Fort Moore was a long-standing military fortification that operated for decades.",
+        "question_type": "true_false",
+        "option_a": "True",
+        "option_b": "False",
+        "correct_answer": "b",
+        "explanation": "Fort Moore was short-lived. It was constructed in 1847 and quickly abandoned as military control was no longer necessary. Its hilltop site is now near the Los Angeles Civic Center.",
+        "order_index": 2
+      },
+      {
+        "question_text": "What was the war that resulted in the U.S. acquiring California?",
+        "question_type": "multiple_choice",
+        "option_a": "The Civil War",
+        "option_b": "The Mexican-American War",
+        "option_c": "The Spanish-American War",
+        "option_d": "The War of 1812",
+        "correct_answer": "b",
+        "explanation": "The Mexican-American War (1846–1848) resulted in the U.S. acquiring California, Arizona, New Mexico, and other territories from Mexico.",
+        "order_index": 3
+      }
+    ]
+  },
+  {
+    "location_slug": "old-chinatown",
+    "title": "Los Angeles's Original Chinatown",
+    "passing_score": 70,
+    "points_reward": 50,
+    "questions": [
+      {
+        "question_text": "What event in 1871 represents one of the deadliest episodes of anti-Chinese violence in U.S. history?",
+        "question_type": "multiple_choice",
+        "option_a": "The Chinese Exclusion Act riots",
+        "option_b": "The Chinese Massacre of 1871",
+        "option_c": "The Railroad Strike of 1871",
+        "option_d": "The Chinatown Fire of 1871",
+        "correct_answer": "b",
+        "explanation": "On October 24, 1871, a white mob attacked LA's Chinese neighborhood, killing approximately 19 Chinese residents. It remains one of the largest mass lynchings in American history.",
+        "order_index": 0
+      },
+      {
+        "question_text": "Why was the original Chinatown demolished in 1933?",
+        "question_type": "multiple_choice",
+        "option_a": "It was destroyed in an earthquake",
+        "option_b": "The city condemned it to build Union Station",
+        "option_c": "Residents voluntarily relocated to a better neighborhood",
+        "option_d": "A fire burned it down",
+        "correct_answer": "b",
+        "explanation": "The city condemned the original Chinatown to build Union Station, displacing hundreds of Chinese residents and businesses who were forced to rebuild several blocks north.",
+        "order_index": 1
+      },
+      {
+        "question_text": "What originally brought large numbers of Chinese immigrants to Los Angeles in the 1860s?",
+        "question_type": "multiple_choice",
+        "option_a": "Gold discovered in the San Gabriel Mountains",
+        "option_b": "A Chinese government resettlement program",
+        "option_c": "Work on the transcontinental railroad",
+        "option_d": "Fleeing a famine in China",
+        "correct_answer": "c",
+        "explanation": "Many Chinese immigrants arrived in California to work on the transcontinental railroad. After its completion, some made their way to Los Angeles.",
+        "order_index": 2
+      },
+      {
+        "question_text": "True or False: The current Chinatown in Los Angeles is located in the same place as the original Chinatown.",
+        "question_type": "true_false",
+        "option_a": "True",
+        "option_b": "False",
+        "correct_answer": "b",
+        "explanation": "The current Chinatown was built several blocks north of the original location after the original was demolished. It opened in 1938 as 'New Chinatown.'",
+        "order_index": 3
+      }
+    ]
+  },
+  {
+    "location_slug": "bradbury-building",
+    "title": "LA's Boom Era and the Bradbury Building",
+    "passing_score": 70,
+    "points_reward": 50,
+    "questions": [
+      {
+        "question_text": "What triggered Los Angeles's population explosion in the 1880s?",
+        "question_type": "multiple_choice",
+        "option_a": "Discovery of oil in the LA Basin",
+        "option_b": "A railroad price war that dropped fares dramatically",
+        "option_c": "The Gold Rush",
+        "option_d": "A federal homesteading program",
+        "correct_answer": "b",
+        "explanation": "When the Santa Fe Railroad arrived in 1885, a fare war with the Southern Pacific drove prices from Kansas City to Los Angeles as low as $1. This triggered a massive real estate boom.",
+        "order_index": 0
+      },
+      {
+        "question_text": "In what year was the Bradbury Building completed?",
+        "question_type": "multiple_choice",
+        "option_a": "1875",
+        "option_b": "1885",
+        "option_c": "1893",
+        "option_d": "1910",
+        "correct_answer": "c",
+        "explanation": "The Bradbury Building was completed in 1893, during a period of rapid commercial development in downtown Los Angeles.",
+        "order_index": 1
+      },
+      {
+        "question_text": "True or False: The Bradbury Building was originally designed to be a permanent landmark.",
+        "question_type": "true_false",
+        "option_a": "True",
+        "option_b": "False",
+        "correct_answer": "b",
+        "explanation": "The building was commissioned as a commercial office building, not as a monument. Its remarkable interior was largely the work of draftsman George Wyman, not a famous architect.",
+        "order_index": 2
+      },
+      {
+        "question_text": "Approximately how much did LA's population grow between 1880 and 1890?",
+        "question_type": "multiple_choice",
+        "option_a": "From 500 to 2,000 people",
+        "option_b": "From 11,000 to over 50,000 people",
+        "option_c": "From 50,000 to 200,000 people",
+        "option_d": "It stayed roughly the same",
+        "correct_answer": "b",
+        "explanation": "Los Angeles's population exploded from roughly 11,000 in 1880 to over 50,000 by 1890 — a more than fourfold increase driven by the railroad and land promotion.",
+        "order_index": 3
+      }
+    ]
+  },
+  {
+    "location_slug": "hollenbeck-park",
+    "title": "Boyle Heights and Hollenbeck Park",
+    "passing_score": 70,
+    "points_reward": 50,
+    "questions": [
+      {
+        "question_text": "Who donated the land for Hollenbeck Park to the City of Los Angeles?",
+        "question_type": "multiple_choice",
+        "option_a": "Colonel Griffith J. Griffith",
+        "option_b": "Elizabeth Hollenbeck",
+        "option_c": "William Mulholland",
+        "option_d": "Henry Huntington",
+        "correct_answer": "b",
+        "explanation": "Elizabeth Hollenbeck donated the land to Los Angeles in 1892 in memory of her husband, John Edward Hollenbeck. It became the city's first public park.",
+        "order_index": 0
+      },
+      {
+        "question_text": "Why did many immigrant groups settle in Boyle Heights in the early 20th century?",
+        "question_type": "multiple_choice",
+        "option_a": "It had the best schools in LA",
+        "option_b": "It was excluded from restrictive racial covenants that kept them out of other neighborhoods",
+        "option_c": "The city offered free land to immigrants there",
+        "option_d": "It was closest to the port of entry",
+        "correct_answer": "b",
+        "explanation": "Restrictive racial covenants barred non-white and many immigrant families from buying property in most of Los Angeles. Boyle Heights, lacking these covenants, became a rare haven for diverse communities.",
+        "order_index": 1
+      },
+      {
+        "question_text": "True or False: Japanese American residents of Boyle Heights were able to return to their homes and businesses after World War II incarceration.",
+        "question_type": "true_false",
+        "option_a": "True",
+        "option_b": "False",
+        "correct_answer": "b",
+        "explanation": "Many Japanese Americans returned after the war to find their homes sold, businesses gone, and communities scattered. The forced incarceration resulted in enormous economic losses.",
+        "order_index": 2
+      },
+      {
+        "question_text": "In what year was Hollenbeck Park donated, making it LA's first public park?",
+        "question_type": "multiple_choice",
+        "option_a": "1876",
+        "option_b": "1892",
+        "option_c": "1905",
+        "option_d": "1920",
+        "correct_answer": "b",
+        "explanation": "Hollenbeck Park was donated in 1892, becoming the first public park in Los Angeles.",
+        "order_index": 3
+      }
+    ]
+  },
+  {
+    "location_slug": "la-placita-church",
+    "title": "La Placita and the Latino Catholic Tradition",
+    "passing_score": 70,
+    "points_reward": 50,
+    "questions": [
+      {
+        "question_text": "In what year was the first chapel near the Plaza established?",
+        "question_type": "multiple_choice",
+        "option_a": "1769",
+        "option_b": "1781",
+        "option_c": "1784",
+        "option_d": "1822",
+        "correct_answer": "c",
+        "explanation": "The first chapel near the Plaza was established in 1784, just three years after the founding of the pueblo, to serve the colonial settlement.",
+        "order_index": 0
+      },
+      {
+        "question_text": "What was the Sanctuary Movement that La Placita participated in during the 1980s?",
+        "question_type": "multiple_choice",
+        "option_a": "A program to restore old mission churches",
+        "option_b": "A movement providing refuge to undocumented refugees fleeing Central American civil wars",
+        "option_c": "A Catholic campaign to build new churches in LA",
+        "option_d": "A protest movement against freeway construction",
+        "correct_answer": "b",
+        "explanation": "Father Luis Olivares declared La Placita a sanctuary for undocumented Salvadoran and Guatemalan refugees fleeing civil wars, drawing FBI scrutiny and national attention.",
+        "order_index": 1
+      },
+      {
+        "question_text": "True or False: The current La Placita church building was completed in the 20th century.",
+        "question_type": "true_false",
+        "option_a": "True",
+        "option_b": "False",
+        "correct_answer": "b",
+        "explanation": "The present adobe church structure was completed in 1822, during the Mexican period, making it the oldest surviving church building in Los Angeles.",
+        "order_index": 2
+      },
+      {
+        "question_text": "Which religious order originally staffed La Placita?",
+        "question_type": "multiple_choice",
+        "option_a": "Jesuits",
+        "option_b": "Dominicans",
+        "option_c": "Franciscans",
+        "option_d": "Augustinians",
+        "correct_answer": "c",
+        "explanation": "La Placita was originally staffed by Franciscan priests from Mission San Gabriel, the same order that ran the California mission system.",
+        "order_index": 3
+      }
+    ]
+  },
+  {
+    "location_slug": "watts-towers",
+    "title": "The Watts Towers and South LA",
+    "passing_score": 70,
+    "points_reward": 50,
+    "questions": [
+      {
+        "question_text": "How long did it take Simon Rodia to build the Watts Towers?",
+        "question_type": "multiple_choice",
+        "option_a": "5 years",
+        "option_b": "12 years",
+        "option_c": "33 years",
+        "option_d": "He never finished them",
+        "correct_answer": "c",
+        "explanation": "Simon Rodia worked alone from 1921 to 1954 — 33 years — to build the towers, working nights and weekends while employed as a tile setter.",
+        "order_index": 0
+      },
+      {
+        "question_text": "What materials did Rodia use to decorate the surface of the towers?",
+        "question_type": "multiple_choice",
+        "option_a": "Imported Italian marble",
+        "option_b": "Broken tile, glass, pottery, and shells",
+        "option_c": "Gold and silver from local mines",
+        "option_d": "Painted steel panels",
+        "correct_answer": "b",
+        "explanation": "Rodia adorned the tower surfaces with tens of thousands of pieces of broken tile, glass, pottery, and shells he gathered from around the neighborhood.",
+        "order_index": 1
+      },
+      {
+        "question_text": "What sparked the Watts Uprising of 1965?",
+        "question_type": "multiple_choice",
+        "option_a": "The assassination of Martin Luther King Jr.",
+        "option_b": "A racially charged traffic stop",
+        "option_c": "The closure of a Watts factory",
+        "option_d": "A riot at a Watts high school",
+        "correct_answer": "b",
+        "explanation": "The Watts Uprising was triggered on August 11, 1965, by a traffic stop of Marquette Frye, a young Black motorist. The incident sparked six days of uprising amid deep frustrations over poverty, police brutality, and racism.",
+        "order_index": 2
+      },
+      {
+        "question_text": "True or False: Simon Rodia had professional architectural training and worked with a team of assistants.",
+        "question_type": "true_false",
+        "option_a": "True",
+        "option_b": "False",
+        "correct_answer": "b",
+        "explanation": "Rodia was a tile setter with no formal training. He built the entire structure himself, without machinery or assistants, making the towers a remarkable example of self-taught folk art.",
+        "order_index": 3
+      }
+    ]
+  },
+  {
+    "location_slug": "griffith-observatory",
+    "title": "Griffith Park and the Public Observatory",
+    "passing_score": 70,
+    "points_reward": 50,
+    "questions": [
+      {
+        "question_text": "Who donated the land that became Griffith Park to the city?",
+        "question_type": "multiple_choice",
+        "option_a": "William Mulholland",
+        "option_b": "Colonel Griffith J. Griffith",
+        "option_c": "Henry Huntington",
+        "option_d": "Harry Chandler",
+        "correct_answer": "b",
+        "explanation": "Colonel Griffith J. Griffith donated over 3,000 acres of his Rancho Los Feliz to Los Angeles in 1896, intending the land as a gift for the common people.",
+        "order_index": 0
+      },
+      {
+        "question_text": "In what year did the Griffith Observatory open to the public?",
+        "question_type": "multiple_choice",
+        "option_a": "1896",
+        "option_b": "1920",
+        "option_c": "1935",
+        "option_d": "1955",
+        "correct_answer": "c",
+        "explanation": "The Griffith Observatory opened on May 14, 1935. Over 10,000 people visited on opening day, drawn by free telescope access and planetarium shows.",
+        "order_index": 1
+      },
+      {
+        "question_text": "True or False: The Griffith Observatory charges admission for telescope viewing.",
+        "question_type": "true_false",
+        "option_a": "True",
+        "option_b": "False",
+        "correct_answer": "b",
+        "explanation": "From its opening in 1935, the Griffith Observatory has offered free public telescope viewing — fulfilling Griffith's vision of a democratic public space accessible to everyone.",
+        "order_index": 2
+      },
+      {
+        "question_text": "Which famous film was partly shot at the Griffith Observatory?",
+        "question_type": "multiple_choice",
+        "option_a": "Sunset Boulevard (1950)",
+        "option_b": "Rebel Without a Cause (1955)",
+        "option_c": "Chinatown (1974)",
+        "option_d": "La La Land (2016)",
+        "correct_answer": "b",
+        "explanation": "James Dean's 'Rebel Without a Cause' (1955) features a pivotal scene at the observatory, cementing its place in Hollywood mythology — though La La Land (2016) also featured it prominently.",
+        "order_index": 3
+      }
+    ]
+  },
+  {
+    "location_slug": "chavez-ravine",
+    "title": "Chavez Ravine: Community, Displacement, and Dodger Stadium",
+    "passing_score": 70,
+    "points_reward": 50,
+    "questions": [
+      {
+        "question_text": "What was the city's original stated purpose for acquiring the land at Chavez Ravine?",
+        "question_type": "multiple_choice",
+        "option_a": "Building a new city hall",
+        "option_b": "A public housing project",
+        "option_c": "Attracting a baseball team",
+        "option_d": "Expanding the freeway system",
+        "correct_answer": "b",
+        "explanation": "In the late 1940s, the city told Chavez Ravine residents it was acquiring their land for a public housing project, asking them to sell with promises of priority placement in the new units.",
+        "order_index": 0
+      },
+      {
+        "question_text": "Why was the planned public housing project at Chavez Ravine cancelled?",
+        "question_type": "multiple_choice",
+        "option_a": "The land was found to be geologically unstable",
+        "option_b": "Anti-communist politics in the early 1950s",
+        "option_c": "The project ran out of funding",
+        "option_d": "Residents successfully fought it in court",
+        "correct_answer": "b",
+        "explanation": "Red Scare politics framed public housing as 'socialist.' The LA City Council voted in 1952 to cancel the project, leaving residents displaced and the cleared land sitting vacant.",
+        "order_index": 1
+      },
+      {
+        "question_text": "In what year did Dodger Stadium open on the former Chavez Ravine site?",
+        "question_type": "multiple_choice",
+        "option_a": "1958",
+        "option_b": "1960",
+        "option_c": "1962",
+        "option_d": "1965",
+        "correct_answer": "c",
+        "explanation": "Dodger Stadium opened on April 10, 1962. The last holdout family, the Arechigas, had been forcibly evicted by sheriff's deputies in 1959 in scenes broadcast on local television.",
+        "order_index": 2
+      },
+      {
+        "question_text": "True or False: The families displaced from Chavez Ravine were given new housing as promised.",
+        "question_type": "true_false",
+        "option_a": "True",
+        "option_b": "False",
+        "correct_answer": "b",
+        "explanation": "The public housing project was cancelled for political reasons, and the displaced families received nothing. Many who had already sold their homes had nowhere to go.",
+        "order_index": 3
+      }
+    ]
+  },
+  {
+    "location_slug": "macarthur-park",
+    "title": "MacArthur Park and LA's Immigrant Communities",
+    "passing_score": 70,
+    "points_reward": 50,
+    "questions": [
+      {
+        "question_text": "What was the park called before it was renamed MacArthur Park in 1942?",
+        "question_type": "multiple_choice",
+        "option_a": "Pershing Park",
+        "option_b": "Westlake Park",
+        "option_c": "Echo Park",
+        "option_d": "Roosevelt Park",
+        "correct_answer": "b",
+        "explanation": "The park was called Westlake Park until 1942, when it was renamed to honor General Douglas MacArthur during World War II.",
+        "order_index": 0
+      },
+      {
+        "question_text": "What primarily brought Central American immigrants to the area around MacArthur Park in the 1980s?",
+        "question_type": "multiple_choice",
+        "option_a": "A booming local tech industry",
+        "option_b": "Civil wars in El Salvador, Guatemala, and Nicaragua",
+        "option_c": "A federal refugee resettlement program",
+        "option_d": "Cheap rents advertised in Central American newspapers",
+        "correct_answer": "b",
+        "explanation": "U.S.-backed civil wars in El Salvador, Guatemala, and Nicaragua drove hundreds of thousands of refugees to flee north. The MacArthur Park area became the heart of Central American Los Angeles.",
+        "order_index": 1
+      },
+      {
+        "question_text": "What happened at MacArthur Park on May 1, 2007?",
+        "question_type": "multiple_choice",
+        "option_a": "A major earthquake damaged the park's lake",
+        "option_b": "LAPD violently dispersed an immigration rights rally",
+        "option_c": "The park was rededicated in a citywide ceremony",
+        "option_d": "A Central American cultural festival was held",
+        "correct_answer": "b",
+        "explanation": "LAPD officers fired rubber bullets and used batons against journalists and protesters at a peaceful immigration rights rally, leading to the firing of the police chief and a national debate.",
+        "order_index": 2
+      },
+      {
+        "question_text": "True or False: MacArthur Park was always a working-class immigrant neighborhood.",
+        "question_type": "true_false",
+        "option_a": "True",
+        "option_b": "False",
+        "correct_answer": "b",
+        "explanation": "MacArthur Park was originally one of the most fashionable destinations in Los Angeles, ringed by luxury hotels and frequented by the city's elite. It only shifted to a working-class area as suburban flight transformed the city.",
+        "order_index": 3
+      }
+    ]
+  },
+  {
+    "location_slug": "hollywood-sign",
+    "title": "The Hollywood Sign and the Film Industry",
+    "passing_score": 70,
+    "points_reward": 50,
+    "questions": [
+      {
+        "question_text": "What did the Hollywood Sign originally read when it was first erected?",
+        "question_type": "multiple_choice",
+        "option_a": "HOLLYWOOD",
+        "option_b": "HOLLYWOODLAND",
+        "option_c": "HOLLYWOODHILL",
+        "option_d": "HOLLYWOODPARK",
+        "correct_answer": "b",
+        "explanation": "The sign originally read 'HOLLYWOODLAND,' advertising a real estate development. The 'LAND' portion was removed in 1949.",
+        "order_index": 0
+      },
+      {
+        "question_text": "Who originally funded the construction of the sign in 1923?",
+        "question_type": "multiple_choice",
+        "option_a": "The City of Los Angeles",
+        "option_b": "Metro-Goldwyn-Mayer studios",
+        "option_c": "Los Angeles Times publisher Harry Chandler",
+        "option_d": "The Hollywood Chamber of Commerce",
+        "correct_answer": "c",
+        "explanation": "LA Times publisher Harry Chandler spent $21,000 to build the sign to advertise his Hollywoodland real estate development in the hills above Hollywood.",
+        "order_index": 1
+      },
+      {
+        "question_text": "True or False: The Hollywood Sign was always intended as a permanent civic landmark.",
+        "question_type": "true_false",
+        "option_a": "True",
+        "option_b": "False",
+        "correct_answer": "b",
+        "explanation": "The sign was built as a temporary real estate advertisement with a planned lifespan of about 18 months. It was never meant to be permanent.",
+        "order_index": 2
+      },
+      {
+        "question_text": "Who helped fund the restoration of the sign in 1978?",
+        "question_type": "multiple_choice",
+        "option_a": "The Walt Disney Company",
+        "option_b": "The State of California",
+        "option_c": "Celebrity donors including Alice Cooper",
+        "option_d": "The Hollywood Foreign Press Association",
+        "correct_answer": "c",
+        "explanation": "A celebrity fundraising campaign raised $250,000 to restore the sign. Alice Cooper famously paid for one letter 'O' as a tribute to Groucho Marx.",
+        "order_index": 3
+      }
+    ]
+  }
+]
