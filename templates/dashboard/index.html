@@ -1,0 +1,284 @@
+{% extends 'base.html' %}
+{% block title %}Dashboard — LA History{% endblock %}
+
+{% block extra_css %}
+<style>
+.dashboard-page {
+  padding: calc(var(--nav-height) + 24px) 24px 40px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.dashboard-hero {
+  background: var(--bg-dark);
+  border-radius: 16px;
+  padding: 28px 32px;
+  color: #fff;
+  margin-bottom: 28px;
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  flex-wrap: wrap;
+}
+
+.hero-greeting { flex: 1; }
+.hero-greeting h1 { font-family: var(--font-serif); font-size: 1.6rem; margin-bottom: 4px; color: var(--accent); }
+.hero-greeting p  { color: #aaa; font-size: 0.9rem; }
+
+.hero-stats { display: flex; gap: 24px; flex-wrap: wrap; }
+.hero-stat { text-align: center; }
+.hero-stat-value { font-size: 2rem; font-weight: 800; color: var(--accent); display: block; line-height: 1; }
+.hero-stat-label { font-size: 0.75rem; color: #aaa; text-transform: uppercase; letter-spacing: 0.05em; }
+
+.section-title {
+  font-family: var(--font-serif);
+  font-size: 1.1rem;
+  margin-bottom: 16px;
+  color: var(--text);
+  border-bottom: 2px solid var(--border);
+  padding-bottom: 8px;
+}
+
+/* Era cards */
+.era-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; margin-bottom: 32px; }
+
+.era-card {
+  background: var(--bg-card);
+  border-radius: 12px;
+  padding: 18px;
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+}
+
+.era-card-name { font-weight: 700; font-size: 0.95rem; margin-bottom: 4px; }
+.era-card-sub  { font-size: 0.78rem; color: var(--text-muted); margin-bottom: 14px; }
+
+.era-ring-container { display: flex; justify-content: center; margin-bottom: 14px; }
+
+.era-ring {
+  position: relative;
+  width: 80px;
+  height: 80px;
+}
+
+.era-ring svg { transform: rotate(-90deg); }
+
+.era-ring-bg   { fill: none; stroke: #ede9df; stroke-width: 8; }
+.era-ring-fill { fill: none; stroke-width: 8; stroke-linecap: round; transition: stroke-dashoffset 1s cubic-bezier(0.25,1,0.5,1); }
+
+.era-ring-text {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  line-height: 1.2;
+}
+
+.era-ring-pct  { font-size: 1.1rem; font-weight: 800; }
+.era-ring-sub  { font-size: 0.65rem; color: var(--text-muted); }
+
+.era-card-stats { display: flex; justify-content: space-between; font-size: 0.8rem; color: var(--text-muted); }
+.era-card-stats span strong { color: var(--text); }
+
+/* Badge showcase */
+.badge-showcase { display: flex; flex-wrap: wrap; gap: 16px; margin-bottom: 32px; }
+
+.badge-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  box-shadow: var(--shadow);
+  min-width: 200px;
+}
+
+.badge-card-icon {
+  font-size: 2rem;
+  width: 52px;
+  height: 52px;
+  background: linear-gradient(135deg, #f5f0e8, #e8e0d0);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid var(--accent);
+  flex-shrink: 0;
+}
+
+.badge-card-info h4 { font-size: 0.9rem; margin-bottom: 2px; }
+.badge-card-info p  { font-size: 0.78rem; color: var(--text-muted); margin-bottom: 4px; line-height: 1.4; }
+.badge-card-date    { font-size: 0.7rem; color: #bbb; }
+
+.no-badges {
+  color: var(--text-muted);
+  font-size: 0.875rem;
+  font-style: italic;
+  padding: 16px 0;
+}
+
+/* Location list */
+.location-table { width: 100%; border-collapse: collapse; margin-bottom: 32px; }
+.location-table th {
+  text-align: left;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--text-muted);
+  padding: 8px 12px;
+  border-bottom: 2px solid var(--border);
+}
+.location-table td {
+  padding: 10px 12px;
+  border-bottom: 1px solid #f0ebe0;
+  font-size: 0.875rem;
+  vertical-align: middle;
+}
+.location-table tr:last-child td { border-bottom: none; }
+.location-table tr:hover td { background: #faf8f4; }
+
+.status-dot {
+  width: 10px; height: 10px; border-radius: 50%; display: inline-block; margin-right: 6px;
+}
+.status-dot.visited { background: #2e7d32; }
+.status-dot.unvisited { background: #e0e0e0; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="dashboard-page">
+
+  <!-- Hero -->
+  <div class="dashboard-hero">
+    <div class="hero-greeting">
+      <h1>{{ summary.user.username }}</h1>
+      <p>Your Los Angeles history journey</p>
+    </div>
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <span class="hero-stat-value">{{ summary.user.total_points }}</span>
+        <span class="hero-stat-label">Points</span>
+      </div>
+      <div class="hero-stat">
+        <span class="hero-stat-value">{{ summary.total_visited }}</span>
+        <span class="hero-stat-label">Visited</span>
+      </div>
+      <div class="hero-stat">
+        <span class="hero-stat-value">{{ summary.total_passed }}</span>
+        <span class="hero-stat-label">Quizzes Passed</span>
+      </div>
+      <div class="hero-stat">
+        <span class="hero-stat-value">{{ summary.badges | length }}</span>
+        <span class="hero-stat-label">Badges</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Era Progress -->
+  <h2 class="section-title">Era Progress</h2>
+  <div class="era-cards">
+    {% set era_colors = {'native': '#c8942a', 'spanish': '#7a8c3f', 'rancho': '#3a6ea5', 'modern': '#c0392b'} %}
+    {% set era_labels = {'native': 'Tongva People', 'spanish': '1769–1847', 'rancho': '1848–1899', 'modern': '1900–Present'} %}
+    {% for era in summary.eras %}
+    {% set pct = ((era.passed / era.total) * 100) | int if era.total > 0 else 0 %}
+    {% set color = era_colors.get(era.era, '#999') %}
+    {% set circumference = 201 %}
+    {% set offset = circumference - (circumference * pct / 100) %}
+    <div class="era-card">
+      <div class="era-card-name">Era {{ era.era_order }}: {{ era.era | capitalize }}</div>
+      <div class="era-card-sub">{{ era_labels.get(era.era, '') }}</div>
+      <div class="era-ring-container">
+        <div class="era-ring">
+          <svg width="80" height="80" viewBox="0 0 80 80">
+            <circle class="era-ring-bg" cx="40" cy="40" r="32"/>
+            <circle class="era-ring-fill" cx="40" cy="40" r="32"
+              stroke="{{ color }}"
+              stroke-dasharray="{{ circumference }}"
+              stroke-dashoffset="{{ offset }}"/>
+          </svg>
+          <div class="era-ring-text">
+            <span class="era-ring-pct" style="color:{{ color }}">{{ pct }}%</span>
+            <span class="era-ring-sub">passed</span>
+          </div>
+        </div>
+      </div>
+      <div class="era-card-stats">
+        <span>Visited: <strong>{{ era.visited }}/{{ era.total }}</strong></span>
+        <span>Passed: <strong>{{ era.passed }}/{{ era.total }}</strong></span>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+  <!-- Badges -->
+  <h2 class="section-title">Badges Earned</h2>
+  {% if summary.badges %}
+  <div class="badge-showcase">
+    {% for badge in summary.badges %}
+    <div class="badge-card">
+      <div class="badge-card-icon">{{ badge.icon }}</div>
+      <div class="badge-card-info">
+        <h4>{{ badge.name }}</h4>
+        <p>{{ badge.description }}</p>
+        <span class="badge-card-date">{{ badge.earned_at[:10] }}</span>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <p class="no-badges">No badges yet — visit locations and pass quizzes to earn them!</p>
+  {% endif %}
+
+  <!-- Location Breakdown -->
+  <h2 class="section-title">Location Breakdown</h2>
+  <table class="location-table">
+    <thead>
+      <tr>
+        <th>Location</th>
+        <th>Era</th>
+        <th>Status</th>
+        <th>Quiz</th>
+        <th>Points</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for era in summary.eras %}
+        {% for loc in era.locations %}
+        <tr>
+          <td>{{ loc.name }}</td>
+          <td><span class="era-badge {{ era.era }}">{{ era.era }}</span></td>
+          <td>
+            {% if not loc.unlocked %}
+              <span style="color:var(--era-locked);font-size:0.8rem">🔒 Locked</span>
+            {% elif loc.visited %}
+              <span class="status-dot visited"></span> Visited
+            {% else %}
+              <span class="status-dot unvisited"></span> Unvisited
+            {% endif %}
+          </td>
+          <td>
+            {% if loc.quiz_passed %}
+              <span class="quiz-passed-badge">✓ {{ loc.quiz_score }}%</span>
+            {% elif loc.unlocked %}
+              <span style="color:var(--text-muted);font-size:0.8rem">Not taken</span>
+            {% else %}
+              —
+            {% endif %}
+          </td>
+          <td style="font-weight:600;color:var(--accent)">{{ loc.points_earned or 0 }}</td>
+        </tr>
+        {% endfor %}
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <div style="text-align:center;margin-top:8px">
+    <a href="{{ url_for('map.map_page') }}" class="btn btn-primary">Continue Exploring →</a>
+  </div>
+
+</div>
+{% endblock %}

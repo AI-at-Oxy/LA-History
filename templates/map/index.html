@@ -1,0 +1,111 @@
+{% extends 'base.html' %}
+{% block title %}Map — LA History{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/map.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/chat.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/quiz.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="map-layout">
+
+  <!-- Left Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <h3>Your Journey</h3>
+      <div class="sidebar-username">{{ current_user.username }}</div>
+      <div class="sidebar-points">
+        <span class="points-label">Points</span>
+        <span class="points-value" id="sidebar-points">{{ current_user.total_points or 0 }}</span>
+      </div>
+    </div>
+    <div class="sidebar-body">
+      <div class="era-progress-section">
+        <h4>Era Progress</h4>
+        <div id="era-progress-list">
+          <!-- Populated by progress.js -->
+          <div style="color:var(--text-muted);font-size:0.82rem;font-style:italic">Loading...</div>
+        </div>
+      </div>
+
+      <div class="sidebar-divider"></div>
+
+      <div class="badge-section">
+        <h4>Badges Earned</h4>
+        <div class="badge-grid" id="badge-grid">
+          <span class="badge-empty">Complete quizzes to earn badges.</span>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Sidebar toggle -->
+  <button class="sidebar-toggle" id="sidebar-toggle" title="Toggle sidebar">‹</button>
+
+  <!-- Map -->
+  <div id="map"></div>
+
+  <!-- Right Detail Panel -->
+  <aside class="detail-panel" id="detail-panel">
+    <div class="detail-panel-header">
+      <span id="detail-era-pill"></span>
+      <button class="detail-close" id="detail-close" title="Close">×</button>
+    </div>
+    <div class="detail-panel-body" id="detail-panel-body">
+      <!-- Populated by map.js -->
+    </div>
+  </aside>
+</div>
+
+<!-- Quiz Modal -->
+<div class="modal-overlay" id="quiz-modal-overlay">
+  <div class="quiz-modal" id="quiz-modal">
+    <!-- Populated by quiz.js -->
+  </div>
+</div>
+
+<!-- Chat Panel -->
+<div class="chat-panel" id="chat-panel">
+  <div class="chat-panel-header" id="chat-panel-header">
+    <span class="chat-panel-icon">💬</span>
+    <span class="chat-panel-title">Ask the Tutor</span>
+    <span class="chat-panel-context" id="chat-location-label"></span>
+    <div class="chat-panel-actions">
+      <button class="chat-action-btn" id="chat-clear-btn" title="Clear history">🗑</button>
+      <button class="chat-action-btn" id="chat-toggle-btn" title="Minimize">▼</button>
+    </div>
+  </div>
+  <div class="chat-messages" id="chat-messages">
+    <div class="chat-intro">
+      <div class="chat-intro-icon">🎓</div>
+      <strong>Your Socratic Tutor</strong>
+      Click a location on the map, then open the tutor to ask questions about that site's history.
+    </div>
+  </div>
+  <div class="chat-input-area">
+    <textarea id="chat-input" placeholder="Ask about this location…" rows="1"></textarea>
+    <button class="chat-send-btn" id="chat-send-btn" title="Send">➤</button>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+  const CURRENT_USER = {
+    id: {{ current_user.id }},
+    username: "{{ current_user.username | e }}",
+    totalPoints: {{ current_user.total_points or 0 }},
+  };
+  const CSRF_TOKEN = "{{ csrf_token() }}";
+</script>
+<script src="{{ url_for('static', filename='js/utils.js') }}"></script>
+<script src="{{ url_for('static', filename='js/tts.js') }}"></script>
+<script src="{{ url_for('static', filename='js/progress.js') }}"></script>
+<script src="{{ url_for('static', filename='js/quiz.js') }}"></script>
+<script src="{{ url_for('static', filename='js/chat.js') }}"></script>
+<script src="{{ url_for('static', filename='js/map.js') }}"></script>
+{% endblock %}

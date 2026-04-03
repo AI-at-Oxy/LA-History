@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}LA History{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+  {% block extra_css %}{% endblock %}
+</head>
+<body>
+
+{% if current_user.is_authenticated %}
+<nav class="navbar">
+  <a href="{{ url_for('map.map_page') }}" class="navbar-brand">
+    🗺 <span>LA</span> History
+  </a>
+  <div class="navbar-spacer"></div>
+  <a href="{{ url_for('map.map_page') }}" class="navbar-link {% if request.endpoint == 'map.map_page' %}active{% endif %}">Map</a>
+  <a href="{{ url_for('progress.dashboard') }}" class="navbar-link {% if request.endpoint == 'progress.dashboard' %}active{% endif %}">Dashboard</a>
+  <span class="navbar-points">⭐ {{ current_user.total_points or 0 }} pts</span>
+  <span class="navbar-username">{{ current_user.username }}</span>
+  <form action="{{ url_for('auth.logout') }}" method="post" style="margin:0">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <button type="submit" class="navbar-link" style="background:none;border:none;cursor:pointer;">Logout</button>
+  </form>
+</nav>
+{% endif %}
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+  <div class="flash-container">
+    {% for category, message in messages %}
+    <div class="flash flash-{{ category }}" onclick="this.remove()">{{ message }}</div>
+    {% endfor %}
+  </div>
+  {% endif %}
+{% endwith %}
+
+<div class="toast-container" id="toast-container"></div>
+
+{% block content %}{% endblock %}
+
+<script>
+// Auto-dismiss flash messages after 4s
+document.querySelectorAll('.flash').forEach(el => {
+  setTimeout(() => el.remove(), 4000);
+});
+</script>
+{% block extra_js %}{% endblock %}
+</body>
+</html>

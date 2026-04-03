@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Register — LA History</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/auth.css') }}">
+</head>
+<body>
+<div class="auth-page">
+  <div class="auth-card">
+    <div class="auth-header">
+      <div class="auth-logo">🗺 LA History</div>
+      <div class="auth-tagline">Begin your journey through Los Angeles</div>
+    </div>
+    <div class="auth-body">
+      <h2>Create your account</h2>
+
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% for category, message in messages %}
+          <div class="auth-flash {% if category == 'success' %}success{% endif %}">{{ message }}</div>
+        {% endfor %}
+      {% endwith %}
+
+      <form method="post" action="{{ url_for('auth.register') }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+        <div class="form-group">
+          <label for="username">Username</label>
+          <input type="text" id="username" name="username" placeholder="explorer42"
+                 value="{{ request.form.get('username', '') }}"
+                 pattern="[a-zA-Z0-9_]{3,20}" required autofocus>
+        </div>
+
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" placeholder="you@example.com"
+                 value="{{ request.form.get('email', '') }}" required>
+        </div>
+
+        <div class="form-group">
+          <label for="password">Password <span style="color:#bbb;font-weight:400">(min. 8 characters)</span></label>
+          <input type="password" id="password" name="password" placeholder="••••••••"
+                 minlength="8" required>
+        </div>
+
+        <div class="form-group">
+          <label for="confirm_password">Confirm Password</label>
+          <input type="password" id="confirm_password" name="confirm_password"
+                 placeholder="••••••••" required>
+        </div>
+
+        <button type="submit" class="btn btn-primary auth-submit btn-lg">Create Account</button>
+      </form>
+
+      <div class="auth-divider">
+        Already have an account? <a href="{{ url_for('auth.login') }}">Sign in</a>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>
