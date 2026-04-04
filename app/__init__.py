@@ -8,7 +8,7 @@ def create_app(config_name=None):
     if config_name is None:
         config_name = os.environ.get('FLASK_ENV', 'default')
 
-    app = Flask(__name__, instance_relative_config=True)
+    app = Flask(__name__, instance_relative_config=True, template_folder='../templates')
     app.config.from_object(config[config_name])
 
     # Ensure instance folder exists
