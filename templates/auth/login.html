@@ -40,9 +40,10 @@
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
 
         <div class="form-group">
-          <label for="email">Email</label>
-          <input type="email" id="email" name="email" placeholder="you@example.com"
-                 value="{{ request.form.get('email', '') }}" required autofocus>
+          <label for="username">Username</label>
+          <input type="text" id="username" name="username" placeholder="e.g. explorer_1"
+                 pattern="[a-zA-Z0-9_]{3,20}"
+                 value="{{ request.form.get('username', '') }}" required autofocus>
         </div>
 
         <div class="form-group">

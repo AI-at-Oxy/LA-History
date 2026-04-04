@@ -11,30 +11,23 @@ def is_valid_email(email):
     return re.match(r'^[^@\s]+@[^@\s]+\.[^@\s]+$', email) is not None
 
 
-@auth_bp.route('/')
-def index():
-    if current_user.is_authenticated:
-        return redirect(url_for('map.map_page'))
-    return redirect(url_for('auth.login'))
-
-
 @auth_bp.route('/login', methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
         return redirect(url_for('map.map_page'))
 
     if request.method == 'POST':
-        email = request.form.get('email', '').strip().lower()
+        username = request.form.get('username', '').strip()
         password = request.form.get('password', '')
         remember = request.form.get('remember') == 'on'
 
-        user = User.query.filter_by(email=email).first()
+        user = User.query.filter_by(username=username).first()
         if user and bcrypt.check_password_hash(user.password_hash, password):
             login_user(user, remember=remember)
             next_page = request.args.get('next')
             return redirect(next_page or url_for('map.map_page'))
 
-        flash('Invalid email or password.', 'danger')
+        flash('Invalid username or password.', 'danger')
 
     return render_template('auth/login.html')
 
