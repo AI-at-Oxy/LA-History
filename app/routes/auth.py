@@ -19,13 +19,21 @@ def login():
     if request.method == 'POST':
         username = request.form.get('username', '').strip()
         password = request.form.get('password', '')
-        remember = request.form.get('remember') == 'on'
+        remember = bool(request.form.get('remember'))
+
+        # Server-side validation
+        if not re.match(r'^[a-zA-Z0-9_]{3,20}$', username) or len(password) < 8:
+            flash('Invalid username or password.', 'danger')
+            return render_template('auth/login.html')
 
         user = User.query.filter_by(username=username).first()
         if user and bcrypt.check_password_hash(user.password_hash, password):
             login_user(user, remember=remember)
             next_page = request.args.get('next')
-            return redirect(next_page or url_for('map.map_page'))
+            # Prevent open-redirect: only allow relative paths
+            if next_page and (next_page.startswith('/') and not next_page.startswith('//')):
+                return redirect(next_page)
+            return redirect(url_for('map.map_page'))
 
         flash('Invalid username or password.', 'danger')
 

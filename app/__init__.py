@@ -1,5 +1,5 @@
 import os
-from flask import Flask, send_from_directory
+from flask import Flask, redirect, url_for
 from .config import config
 from .extensions import db, login_manager, bcrypt, csrf
 
@@ -8,7 +8,7 @@ def create_app(config_name=None):
     if config_name is None:
         config_name = os.environ.get('FLASK_ENV', 'default')
 
-    app = Flask(__name__, instance_relative_config=True, template_folder='../templates')
+    app = Flask(__name__, instance_relative_config=True, template_folder='../templates', static_folder='../static')
     app.config.from_object(config[config_name])
 
     # Ensure instance folder exists
@@ -41,15 +41,8 @@ def create_app(config_name=None):
     with app.app_context():
         db.create_all()
 
-    # Serve the React frontend for all non-API, non-auth routes
-    dist_dir = os.path.join(app.root_path, '..', 'frontend', 'dist')
-
-    @app.route('/', defaults={'path': ''})
-    @app.route('/<path:path>')
-    def serve_react(path):
-        full_path = os.path.join(dist_dir, path)
-        if path and os.path.isfile(full_path):
-            return send_from_directory(dist_dir, path)
-        return send_from_directory(dist_dir, 'index.html')
+    @app.route('/')
+    def index():
+        return redirect(url_for('map.map_page'))
 
     return app

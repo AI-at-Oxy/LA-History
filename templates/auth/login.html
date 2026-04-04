@@ -4,6 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Login — LA History</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,400&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/auth.css') }}">
 </head>
@@ -42,13 +45,13 @@
         <div class="form-group">
           <label for="username">Username</label>
           <input type="text" id="username" name="username" placeholder="e.g. explorer_1"
-                 pattern="[a-zA-Z0-9_]{3,20}"
+                 pattern="^[a-zA-Z0-9_]+$" minlength="3" maxlength="20"
                  value="{{ request.form.get('username', '') }}" required autofocus>
         </div>
 
         <div class="form-group">
           <label for="password">Password</label>
-          <input type="password" id="password" name="password" placeholder="••••••••" required>
+          <input type="password" id="password" name="password" placeholder="••••••••" minlength="8" required>
         </div>
 
         <div class="form-check">
