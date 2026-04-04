@@ -13,6 +13,9 @@ function initMap() {
     center: [34.05, -118.25],
     zoom: 11,
     zoomControl: true,
+    minZoom: 9,
+    maxBounds: [[33.65, -118.80], [34.45, -117.55]],
+    maxBoundsViscosity: 1.0,
   });
 
   L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {

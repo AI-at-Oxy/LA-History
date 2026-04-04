@@ -1,5 +1,5 @@
 import os
-from flask import Flask
+from flask import Flask, send_from_directory
 from .config import config
 from .extensions import db, login_manager, bcrypt, csrf
 
@@ -40,5 +40,16 @@ def create_app(config_name=None):
     # Create tables
     with app.app_context():
         db.create_all()
+
+    # Serve the React frontend for all non-API, non-auth routes
+    dist_dir = os.path.join(app.root_path, '..', 'frontend', 'dist')
+
+    @app.route('/', defaults={'path': ''})
+    @app.route('/<path:path>')
+    def serve_react(path):
+        full_path = os.path.join(dist_dir, path)
+        if path and os.path.isfile(full_path):
+            return send_from_directory(dist_dir, path)
+        return send_from_directory(dist_dir, 'index.html')
 
     return app
