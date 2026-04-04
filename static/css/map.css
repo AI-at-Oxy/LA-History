@@ -391,13 +391,14 @@
 
 /* ---- Right Detail Panel ---- */
 .detail-panel {
+  position: absolute;
+  top: 0; right: 0; bottom: 0;
   width: var(--panel-w);
   background: var(--bg-card);
   border-left: 1px solid var(--border);
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  flex-shrink: 0;
   z-index: 10;
   transform: translateX(100%);
   transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
