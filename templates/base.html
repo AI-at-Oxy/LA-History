@@ -4,6 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{% block title %}LA History{% endblock %}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,400&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
   {% block extra_css %}{% endblock %}
 </head>
@@ -12,16 +15,30 @@
 {% if current_user.is_authenticated %}
 <nav class="navbar">
   <a href="{{ url_for('map.map_page') }}" class="navbar-brand">
-    🗺 <span>LA</span> History
+    <svg class="navbar-brand-icon" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="13" cy="13" r="11.5" stroke="currentColor" stroke-width="1.2" opacity="0.5"/>
+      <circle cx="13" cy="13" r="8" stroke="currentColor" stroke-width="0.8" opacity="0.3"/>
+      <path d="M13 2 L13 24 M2 13 L24 13" stroke="currentColor" stroke-width="0.8" opacity="0.4"/>
+      <path d="M13 2 L15 11 L13 13 L11 11 Z" fill="currentColor" opacity="0.9"/>
+      <path d="M13 24 L15 15 L13 13 L11 15 Z" fill="currentColor" opacity="0.4"/>
+      <path d="M2 13 L11 11 L13 13 L11 15 Z" fill="currentColor" opacity="0.4"/>
+      <path d="M24 13 L15 11 L13 13 L15 15 Z" fill="currentColor" opacity="0.4"/>
+      <circle cx="13" cy="13" r="1.8" fill="currentColor"/>
+    </svg>
+    <div class="navbar-brand-text">
+      <span class="la">LA</span>
+      <span class="history">History</span>
+    </div>
   </a>
+  <div class="navbar-divider"></div>
   <div class="navbar-spacer"></div>
   <a href="{{ url_for('map.map_page') }}" class="navbar-link {% if request.endpoint == 'map.map_page' %}active{% endif %}">Map</a>
   <a href="{{ url_for('progress.dashboard') }}" class="navbar-link {% if request.endpoint == 'progress.dashboard' %}active{% endif %}">Dashboard</a>
-  <span class="navbar-points">⭐ {{ current_user.total_points or 0 }} pts</span>
+  <span class="navbar-points">✦ {{ current_user.total_points or 0 }} pts</span>
   <span class="navbar-username">{{ current_user.username }}</span>
   <form action="{{ url_for('auth.logout') }}" method="post" style="margin:0">
     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-    <button type="submit" class="navbar-link" style="background:none;border:none;cursor:pointer;">Logout</button>
+    <button type="submit" class="navbar-link" style="background:none;border:none;cursor:pointer;font-family:inherit;">Logout</button>
   </form>
 </nav>
 {% endif %}

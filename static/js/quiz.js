@@ -178,14 +178,14 @@ function renderResults(result) {
       <button class="quiz-close" onclick="closeQuiz()">×</button>
     </div>
     <div class="quiz-progress-bar">
-      <div class="quiz-progress-fill" style="width:100%;background:${passed ? '#2e7d32' : '#c62828'}"></div>
+      <div class="quiz-progress-fill" style="width:100%;background:${passed ? 'var(--success)' : 'var(--danger)'}"></div>
     </div>
     <div class="quiz-body">
       <div class="quiz-results">
         <div class="results-score ${passed ? 'pass' : 'fail'}">${pct}%</div>
         <div class="results-label ${passed ? 'pass' : 'fail'}">${passed ? '✓ Passed!' : '✗ Not quite'}</div>
         <div class="results-detail">${result.correct_count} of ${result.total_questions} correct</div>
-        ${result.points_earned > 0 ? `<div class="results-points">⭐ +${result.points_earned} points</div>` : ''}
+        ${result.points_earned > 0 ? `<div class="results-points">✦ +${result.points_earned} points</div>` : ''}
         ${unlockHTML}
         <div class="results-actions">
           <button class="btn btn-secondary" onclick="closeQuiz()">Close</button>

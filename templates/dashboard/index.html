@@ -3,68 +3,214 @@
 
 {% block extra_css %}
 <style>
+/* ---- Dashboard Page ---- */
 .dashboard-page {
-  padding: calc(var(--nav-height) + 24px) 24px 40px;
-  max-width: 900px;
+  padding: calc(var(--nav-height) + 32px) 28px 56px;
+  max-width: 940px;
   margin: 0 auto;
 }
 
+/* ---- Hero ---- */
 .dashboard-hero {
   background: var(--bg-dark);
-  border-radius: 16px;
-  padding: 28px 32px;
+  border-radius: 12px;
+  padding: 36px 40px 34px;
   color: #fff;
-  margin-bottom: 28px;
+  margin-bottom: 36px;
   display: flex;
   align-items: center;
-  gap: 32px;
+  gap: 40px;
   flex-wrap: wrap;
+  position: relative;
+  overflow: hidden;
+  box-shadow: var(--shadow-lg);
+  border: 1px solid rgba(212,168,67,0.15);
 }
 
-.hero-greeting { flex: 1; }
-.hero-greeting h1 { font-family: var(--font-serif); font-size: 1.6rem; margin-bottom: 4px; color: var(--accent); }
-.hero-greeting p  { color: #aaa; font-size: 0.9rem; }
+/* Art deco diagonal weave on hero */
+.dashboard-hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    repeating-linear-gradient(
+      135deg,
+      transparent 0px, transparent 28px,
+      rgba(212,168,67,0.035) 28px, rgba(212,168,67,0.035) 29px
+    ),
+    repeating-linear-gradient(
+      45deg,
+      transparent 0px, transparent 28px,
+      rgba(212,168,67,0.02) 28px, rgba(212,168,67,0.02) 29px
+    );
+  pointer-events: none;
+}
 
-.hero-stats { display: flex; gap: 24px; flex-wrap: wrap; }
-.hero-stat { text-align: center; }
-.hero-stat-value { font-size: 2rem; font-weight: 800; color: var(--accent); display: block; line-height: 1; }
-.hero-stat-label { font-size: 0.75rem; color: #aaa; text-transform: uppercase; letter-spacing: 0.05em; }
+/* Subtle glow accent behind greeting */
+.dashboard-hero::after {
+  content: '';
+  position: absolute;
+  left: -60px;
+  top: -60px;
+  width: 300px;
+  height: 300px;
+  background: radial-gradient(ellipse, rgba(184,115,26,0.12) 0%, transparent 70%);
+  pointer-events: none;
+}
 
+.hero-greeting {
+  flex: 1;
+  min-width: 200px;
+  position: relative;
+}
+
+.hero-greeting-eyebrow {
+  font-size: 0.68rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--accent-gold);
+  margin-bottom: 6px;
+  font-weight: 500;
+}
+
+.hero-greeting h1 {
+  font-family: var(--font-display);
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 6px;
+  color: #f0ece4;
+  line-height: 1.15;
+}
+
+.hero-greeting p {
+  color: #6e6458;
+  font-size: 0.88rem;
+  letter-spacing: 0.02em;
+}
+
+.hero-rule {
+  display: block;
+  width: 40px;
+  height: 2px;
+  background: linear-gradient(to right, var(--accent), transparent);
+  margin: 12px 0;
+}
+
+.hero-stats {
+  display: flex;
+  gap: 0;
+  flex-wrap: wrap;
+  position: relative;
+}
+
+.hero-stat {
+  text-align: center;
+  padding: 10px 24px;
+  border-right: 1px solid rgba(255,255,255,0.07);
+}
+.hero-stat:last-child { border-right: none; }
+
+.hero-stat-value {
+  font-family: var(--font-display);
+  font-size: 2.2rem;
+  font-weight: 900;
+  color: var(--accent-gold);
+  display: block;
+  line-height: 1;
+  margin-bottom: 5px;
+}
+
+.hero-stat-label {
+  font-size: 0.68rem;
+  color: #6e6458;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-weight: 500;
+}
+
+/* ---- Section title ---- */
 .section-title {
-  font-family: var(--font-serif);
+  font-family: var(--font-display);
   font-size: 1.1rem;
-  margin-bottom: 16px;
+  font-weight: 600;
+  margin-bottom: 18px;
   color: var(--text);
-  border-bottom: 2px solid var(--border);
-  padding-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.section-title::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(to right, var(--border), transparent);
 }
 
-/* Era cards */
-.era-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; margin-bottom: 32px; }
+/* ---- Era cards ---- */
+.era-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(205px, 1fr));
+  gap: 18px;
+  margin-bottom: 40px;
+}
 
 .era-card {
   background: var(--bg-card);
-  border-radius: 12px;
-  padding: 18px;
+  border-radius: 10px;
+  padding: 20px;
   border: 1px solid var(--border);
   box-shadow: var(--shadow);
+  transition: transform 0.2s, box-shadow 0.2s;
+  position: relative;
+  overflow: hidden;
+}
+.era-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-lg);
 }
 
-.era-card-name { font-weight: 700; font-size: 0.95rem; margin-bottom: 4px; }
-.era-card-sub  { font-size: 0.78rem; color: var(--text-muted); margin-bottom: 14px; }
+/* Subtle era color accent on card top */
+.era-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  border-radius: 10px 10px 0 0;
+}
+.era-card.native::before  { background: var(--era-native); }
+.era-card.spanish::before { background: var(--era-spanish); }
+.era-card.rancho::before  { background: var(--era-rancho); }
+.era-card.modern::before  { background: var(--era-modern); }
 
-.era-ring-container { display: flex; justify-content: center; margin-bottom: 14px; }
+.era-card-name {
+  font-weight: 700;
+  font-size: 0.9rem;
+  margin-bottom: 2px;
+  color: var(--text);
+}
+.era-card-sub {
+  font-size: 0.74rem;
+  color: var(--text-muted);
+  margin-bottom: 16px;
+  letter-spacing: 0.02em;
+}
+
+.era-ring-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 16px;
+}
 
 .era-ring {
   position: relative;
-  width: 80px;
-  height: 80px;
+  width: 84px;
+  height: 84px;
 }
 
 .era-ring svg { transform: rotate(-90deg); }
 
-.era-ring-bg   { fill: none; stroke: #ede9df; stroke-width: 8; }
-.era-ring-fill { fill: none; stroke-width: 8; stroke-linecap: round; transition: stroke-dashoffset 1s cubic-bezier(0.25,1,0.5,1); }
+.era-ring-bg   { fill: none; stroke: var(--border-light); stroke-width: 7; }
+.era-ring-fill { fill: none; stroke-width: 7; stroke-linecap: round; transition: stroke-dashoffset 1.1s cubic-bezier(0.22,1,0.36,1); }
 
 .era-ring-text {
   position: absolute;
@@ -76,76 +222,136 @@
   line-height: 1.2;
 }
 
-.era-ring-pct  { font-size: 1.1rem; font-weight: 800; }
-.era-ring-sub  { font-size: 0.65rem; color: var(--text-muted); }
+.era-ring-pct  { font-family: var(--font-display); font-size: 1.15rem; font-weight: 800; }
+.era-ring-sub  { font-size: 0.6rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; }
 
-.era-card-stats { display: flex; justify-content: space-between; font-size: 0.8rem; color: var(--text-muted); }
-.era-card-stats span strong { color: var(--text); }
+.era-card-stats {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.76rem;
+  color: var(--text-muted);
+  border-top: 1px solid var(--border-light);
+  padding-top: 12px;
+  margin-top: 4px;
+}
+.era-card-stats span strong { color: var(--text); font-weight: 600; }
 
-/* Badge showcase */
-.badge-showcase { display: flex; flex-wrap: wrap; gap: 16px; margin-bottom: 32px; }
+/* ---- Badge showcase ---- */
+.badge-showcase {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 40px;
+}
 
 .badge-card {
   background: var(--bg-card);
   border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 16px;
+  border-radius: 10px;
+  padding: 16px 18px;
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 15px;
   box-shadow: var(--shadow);
   min-width: 200px;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.badge-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
 }
 
 .badge-card-icon {
-  font-size: 2rem;
-  width: 52px;
-  height: 52px;
-  background: linear-gradient(135deg, #f5f0e8, #e8e0d0);
+  font-size: 1.9rem;
+  width: 54px;
+  height: 54px;
+  background: linear-gradient(135deg, #f8f4ec, #ece4d4);
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 2px solid var(--accent);
+  border: 2px solid rgba(184,115,26,0.35);
   flex-shrink: 0;
+  box-shadow: 0 2px 8px rgba(184,115,26,0.18);
 }
 
-.badge-card-info h4 { font-size: 0.9rem; margin-bottom: 2px; }
-.badge-card-info p  { font-size: 0.78rem; color: var(--text-muted); margin-bottom: 4px; line-height: 1.4; }
-.badge-card-date    { font-size: 0.7rem; color: #bbb; }
+.badge-card-info h4 {
+  font-size: 0.88rem;
+  margin-bottom: 3px;
+  font-weight: 600;
+  color: var(--text);
+}
+.badge-card-info p {
+  font-size: 0.76rem;
+  color: var(--text-muted);
+  margin-bottom: 5px;
+  line-height: 1.45;
+}
+.badge-card-date {
+  font-size: 0.68rem;
+  color: #bdb0a0;
+  letter-spacing: 0.03em;
+}
 
 .no-badges {
   color: var(--text-muted);
   font-size: 0.875rem;
   font-style: italic;
-  padding: 16px 0;
+  padding: 18px 0;
+  opacity: 0.8;
 }
 
-/* Location list */
-.location-table { width: 100%; border-collapse: collapse; margin-bottom: 32px; }
+/* ---- Location table ---- */
+.location-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 36px;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--border);
+}
+
 .location-table th {
   text-align: left;
-  font-size: 0.75rem;
+  font-size: 0.68rem;
   text-transform: uppercase;
-  letter-spacing: 0.07em;
+  letter-spacing: 0.1em;
   color: var(--text-muted);
-  padding: 8px 12px;
-  border-bottom: 2px solid var(--border);
+  padding: 11px 14px;
+  background: #f0ebe0;
+  border-bottom: 1.5px solid var(--border);
+  font-weight: 600;
 }
+
 .location-table td {
-  padding: 10px 12px;
-  border-bottom: 1px solid #f0ebe0;
+  padding: 11px 14px;
+  border-bottom: 1px solid var(--border-light);
   font-size: 0.875rem;
   vertical-align: middle;
 }
+
 .location-table tr:last-child td { border-bottom: none; }
-.location-table tr:hover td { background: #faf8f4; }
+.location-table tr:hover td { background: #fdf8f0; }
+.location-table tbody tr { transition: background 0.15s; }
 
 .status-dot {
-  width: 10px; height: 10px; border-radius: 50%; display: inline-block; margin-right: 6px;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  display: inline-block;
+  margin-right: 7px;
+  vertical-align: middle;
 }
-.status-dot.visited { background: #2e7d32; }
-.status-dot.unvisited { background: #e0e0e0; }
+.status-dot.visited   { background: var(--success); box-shadow: 0 0 0 2px rgba(42,110,48,0.2); }
+.status-dot.unvisited { background: var(--border); }
+
+/* ---- CTA footer ---- */
+.dashboard-footer {
+  text-align: center;
+  margin-top: 8px;
+  padding-top: 8px;
+}
 </style>
 {% endblock %}
 
@@ -155,7 +361,9 @@
   <!-- Hero -->
   <div class="dashboard-hero">
     <div class="hero-greeting">
+      <div class="hero-greeting-eyebrow">Explorer Profile</div>
       <h1>{{ summary.user.username }}</h1>
+      <span class="hero-rule"></span>
       <p>Your Los Angeles history journey</p>
     </div>
     <div class="hero-stats">
@@ -181,21 +389,21 @@
   <!-- Era Progress -->
   <h2 class="section-title">Era Progress</h2>
   <div class="era-cards">
-    {% set era_colors = {'native': '#c8942a', 'spanish': '#7a8c3f', 'rancho': '#3a6ea5', 'modern': '#c0392b'} %}
+    {% set era_colors = {'native': '#b87316', 'spanish': '#5c7a2e', 'rancho': '#2d5f96', 'modern': '#a82828'} %}
     {% set era_labels = {'native': 'Tongva People', 'spanish': '1769–1847', 'rancho': '1848–1899', 'modern': '1900–Present'} %}
     {% for era in summary.eras %}
     {% set pct = ((era.passed / era.total) * 100) | int if era.total > 0 else 0 %}
     {% set color = era_colors.get(era.era, '#999') %}
-    {% set circumference = 201 %}
+    {% set circumference = 213 %}
     {% set offset = circumference - (circumference * pct / 100) %}
-    <div class="era-card">
+    <div class="era-card {{ era.era }}">
       <div class="era-card-name">Era {{ era.era_order }}: {{ era.era | capitalize }}</div>
       <div class="era-card-sub">{{ era_labels.get(era.era, '') }}</div>
       <div class="era-ring-container">
         <div class="era-ring">
-          <svg width="80" height="80" viewBox="0 0 80 80">
-            <circle class="era-ring-bg" cx="40" cy="40" r="32"/>
-            <circle class="era-ring-fill" cx="40" cy="40" r="32"
+          <svg width="84" height="84" viewBox="0 0 84 84">
+            <circle class="era-ring-bg" cx="42" cy="42" r="34"/>
+            <circle class="era-ring-fill" cx="42" cy="42" r="34"
               stroke="{{ color }}"
               stroke-dasharray="{{ circumference }}"
               stroke-dashoffset="{{ offset }}"/>
@@ -249,15 +457,15 @@
       {% for era in summary.eras %}
         {% for loc in era.locations %}
         <tr>
-          <td>{{ loc.name }}</td>
+          <td style="font-weight:500">{{ loc.name }}</td>
           <td><span class="era-badge {{ era.era }}">{{ era.era }}</span></td>
           <td>
             {% if not loc.unlocked %}
               <span style="color:var(--era-locked);font-size:0.8rem">🔒 Locked</span>
             {% elif loc.visited %}
-              <span class="status-dot visited"></span> Visited
+              <span class="status-dot visited"></span>Visited
             {% else %}
-              <span class="status-dot unvisited"></span> Unvisited
+              <span class="status-dot unvisited"></span>Unvisited
             {% endif %}
           </td>
           <td>
@@ -266,7 +474,7 @@
             {% elif loc.unlocked %}
               <span style="color:var(--text-muted);font-size:0.8rem">Not taken</span>
             {% else %}
-              —
+              <span style="color:var(--border)">—</span>
             {% endif %}
           </td>
           <td style="font-weight:600;color:var(--accent)">{{ loc.points_earned or 0 }}</td>
@@ -276,8 +484,8 @@
     </tbody>
   </table>
 
-  <div style="text-align:center;margin-top:8px">
-    <a href="{{ url_for('map.map_page') }}" class="btn btn-primary">Continue Exploring →</a>
+  <div class="dashboard-footer">
+    <a href="{{ url_for('map.map_page') }}" class="btn btn-primary btn-lg">Continue Exploring →</a>
   </div>
 
 </div>

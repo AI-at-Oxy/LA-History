@@ -15,7 +15,7 @@ function initMap() {
     zoomControl: true,
   });
 
-  L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
     attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors © <a href="https://carto.com/attributions">CARTO</a>',
     maxZoom: 19,
   }).addTo(map);
@@ -28,8 +28,12 @@ async function loadLocations() {
     locationsData = await apiFetch('/api/locations');
     renderMarkers(locationsData);
     loadProgress(); // load sidebar
+    const loader = document.getElementById('map-loading');
+    if (loader) { loader.classList.add('hidden'); setTimeout(() => loader.remove(), 400); }
   } catch (e) {
     console.error('Failed to load locations:', e);
+    const loader = document.getElementById('map-loading');
+    if (loader) loader.remove();
   }
 }
 

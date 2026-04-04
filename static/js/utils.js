@@ -29,7 +29,7 @@ function showToast(message, type = 'info', duration = 3500) {
 }
 
 function eraColor(era) {
-  return { native: '#c8942a', spanish: '#7a8c3f', rancho: '#3a6ea5', modern: '#c0392b' }[era] || '#9e9e9e';
+  return { native: '#b87316', spanish: '#5c7a2e', rancho: '#2d5f96', modern: '#a82828' }[era] || '#9e9e9e';
 }
 
 function eraLabel(era) {

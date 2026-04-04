@@ -64,7 +64,7 @@ function updatePointsDisplay(newTotal) {
   }
   // Also update navbar
   const navPoints = document.querySelector('.navbar-points');
-  if (navPoints) navPoints.textContent = `⭐ ${newTotal} pts`;
+  if (navPoints) navPoints.textContent = `✦ ${newTotal} pts`;
 }
 
 function handleNewBadges(badges) {
