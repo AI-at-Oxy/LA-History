@@ -22,7 +22,7 @@ const LA_CENTER = [34.0522, -118.2437]
 const DEFAULT_ZOOM = 11
 // Bounds covering the Greater LA area (Valley to Long Beach, Malibu to Pomona)
 const LA_BOUNDS = [[33.65, -118.80], [34.45, -117.55]]
-const MIN_ZOOM = 9
+const MIN_ZOOM = DEFAULT_ZOOM
 
 export default function MapContainer() {
   return (
