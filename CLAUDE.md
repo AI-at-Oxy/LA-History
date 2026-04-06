@@ -23,16 +23,6 @@ python seed_db.py
 python run.py
 ```
 
-**Frontend (React + Vite):**
-```bash
-cd frontend
-npm install
-npm run dev    # dev server on port 5173, proxies /api/* to Flask :5000
-npm run build  # build to frontend/dist/
-```
-
-Vite proxies all `/api/*` requests to `http://localhost:5000`, so both servers must run during development.
-
 **Ollama (AI chat):**
 The chat feature requires a local Ollama instance running `llama3.2` at `http://localhost:11434`. Set `OLLAMA_BASE_URL` and `OLLAMA_MODEL` in `.env` to override.
 
@@ -42,26 +32,29 @@ The chat feature requires a local Ollama instance running `llama3.2` at `http://
 
 Flask 3 with modular blueprints, SQLAlchemy ORM, Flask-Login auth, CSRF protection.
 
-- `app/__init__.py` — `create_app()` factory, registers all blueprints, serves React SPA fallback
+- `app/__init__.py` — `create_app()` factory, registers all blueprints, redirects `/` to `/map`
 - `app/models/` — SQLAlchemy models: User, Location, HistoricalEvent, UserProgress, Badge, UserBadge, Quiz, QuizQuestion, ChatSession, ChatMessage
 - `app/routes/` — Blueprints: `auth` (login/register/logout), `map` (/api/locations), `progress` (/api/progress), `quiz` (/api/quiz), `chat` (/api/chat)
 - `app/services/gamification.py` — Points/badge/era-unlock logic (10 pts visit, 50 pts quiz pass, 100 pts era complete; era unlock gates via quiz-pass thresholds)
 - `app/services/ollama_service.py` — Socratic tutor; connects to local Ollama, keeps 6-message rolling context per session
 
-### Frontend (`frontend/src/`)
+### Frontend (`templates/` + `static/`)
 
-React 18 SPA with React Router, Leaflet maps, Tailwind CSS.
+Flask-rendered Jinja2 templates with vanilla JS and custom CSS.
 
-- `App.jsx` — BrowserRouter: `/` → MapPage, `/progress` → ProgressPage, `/about` → AboutPage
-- `context/AppContext.jsx` — Global state: `selectedLocation`, `completedIds`, `totalPoints`
-- `components/MapContainer.jsx` — Leaflet map, restricted to Greater LA bounds
-- `components/InfoPanel.jsx` — Slide-in panel for location detail, quiz, and chat
+- `templates/map/index.html` — Main map page (sidebar, Leaflet map, detail panel, quiz modal, chat)
+- `templates/auth/` — Login and register forms
+- `templates/base.html` — Base layout
+- `static/js/map.js` — Leaflet map init, marker rendering, location detail
+- `static/js/quiz.js` — Quiz modal logic
+- `static/js/chat.js` — Socratic tutor chat panel
+- `static/js/progress.js` — Era progress and badge display
 
 ### Data Flow
 
 1. Flask authenticates via session cookie (username-based login, Flask-Login)
-2. React fetches `/api/locations` on load → renders markers with era-based unlock status
-3. Clicking a marker → `selectedLocation` in context → InfoPanel opens
+2. `map.js` fetches `/api/locations` on load → renders markers with era-based unlock status
+3. Clicking a marker calls `/api/locations/<id>` → populates detail panel
 4. `/api/locations/<id>/visit` awards 10 pts; `/api/quiz/<id>/submit` grades and awards points
 5. `/api/chat` sends message to Ollama with location context + last 6 messages as history
 
@@ -79,7 +72,6 @@ React 18 SPA with React Router, Leaflet maps, Tailwind CSS.
 | `seed_db.py` | Populate DB from `data/locations.json` and `data/quizzes.json` |
 | `app/config.py` | Dev/prod config (SQLite dev, `DATABASE_URL` env var for prod) |
 | `app/extensions.py` | Flask extensions: `db`, `login_manager`, `bcrypt`, `csrf` |
-| `frontend/vite.config.js` | Proxy `/api/*` to Flask |
 | `data/locations.json` | Source of truth for 57 historical locations |
 | `data/quizzes.json` | Quiz questions per location |
 
