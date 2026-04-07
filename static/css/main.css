@@ -314,3 +314,81 @@ a:hover { color: var(--accent-dark); text-decoration: underline; }
   height: 1px;
   background: var(--border);
 }
+
+/* ---- Dark Mode ---- */
+html.dark {
+  --bg:           #1c1712;
+  --bg-card:      #252018;
+  --text:         #e8e4dc;
+  --text-muted:   #9a8e7e;
+  --border:       #3a3228;
+  --border-light: #2e2820;
+  --shadow:       0 2px 16px rgba(0,0,0,0.4);
+  --shadow-lg:    0 8px 40px rgba(0,0,0,0.6);
+}
+
+html.dark .btn-secondary { background: #2e2820; border-color: var(--border); }
+html.dark .btn-secondary:hover { background: #3a3028; }
+
+html.dark .tts-bar,
+html.dark .locked-notice { background: #1e1a14; }
+
+html.dark .badge-icon { background: linear-gradient(135deg, #2e2820, #3a3028); }
+
+html.dark .sidebar-toggle:hover,
+html.dark .detail-close:hover { background: #2e2820; }
+
+html.dark .leaflet-control-zoom-in,
+html.dark .leaflet-control-zoom-out { background: var(--bg-card) !important; color: var(--text) !important; }
+html.dark .leaflet-control-zoom-in:hover,
+html.dark .leaflet-control-zoom-out:hover { background: #2e2820 !important; }
+
+html.dark .leaflet-control-attribution { background: rgba(25,20,14,0.85) !important; color: var(--text-muted); }
+html.dark .leaflet-control-attribution a { color: var(--accent); }
+
+html.dark .leaflet-popup-content-wrapper,
+html.dark .leaflet-popup-tip { background: var(--bg-card); }
+
+html.dark .quiz-passed-badge { background: #1a2e1c; border-color: #2a4a2e; color: #6abf74; }
+
+html.dark .chat-error { background: #2e1818; }
+
+html.dark .sidebar-username,
+html.dark .points-label { color: #9a8e7e; }
+
+html.dark .quiz-header { background: linear-gradient(to bottom, #1e1a14, var(--bg-card)); }
+
+html.dark .quiz-option:hover:not(:disabled),
+html.dark .quiz-option.selected { background: #2a231c; border-color: var(--accent); }
+
+html.dark .quiz-option.correct   { background: #1a2e1c; color: #6abf74; border-color: #2a4a2e; }
+html.dark .quiz-option.incorrect { background: #2e1818; color: #e07070; border-color: #4a2020; }
+html.dark .quiz-option.correct   .option-letter { background: #2a6e30; }
+html.dark .quiz-option.incorrect .option-letter { background: var(--danger); }
+
+html.dark .quiz-explanation { background: #1e1a14; }
+html.dark .quiz-footer      { background: #1e1a14; }
+
+html.dark .quiz-close:hover { background: #2e2820; }
+html.dark .results-unlock-notice { background: #1a2e1c; border-color: #2a4a2e; color: #6abf74; }
+
+html.dark .leaflet-tooltip { background: var(--bg-card); color: var(--text); border-color: var(--border); }
+html.dark .leaflet-tooltip::before { border-top-color: var(--border); }
+
+html.dark-map .leaflet-tile-pane {
+  filter: invert(1) hue-rotate(180deg) brightness(0.85) saturate(0.6);
+}
+
+/* Dark mode toggle button */
+#dark-mode-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+  padding: 5px 8px;
+  border-radius: 6px;
+  line-height: 1;
+  transition: background 0.18s;
+  color: #b0a898;
+}
+#dark-mode-btn:hover { background: rgba(255,255,255,0.08); }
