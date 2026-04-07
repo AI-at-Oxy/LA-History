@@ -159,12 +159,6 @@ function openDetailPanel(loc) {
 
     ${eventsHTML}
     ${quizSection}
-
-    <div class="detail-actions">
-      <button class="btn btn-ghost" onclick="openChat(${loc.id}, '${escapeAttr(loc.name)}')">
-        💬 Ask the Tutor
-      </button>
-    </div>
   `;
 
   panel.classList.add('open');
@@ -177,13 +171,13 @@ function buildQuizSection(loc) {
 
   if (loc.quiz_passed) {
     return `
-      <div class="detail-actions" style="padding-bottom:0">
+      <div class="detail-actions">
         <span class="quiz-passed-badge">✓ Quiz Passed — ${loc.quiz_score}%</span>
       </div>`;
   }
 
   return `
-    <div class="detail-actions" style="padding-bottom:0">
+    <div class="detail-actions">
       <button class="btn btn-primary" onclick="openQuiz(${loc.id})">
         📝 Take the Quiz
       </button>
