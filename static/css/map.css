@@ -602,3 +602,10 @@
   border-radius: 12px;
   border: 1px solid #bcddc2;
 }
+
+/* Match tooltip font to the map's display font */
+.leaflet-tooltip {
+  font-family: var(--font-display);
+  font-size: 0.82rem;
+  font-weight: 600;
+}

@@ -71,6 +71,8 @@ function createMarker(loc) {
 
   const marker = L.marker([loc.latitude, loc.longitude], { icon });
 
+  marker.bindTooltip(loc.name, { direction: 'top', offset: [0, -36], opacity: 0.9 });
+
   if (loc.unlocked) {
     marker.bindPopup(buildPopup(loc), { maxWidth: 240 });
     marker.on('click', () => onMarkerClick(loc.id));
