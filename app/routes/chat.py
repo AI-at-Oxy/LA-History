@@ -81,16 +81,12 @@ def get_history(location_id):
     return jsonify({'messages': messages})
 
 
-@chat_bp.route('/api/chat/history/<int:location_id>', methods=['DELETE'])
+@chat_bp.route('/api/chat/history', methods=['DELETE'])
 @login_required
-def clear_history(location_id):
-    session = ChatSession.query.filter_by(
-        user_id=current_user.id, location_id=location_id
-    ).first()
-
-    if session:
+def clear_history():
+    sessions = ChatSession.query.filter_by(user_id=current_user.id).all()
+    for session in sessions:
         ChatMessage.query.filter_by(session_id=session.id).delete()
         db.session.delete(session)
-        db.session.commit()
-
+    db.session.commit()
     return jsonify({'success': True})

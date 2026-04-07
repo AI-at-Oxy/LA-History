@@ -142,10 +142,9 @@ function escapeHtml(text) {
 }
 
 async function clearChatHistory() {
-  if (!chatLocationId) return;
-  if (!confirm('Clear your conversation history for this location?')) return;
+  if (!confirm('Clear your conversation history?')) return;
   try {
-    await apiFetch(`/api/chat/history/${chatLocationId}`, 'DELETE');
+    await apiFetch('/api/chat/history', 'DELETE');
     const messages = document.getElementById('chat-messages');
     messages.innerHTML = `
       <div class="chat-intro">
