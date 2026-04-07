@@ -212,6 +212,10 @@ def check_and_award_badges(user):
     if era_all_passed(4):
         candidates.append('modern_era_complete')
 
+    quiz_passed_count = sum(1 for p in all_progress if p.quiz_passed)
+    if quiz_passed_count >= 1:
+        candidates.append('first_victory')
+
     new_badges = []
     for slug in candidates:
         if slug not in earned_slugs:

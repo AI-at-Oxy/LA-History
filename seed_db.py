@@ -67,6 +67,12 @@ def seed_badges():
             'description': 'Passed all Era 4 (Modern) quizzes.',
             'icon': '🌆',
         },
+        {
+            'slug': 'first_victory',
+            'name': 'First Victory',
+            'description': 'Passed your first quiz.',
+            'icon': '🏆',
+        },
     ]
     for data in badges:
         if not Badge.query.filter_by(slug=data['slug']).first():
