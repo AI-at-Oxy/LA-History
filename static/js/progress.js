@@ -41,10 +41,11 @@ function renderSidebar(data) {
   // Badges
   const grid = document.getElementById('badge-grid');
   if (grid) {
-    if (data.badges.length === 0) {
+    const earned = data.badges.filter(b => b.earned);
+    if (earned.length === 0) {
       grid.innerHTML = '<span class="badge-empty">Complete quizzes to earn badges.</span>';
     } else {
-      grid.innerHTML = data.badges.map(b => `
+      grid.innerHTML = earned.map(b => `
         <div class="badge-item" title="${b.name}: ${b.description}">
           <div class="badge-icon">${b.icon}</div>
           <span class="badge-name">${b.name}</span>

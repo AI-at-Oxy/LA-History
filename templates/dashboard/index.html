@@ -292,6 +292,10 @@
   color: #bdb0a0;
   letter-spacing: 0.03em;
 }
+.badge-card-locked {
+  opacity: 0.45;
+  filter: grayscale(60%);
+}
 
 .no-badges {
   color: var(--text-muted);
@@ -423,10 +427,10 @@
   </div>
 
   <!-- Badges -->
-  <h2 class="section-title">Badges Earned</h2>
-  {% if summary.badges %}
+  <h2 class="section-title">Badge Collection</h2>
   <div class="badge-showcase">
     {% for badge in summary.badges %}
+    {% if badge.earned %}
     <div class="badge-card">
       <div class="badge-card-icon">{{ badge.icon }}</div>
       <div class="badge-card-info">
@@ -435,11 +439,17 @@
         <span class="badge-card-date">{{ badge.earned_at[:10] }}</span>
       </div>
     </div>
+    {% else %}
+    <div class="badge-card badge-card-locked">
+      <div class="badge-card-icon">{{ badge.icon }}</div>
+      <div class="badge-card-info">
+        <h4>🔒 {{ badge.name }}</h4>
+        <p>{{ badge.description }}</p>
+      </div>
+    </div>
+    {% endif %}
     {% endfor %}
   </div>
-  {% else %}
-  <p class="no-badges">No badges yet — visit locations and pass quizzes to earn them!</p>
-  {% endif %}
 
   <!-- Location Breakdown -->
   <h2 class="section-title">Location Breakdown</h2>

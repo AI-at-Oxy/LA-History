@@ -262,10 +262,19 @@ def get_progress_summary(user_id):
         if prog and prog.quiz_passed:
             eras[key]['passed'] += 1
 
-    badges = [
-        {**ub.badge.to_dict(), 'earned_at': ub.earned_at.isoformat()}
+    earned_map = {
+        ub.badge_id: ub.earned_at
         for ub in UserBadge.query.filter_by(user_id=user_id).all()
-    ]
+    }
+    badges = []
+    for badge in Badge.query.all():
+        entry = badge.to_dict()
+        if badge.id in earned_map:
+            entry['earned'] = True
+            entry['earned_at'] = earned_map[badge.id].isoformat()
+        else:
+            entry['earned'] = False
+        badges.append(entry)
 
     return {
         'user': {
