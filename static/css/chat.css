@@ -175,6 +175,19 @@
 }
 .chat-msg.user .chat-msg-time { text-align: right; }
 
+.chat-tts-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 0.8rem;
+  padding: 2px 4px;
+  opacity: 0.5;
+  transition: opacity 0.2s;
+  align-self: flex-start;
+}
+.chat-tts-btn:hover { opacity: 1; }
+.chat-tts-btn.active { opacity: 1; color: #c0392b; }
+
 /* Typing indicator */
 .chat-typing {
   align-self: flex-start;

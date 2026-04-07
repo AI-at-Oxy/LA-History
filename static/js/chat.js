@@ -89,8 +89,13 @@ function appendMessage(role, content, animate = true) {
   div.className = `chat-msg ${role}`;
   div.innerHTML = `
     <div class="chat-bubble">${escapeHtml(content)}</div>
+    ${role === 'assistant' && TTS.isSupported() ? '<button class="chat-tts-btn" title="Read aloud">🔊</button>' : ''}
     <div class="chat-msg-time">${new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}</div>
   `;
+  if (role === 'assistant' && TTS.isSupported()) {
+    const btn = div.querySelector('.chat-tts-btn');
+    btn.addEventListener('click', () => chatTTSToggle(btn, content));
+  }
   container.appendChild(div);
   scrollToBottom();
 }
@@ -151,6 +156,27 @@ async function clearChatHistory() {
   } catch (e) {
     showToast('Could not clear history.', 'error');
   }
+}
+
+function chatTTSToggle(btn, content) {
+  if (TTS.isSpeaking()) {
+    TTS.stop();
+    btn.textContent = '🔊';
+    btn.classList.remove('active');
+    return;
+  }
+  // Reset any other active TTS buttons
+  document.querySelectorAll('.chat-tts-btn').forEach(b => { b.textContent = '🔊'; b.classList.remove('active'); });
+  TTS.speak(content);
+  btn.textContent = '⏹';
+  btn.classList.add('active');
+  const check = setInterval(() => {
+    if (!TTS.isSpeaking()) {
+      btn.textContent = '🔊';
+      btn.classList.remove('active');
+      clearInterval(check);
+    }
+  }, 500);
 }
 
 document.addEventListener('DOMContentLoaded', () => {
