@@ -146,6 +146,8 @@ function openDetailPanel(loc) {
       ${loc.visited ? '<span class="quiz-passed-badge" style="font-size:0.78rem;margin-top:4px">✓ Visited</span>' : ''}
     </div>
 
+    ${loc.image_url ? `<img src="${encodeURI(loc.image_url)}" alt="${escapeAttr(loc.name)}" class="detail-image">` : ''}
+
     <div class="detail-description" id="detail-full-desc">
       ${escapeHtml(loc.full_description)}
     </div>

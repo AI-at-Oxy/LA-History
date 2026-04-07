@@ -78,7 +78,9 @@ def seed_badges():
 def seed_locations(location_data):
     count = 0
     for loc in location_data:
-        if Location.query.filter_by(slug=loc['slug']).first():
+        existing = Location.query.filter_by(slug=loc['slug']).first()
+        if existing:
+            existing.image_url = loc.get('image_url')
             continue
 
         location = Location(

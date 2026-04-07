@@ -603,6 +603,14 @@
   border: 1px solid #bcddc2;
 }
 
+/* Location image in the detail panel */
+.detail-image {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  display: block;
+}
+
 /* Match tooltip font to the map's display font */
 .leaflet-tooltip {
   font-family: var(--font-display);
