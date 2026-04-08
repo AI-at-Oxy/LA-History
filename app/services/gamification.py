@@ -215,6 +215,8 @@ def check_and_award_badges(user):
     quiz_passed_count = sum(1 for p in all_progress if p.quiz_passed)
     if quiz_passed_count >= 1:
         candidates.append('first_victory')
+    if quiz_passed_count >= total_locations:
+        candidates.append('quiz_master')
 
     new_badges = []
     for slug in candidates:

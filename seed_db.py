@@ -73,6 +73,12 @@ def seed_badges():
             'description': 'Passed your first quiz.',
             'icon': '🏆',
         },
+        {
+            'slug': 'quiz_master',
+            'name': 'Quiz Master',
+            'description': 'Passed every quiz on the map.',
+            'icon': '🎓',
+        },
     ]
     for data in badges:
         if not Badge.query.filter_by(slug=data['slug']).first():
