@@ -17,6 +17,7 @@ class Location(db.Model):
     unlock_threshold = db.Column(db.Integer, default=0)
     is_starter = db.Column(db.Boolean, default=False)
     image_url = db.Column(db.String(300), nullable=True)
+    image_caption = db.Column(db.String(500), nullable=True)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
     # Relationships
@@ -41,6 +42,7 @@ class Location(db.Model):
             'short_description': self.short_description,
             'is_starter': self.is_starter,
             'image_url': self.image_url,
+            'image_caption': self.image_caption,
             'has_quiz': self.quiz is not None,
         }
         if user_progress:

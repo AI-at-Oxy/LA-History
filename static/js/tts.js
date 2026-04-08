@@ -19,7 +19,7 @@ const TTS = (() => {
   function speak(text) {
     if (!synth) return;
     synth.cancel();
-    const utterance = new SpeechSynthesisUtterance(text);
+    const utterance = new SpeechSynthesisUtterance(text.replace(/~/g, 'Around'));
     utterance.rate = 0.92;
     utterance.pitch = 1.0;
     const preferred = voices.find(v => v.lang === 'en-US' && /Google|Samantha|Alex/.test(v.name));

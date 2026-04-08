@@ -138,25 +138,31 @@ function openDetailPanel(loc) {
   pill.innerHTML = `<span class="era-badge ${loc.era}">${loc.era}</span>`;
 
   const quizSection = buildQuizSection(loc);
-  const eventsHTML  = buildEventsHTML(loc.events || []);
+  const events      = loc.events || [];
+  const eventsHTML  = buildEventsHTML(events);
+
+  const ttsBtnHTML = TTS.isSupported()
+    ? `<button class="detail-tts-btn" id="tts-btn" onclick="handleTTS('${loc.slug}')" title="Read aloud">🔊 Read Aloud</button>`
+    : '';
 
   body.innerHTML = `
     <div class="detail-era-header">
       <h2 class="detail-name">${loc.name}</h2>
-      ${loc.visited ? '<span class="quiz-passed-badge" style="font-size:0.78rem;margin-top:4px">✓ Visited</span>' : ''}
+      <div class="detail-header-meta">
+        ${loc.visited ? '<span class="quiz-passed-badge" style="font-size:0.78rem">✓ Visited</span>' : ''}
+        ${ttsBtnHTML}
+      </div>
     </div>
 
-    ${loc.image_url ? `<img src="${encodeURI(loc.image_url)}" alt="${escapeAttr(loc.name)}" class="detail-image">` : ''}
+    ${loc.image_url ? `
+    <figure class="detail-image-figure" onclick="openImageLightbox('${encodeURI(loc.image_url)}', '${escapeAttr(loc.image_caption || loc.name)}')" title="Click to enlarge">
+      <img src="${encodeURI(loc.image_url)}" alt="${escapeAttr(loc.name)}" class="detail-image">
+      <div class="detail-image-expand-hint">⤢</div>
+      ${loc.image_caption ? `<figcaption class="detail-image-caption">${escapeHtml(loc.image_caption)}</figcaption>` : ''}
+    </figure>` : ''}
 
     <div class="detail-description" id="detail-full-desc">
       ${escapeHtml(loc.full_description)}
-    </div>
-
-    <div class="tts-bar">
-      <button class="btn btn-secondary btn-sm" id="tts-btn" onclick="handleTTS('${loc.slug}')">
-        🔊 Read Aloud
-      </button>
-      <span id="tts-status"></span>
     </div>
 
     ${eventsHTML}
@@ -165,6 +171,7 @@ function openDetailPanel(loc) {
 
   panel.classList.add('open');
 
+  if (events.length) bindTimelineTTSButtons(events);
   document.getElementById('detail-close').addEventListener('click', closeDetailPanel);
 }
 
@@ -197,11 +204,50 @@ function buildEventsHTML(events) {
     </div>
   `).join('');
 
+  const ttsBtn = TTS.isSupported()
+    ? `<button class="timeline-tts-btn" id="timeline-tts-btn" title="Read timeline aloud">🔊</button>`
+    : '';
+
   return `
     <div class="events-section">
-      <h4>Historical Timeline</h4>
+      <div class="events-section-header">
+        <h4>Historical Timeline</h4>
+        ${ttsBtn}
+      </div>
       <div class="timeline">${items}</div>
     </div>`;
+}
+
+function bindTimelineTTSButtons(events) {
+  const btn = document.getElementById('timeline-tts-btn');
+  if (!btn) return;
+  const fullText = events.map(ev => `${ev.year_display}. ${ev.title}. ${ev.content}`).join(' ');
+  btn.addEventListener('click', () => timelineTTSToggle(btn, fullText));
+}
+
+function timelineTTSToggle(btn, text) {
+  if (TTS.isSpeaking() && btn.classList.contains('active')) {
+    TTS.stop();
+    btn.textContent = '🔊';
+    btn.classList.remove('active');
+    return;
+  }
+  if (TTS.isSpeaking()) TTS.stop();
+  // Reset description TTS if active
+  const descBtn = document.getElementById('tts-btn');
+  if (descBtn) { descBtn.textContent = '🔊 Read Aloud'; descBtn.classList.remove('active'); }
+  ttsActive = false;
+
+  TTS.speak(text);
+  btn.textContent = '⏹';
+  btn.classList.add('active');
+  const check = setInterval(() => {
+    if (!TTS.isSpeaking()) {
+      btn.textContent = '🔊';
+      btn.classList.remove('active');
+      clearInterval(check);
+    }
+  }, 500);
 }
 
 function closeDetailPanel() {
@@ -212,32 +258,29 @@ function closeDetailPanel() {
 }
 
 function handleTTS(slug) {
-  const btn    = document.getElementById('tts-btn');
-  const status = document.getElementById('tts-status');
-  const desc   = document.getElementById('detail-full-desc');
-
-  if (!TTS.isSupported()) {
-    status.textContent = 'TTS not supported in this browser.';
-    return;
-  }
+  const btn  = document.getElementById('tts-btn');
+  const desc = document.getElementById('detail-full-desc');
 
   if (TTS.isSpeaking()) {
     TTS.stop();
     btn.textContent = '🔊 Read Aloud';
-    status.textContent = '';
+    btn.classList.remove('active');
     ttsActive = false;
     return;
   }
 
+  // Reset any active timeline TTS buttons
+  document.querySelectorAll('.timeline-tts-btn').forEach(b => { b.textContent = '🔊'; b.classList.remove('active'); });
+
   TTS.speak(desc.textContent);
   btn.textContent = '⏹ Stop';
-  status.textContent = 'Reading…';
+  btn.classList.add('active');
   ttsActive = true;
 
   const checkInterval = setInterval(() => {
     if (!TTS.isSpeaking()) {
       btn.textContent = '🔊 Read Aloud';
-      status.textContent = '';
+      btn.classList.remove('active');
       ttsActive = false;
       clearInterval(checkInterval);
     }
@@ -255,6 +298,38 @@ function refreshSingleMarker(loc) {
 
 // Expose so quiz.js can trigger a full refresh after unlock
 window.refreshMapMarkers = loadLocations;
+
+function openImageLightbox(src, caption) {
+  let overlay = document.getElementById('image-lightbox-overlay');
+  if (!overlay) {
+    overlay = document.createElement('div');
+    overlay.id = 'image-lightbox-overlay';
+    overlay.className = 'image-lightbox-overlay';
+    overlay.innerHTML = `
+      <div class="image-lightbox-box">
+        <button class="image-lightbox-close" id="image-lightbox-close" title="Close">×</button>
+        <img class="image-lightbox-img" id="image-lightbox-img" src="" alt="">
+        <p class="image-lightbox-caption" id="image-lightbox-caption"></p>
+      </div>`;
+    document.body.appendChild(overlay);
+    overlay.addEventListener('click', e => { if (e.target === overlay) closeImageLightbox(); });
+    document.getElementById('image-lightbox-close').addEventListener('click', closeImageLightbox);
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeImageLightbox(); });
+  }
+  document.getElementById('image-lightbox-img').src = src;
+  document.getElementById('image-lightbox-img').alt = caption;
+  const cap = document.getElementById('image-lightbox-caption');
+  cap.textContent = caption;
+  cap.style.display = caption ? '' : 'none';
+  overlay.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeImageLightbox() {
+  const overlay = document.getElementById('image-lightbox-overlay');
+  if (overlay) overlay.classList.remove('open');
+  document.body.style.overflow = '';
+}
 
 function escapeAttr(text) {
   return text.replace(/'/g, "\\'").replace(/"/g, '&quot;');

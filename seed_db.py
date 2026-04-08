@@ -87,6 +87,7 @@ def seed_locations(location_data):
         existing = Location.query.filter_by(slug=loc['slug']).first()
         if existing:
             existing.image_url = loc.get('image_url')
+            existing.image_caption = loc.get('image_caption')
             continue
 
         location = Location(
@@ -101,6 +102,7 @@ def seed_locations(location_data):
             short_description=loc['short_description'],
             full_description=loc['full_description'],
             image_url=loc.get('image_url'),
+            image_caption=loc.get('image_caption'),
         )
         db.session.add(location)
         db.session.flush()  # get location.id before committing

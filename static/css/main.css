@@ -330,7 +330,6 @@ html.dark {
 html.dark .btn-secondary { background: #2e2820; border-color: var(--border); }
 html.dark .btn-secondary:hover { background: #3a3028; }
 
-html.dark .tts-bar,
 html.dark .locked-notice { background: #1e1a14; }
 
 html.dark .badge-icon { background: linear-gradient(135deg, #2e2820, #3a3028); }

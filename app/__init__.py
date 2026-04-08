@@ -40,6 +40,14 @@ def create_app(config_name=None):
     # Create tables
     with app.app_context():
         db.create_all()
+        # Add image_caption column if it doesn't exist (for existing databases)
+        with db.engine.connect() as conn:
+            from sqlalchemy import text, inspect
+            inspector = inspect(db.engine)
+            cols = [c['name'] for c in inspector.get_columns('locations')]
+            if 'image_caption' not in cols:
+                conn.execute(text('ALTER TABLE locations ADD COLUMN image_caption VARCHAR(500)'))
+                conn.commit()
 
     @app.route('/')
     def index():
