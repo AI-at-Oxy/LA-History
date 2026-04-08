@@ -1,7 +1,7 @@
 import os
 from flask import Flask, redirect, url_for
 from .config import config
-from .extensions import db, login_manager, bcrypt, csrf
+from .extensions import db, login_manager, bcrypt, csrf, mail, limiter
 
 
 def create_app(config_name=None):
@@ -19,6 +19,8 @@ def create_app(config_name=None):
     login_manager.init_app(app)
     bcrypt.init_app(app)
     csrf.init_app(app)
+    mail.init_app(app)
+    limiter.init_app(app)
 
     login_manager.login_view = 'auth.login'
     login_manager.login_message = 'Please log in to access this page.'
@@ -43,11 +45,25 @@ def create_app(config_name=None):
         # Add image_caption column if it doesn't exist (for existing databases)
         with db.engine.connect() as conn:
             from sqlalchemy import text, inspect
+            from sqlalchemy.exc import OperationalError
             inspector = inspect(db.engine)
             cols = [c['name'] for c in inspector.get_columns('locations')]
             if 'image_caption' not in cols:
                 conn.execute(text('ALTER TABLE locations ADD COLUMN image_caption VARCHAR(500)'))
                 conn.commit()
+            # Password reset token columns
+            user_cols = [c['name'] for c in inspector.get_columns('users')]
+            for col, ddl in [
+                ('reset_token_hash',    'ALTER TABLE users ADD COLUMN reset_token_hash VARCHAR(64)'),
+                ('reset_token_expires', 'ALTER TABLE users ADD COLUMN reset_token_expires DATETIME'),
+                ('reset_token_used',    'ALTER TABLE users ADD COLUMN reset_token_used BOOLEAN DEFAULT 0'),
+            ]:
+                if col not in user_cols:
+                    try:
+                        conn.execute(text(ddl))
+                        conn.commit()
+                    except OperationalError:
+                        pass  # Column already exists (concurrent startup)
 
     @app.route('/')
     def index():
