@@ -781,3 +781,41 @@
   font-size: 0.82rem;
   font-weight: 600;
 }
+
+/* ---- TTS word highlight ---- */
+.tts-word {
+  display: inline;
+  border-radius: 3px;
+  padding: 1px 0;
+  transition: background 0.1s, color 0.1s;
+}
+.tts-word.tts-active {
+  background: rgba(184, 115, 26, 0.22);
+  color: var(--accent-dark);
+  border-radius: 3px;
+  padding: 1px 2px;
+}
+
+/* ---- TTS reading progress bar ---- */
+.tts-progress-bar {
+  height: 3px;
+  background: var(--border-light);
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.events-section-header + .tts-progress-bar {
+  margin-bottom: 10px;
+}
+.tts-progress-fill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(to right, var(--accent), var(--accent-gold));
+  transition: width 0.25s linear;
+}
+
+/* dark mode */
+html.dark .tts-word.tts-active {
+  background: rgba(212, 168, 67, 0.18);
+  color: var(--accent-gold);
+}
+html.dark .tts-progress-bar { background: #2e2820; }

@@ -38,6 +38,7 @@
   <a href="{{ url_for('progress.dashboard') }}" class="navbar-link {% if request.endpoint == 'progress.dashboard' %}active{% endif %}">Dashboard</a>
   <span class="navbar-points">✦ {{ current_user.total_points or 0 }} pts</span>
   <button id="dark-mode-btn" onclick="toggleDarkMode()" title="Toggle dark mode">🌙</button>
+  <button id="settings-btn" onclick="openSettings()" title="Settings">⚙</button>
   <span class="navbar-username">{{ current_user.username }}</span>
   <form action="{{ url_for('auth.logout') }}" method="post" style="margin:0">
     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
@@ -97,5 +98,53 @@ function toggleDarkMode() {
 })();
 </script>
 {% block extra_js %}{% endblock %}
+
+{% if current_user.is_authenticated %}
+<!-- Settings Modal -->
+<div class="settings-overlay" id="settings-overlay" onclick="closeSettings(event)">
+  <div class="settings-modal" id="settings-modal" role="dialog" aria-label="Settings">
+    <div class="settings-modal-header">
+      <span>Settings</span>
+      <button class="settings-close" onclick="closeSettings()">×</button>
+    </div>
+    <div class="settings-accordion">
+
+      <div class="accordion-section" id="acc-tts">
+        <button class="accordion-header open" onclick="toggleAccordion('acc-tts')">
+          <span>🔊 Text-to-Speech</span>
+          <span class="accordion-chevron">▾</span>
+        </button>
+        <div class="accordion-body">
+          <div class="settings-row">
+            <label for="tts-lang-select">Language</label>
+            <select id="tts-lang-select"></select>
+          </div>
+          <div class="settings-row">
+            <label for="tts-voice-select">Voice</label>
+            <select id="tts-voice-select"></select>
+          </div>
+          <div class="settings-row">
+            <label for="tts-speed-slider">Speed <span id="tts-speed-val">0.92×</span></label>
+            <input type="range" id="tts-speed-slider" min="0.5" max="2.0" step="0.05" value="0.92">
+          </div>
+          <div class="settings-row">
+            <label for="tts-pitch-slider">Pitch <span id="tts-pitch-val">1.0</span></label>
+            <input type="range" id="tts-pitch-slider" min="0.5" max="2.0" step="0.05" value="1.0">
+          </div>
+          <div class="settings-row settings-row-inline">
+            <label for="tts-highlight-toggle">Word Highlight</label>
+            <label class="settings-toggle-label">
+              <input type="checkbox" id="tts-highlight-toggle">
+              <span class="settings-toggle-track"></span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+<script src="{{ url_for('static', filename='js/settings.js') }}"></script>
+{% endif %}
 </body>
 </html>

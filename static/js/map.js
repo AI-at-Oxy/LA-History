@@ -8,6 +8,80 @@ let locationsData = [];
 let activeLocationId = null;
 let ttsActive = false;
 
+// ---- TTS word-highlight helpers ----
+let _descOrigHTML   = '';
+let _wordPositions  = []; // [{ idx, fraction }]
+
+function wrapWordsForHighlight(element) {
+  _descOrigHTML = element.innerHTML;
+  const totalChars = element.textContent.length || 1;
+  let wordIdx = 0;
+  let charPos = 0;
+  const positions = [];
+
+  const newHTML = element.innerHTML.replace(/(<[^>]+>)|([^\s<>]+)/g, (match, tag, word) => {
+    if (tag)  return tag;
+    if (word) {
+      positions.push({ idx: wordIdx, fraction: charPos / totalChars });
+      charPos += word.length + 1;
+      wordIdx++;
+      return `<span class="tts-word" data-idx="${wordIdx - 1}">${word}</span>`;
+    }
+    charPos += match.length;
+    return match;
+  });
+
+  element.innerHTML = newHTML;
+  _wordPositions = positions;
+}
+
+function highlightWordAtProgress(element, progress) {
+  let best = _wordPositions[0];
+  for (const wp of _wordPositions) {
+    if (wp.fraction <= progress) best = wp;
+    else break;
+  }
+  if (!best) return;
+  const prev = element.querySelector('.tts-word.tts-active');
+  if (prev) prev.classList.remove('tts-active');
+  const span = element.querySelector(`.tts-word[data-idx="${best.idx}"]`);
+  if (span) span.classList.add('tts-active');
+}
+
+function restoreDescHTML(element) {
+  if (!element || !_descOrigHTML) return;
+  element.innerHTML = _descOrigHTML;
+  _descOrigHTML  = '';
+  _wordPositions = [];
+}
+
+// ---- TTS progress bar helpers ----
+let _progressBarEl    = null;
+let _progressFillEl   = null;
+let _progressMaxRatio = 0;
+
+function showTTSProgressBar(afterElement) {
+  hideTTSProgressBar();
+  const bar = document.createElement('div');
+  bar.className = 'tts-progress-bar';
+  bar.innerHTML = '<div class="tts-progress-fill"></div>';
+  afterElement.insertAdjacentElement('afterend', bar);
+  _progressBarEl    = bar;
+  _progressFillEl   = bar.querySelector('.tts-progress-fill');
+  _progressMaxRatio = 0;
+}
+
+function updateTTSProgress(ratio) {
+  if (!_progressFillEl) return;
+  _progressMaxRatio = Math.max(_progressMaxRatio, ratio);
+  _progressFillEl.style.width = `${Math.min(_progressMaxRatio * 100, 100)}%`;
+}
+
+function hideTTSProgressBar() {
+  if (_progressBarEl) { _progressBarEl.remove(); _progressBarEl = null; _progressFillEl = null; }
+  _progressMaxRatio = 0;
+}
+
 function initMap() {
   map = L.map('map', {
     center: [34.05, -118.25],
@@ -142,7 +216,7 @@ function openDetailPanel(loc) {
   const eventsHTML  = buildEventsHTML(events);
 
   const ttsBtnHTML = TTS.isSupported()
-    ? `<button class="detail-tts-btn" id="tts-btn" onclick="handleTTS('${loc.slug}')" title="Read aloud">🔊 Read Aloud</button>`
+    ? `<button class="detail-tts-btn" id="tts-btn" onclick="handleTTS()" title="Read aloud">🔊 Read Aloud</button>`
     : '';
 
   body.innerHTML = `
@@ -228,41 +302,55 @@ function bindTimelineTTSButtons(events) {
 function timelineTTSToggle(btn, text) {
   if (TTS.isSpeaking() && btn.classList.contains('active')) {
     TTS.stop();
+    hideTTSProgressBar();
     btn.textContent = '🔊';
     btn.classList.remove('active');
     return;
   }
   if (TTS.isSpeaking()) TTS.stop();
+
   // Reset description TTS if active
   const descBtn = document.getElementById('tts-btn');
+  const desc    = document.getElementById('detail-full-desc');
   if (descBtn) { descBtn.textContent = '🔊 Read Aloud'; descBtn.classList.remove('active'); }
+  if (desc) restoreDescHTML(desc);
+  hideTTSProgressBar();
   ttsActive = false;
 
-  TTS.speak(text);
+  const header = document.querySelector('.events-section-header');
+  if (header) showTTSProgressBar(header);
+
   btn.textContent = '⏹';
   btn.classList.add('active');
-  const check = setInterval(() => {
-    if (!TTS.isSpeaking()) {
+
+  TTS.speak(text, {
+    onBoundary: (charIndex, totalLength) => updateTTSProgress(charIndex / totalLength),
+    onEnd: () => {
+      hideTTSProgressBar();
       btn.textContent = '🔊';
       btn.classList.remove('active');
-      clearInterval(check);
-    }
-  }, 500);
+    },
+  });
 }
 
 function closeDetailPanel() {
   document.getElementById('detail-panel').classList.remove('open');
+  const desc = document.getElementById('detail-full-desc');
+  if (desc) restoreDescHTML(desc);
+  hideTTSProgressBar();
   TTS.stop();
   ttsActive = false;
   activeLocationId = null;
 }
 
-function handleTTS(slug) {
+function handleTTS() {
   const btn  = document.getElementById('tts-btn');
   const desc = document.getElementById('detail-full-desc');
 
   if (TTS.isSpeaking()) {
     TTS.stop();
+    restoreDescHTML(desc);
+    hideTTSProgressBar();
     btn.textContent = '🔊 Read Aloud';
     btn.classList.remove('active');
     ttsActive = false;
@@ -272,19 +360,28 @@ function handleTTS(slug) {
   // Reset any active timeline TTS buttons
   document.querySelectorAll('.timeline-tts-btn').forEach(b => { b.textContent = '🔊'; b.classList.remove('active'); });
 
-  TTS.speak(desc.textContent);
+  const highlightEnabled = localStorage.getItem('tts_word_highlight') === 'on';
+  if (highlightEnabled) wrapWordsForHighlight(desc);
+  const eraHeader = document.querySelector('.detail-era-header');
+  showTTSProgressBar(eraHeader || btn);
+
   btn.textContent = '⏹ Stop';
   btn.classList.add('active');
   ttsActive = true;
 
-  const checkInterval = setInterval(() => {
-    if (!TTS.isSpeaking()) {
+  TTS.speak(desc.textContent, {
+    onBoundary: (charIndex, totalLength) => {
+      if (highlightEnabled) highlightWordAtProgress(desc, charIndex / totalLength);
+      updateTTSProgress(charIndex / totalLength);
+    },
+    onEnd: () => {
+      restoreDescHTML(desc);
+      hideTTSProgressBar();
       btn.textContent = '🔊 Read Aloud';
       btn.classList.remove('active');
       ttsActive = false;
-      clearInterval(checkInterval);
-    }
-  }, 500);
+    },
+  });
 }
 
 function refreshSingleMarker(loc) {
