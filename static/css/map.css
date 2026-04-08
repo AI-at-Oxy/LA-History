@@ -366,8 +366,8 @@
 
 /* Custom marker styles */
 .map-marker {
-  width: 34px;
-  height: 34px;
+  width: var(--marker-size, 34px);
+  height: var(--marker-size, 34px);
   border-radius: 50% 50% 50% 0;
   transform: rotate(-45deg);
   border: 2.5px solid rgba(255,255,255,0.88);

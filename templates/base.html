@@ -37,7 +37,6 @@
   <a href="{{ url_for('map.map_page') }}" class="navbar-link {% if request.endpoint == 'map.map_page' %}active{% endif %}">Map</a>
   <a href="{{ url_for('progress.dashboard') }}" class="navbar-link {% if request.endpoint == 'progress.dashboard' %}active{% endif %}">Dashboard</a>
   <span class="navbar-points">✦ {{ current_user.total_points or 0 }} pts</span>
-  <button id="dark-mode-btn" onclick="toggleDarkMode()" title="Toggle dark mode">🌙</button>
   <button id="settings-btn" onclick="openSettings()" title="Settings">⚙</button>
   <span class="navbar-username">{{ current_user.username }}</span>
   <form action="{{ url_for('auth.logout') }}" method="post" style="margin:0">
@@ -67,35 +66,19 @@ document.querySelectorAll('.flash').forEach(el => {
   setTimeout(() => el.remove(), 4000);
 });
 
-// Dark mode — cycles: light → semi-dark → dark → light
-function toggleDarkMode() {
+// Theme — light / semi-dark / dark
+function setTheme(mode) {
   const html = document.documentElement;
-  const current = localStorage.getItem('darkMode') || 'light';
-  const btn = document.getElementById('dark-mode-btn');
-  if (current === 'light' || current === 'false' || !current) {
-    html.classList.add('dark'); html.classList.remove('dark-map');
-    localStorage.setItem('darkMode', 'semi-dark');
-    if (btn) btn.textContent = '🌗';
-  } else if (current === 'semi-dark' || current === 'true') {
-    html.classList.add('dark'); html.classList.add('dark-map');
-    localStorage.setItem('darkMode', 'dark');
-    if (btn) btn.textContent = '☀️';
-  } else {
-    html.classList.remove('dark'); html.classList.remove('dark-map');
-    localStorage.setItem('darkMode', 'light');
-    if (btn) btn.textContent = '🌙';
+  html.classList.remove('dark', 'dark-map');
+  if (mode === 'semi-dark' || mode === 'true') {
+    html.classList.add('dark');
+  } else if (mode === 'dark') {
+    html.classList.add('dark', 'dark-map');
   }
+  localStorage.setItem('darkMode', mode);
+  const sel = document.getElementById('theme-select');
+  if (sel) sel.value = mode;
 }
-
-// Set correct icon on load
-(function() {
-  const btn = document.getElementById('dark-mode-btn');
-  if (!btn) return;
-  const m = localStorage.getItem('darkMode');
-  if (m === 'dark') btn.textContent = '☀️';
-  else if (m === 'semi-dark' || m === 'true') btn.textContent = '🌗';
-  else btn.textContent = '🌙';
-})();
 </script>
 {% block extra_js %}{% endblock %}
 
@@ -109,12 +92,29 @@ function toggleDarkMode() {
     </div>
     <div class="settings-accordion">
 
+      <div class="accordion-section" id="acc-appearance">
+        <button class="accordion-header" onclick="toggleAccordion('acc-appearance')">
+          <span>🎨 Appearance</span>
+          <span class="accordion-chevron">▾</span>
+        </button>
+        <div class="accordion-body" style="display:none">
+          <div class="settings-row">
+            <label for="theme-select">Theme</label>
+            <select id="theme-select">
+              <option value="light">Light</option>
+              <option value="semi-dark">Semi-Dark</option>
+              <option value="dark">Dark</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
       <div class="accordion-section" id="acc-tts">
-        <button class="accordion-header open" onclick="toggleAccordion('acc-tts')">
+        <button class="accordion-header" onclick="toggleAccordion('acc-tts')">
           <span>🔊 Text-to-Speech</span>
           <span class="accordion-chevron">▾</span>
         </button>
-        <div class="accordion-body">
+        <div class="accordion-body" style="display:none">
           <div class="settings-row">
             <label for="tts-lang-select">Language</label>
             <select id="tts-lang-select"></select>
@@ -141,9 +141,57 @@ function toggleDarkMode() {
         </div>
       </div>
 
+      <div class="accordion-section" id="acc-fontsize">
+        <button class="accordion-header" onclick="toggleAccordion('acc-fontsize')">
+          <span>🔤 Font Size</span>
+          <span class="accordion-chevron">▾</span>
+        </button>
+        <div class="accordion-body" style="display:none">
+          <div class="settings-row">
+            <label for="fontsize-slider">Size <span id="fontsize-val">15px</span></label>
+            <input type="range" id="fontsize-slider" min="12" max="20" step="1" value="15">
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-section" id="acc-markersize">
+        <button class="accordion-header" onclick="toggleAccordion('acc-markersize')">
+          <span>📍 Marker Size</span>
+          <span class="accordion-chevron">▾</span>
+        </button>
+        <div class="accordion-body" style="display:none">
+          <div class="settings-row">
+            <label for="markersize-select">Icon Size</label>
+            <select id="markersize-select">
+              <option value="24">Small</option>
+              <option value="32" selected>Medium</option>
+              <option value="44">Large</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-section" id="acc-reset">
+        <button class="accordion-header" onclick="toggleAccordion('acc-reset')">
+          <span>🗑️ Reset Progress</span>
+          <span class="accordion-chevron">▾</span>
+        </button>
+        <div class="accordion-body" style="display:none">
+          <p style="font-size:0.82rem;color:var(--text-muted);margin-bottom:8px;">
+            This will permanently erase all visited locations, quiz scores, badges, and points. This cannot be undone.
+          </p>
+          <button class="btn btn-danger" id="reset-progress-btn" style="width:100%">
+            Reset All Progress
+          </button>
+        </div>
+      </div>
+
     </div>
   </div>
 </div>
+<script>
+  if (typeof CSRF_TOKEN === 'undefined') var CSRF_TOKEN = "{{ csrf_token() }}";
+</script>
 <script src="{{ url_for('static', filename='js/settings.js') }}"></script>
 {% endif %}
 </body>

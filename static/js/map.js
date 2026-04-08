@@ -126,7 +126,18 @@ function renderMarkers(locations) {
   });
 }
 
+function getMarkerDimensions() {
+  const base = parseInt(localStorage.getItem('marker_size')) || 32;
+  return {
+    iconSize:      [base, base],
+    iconAnchor:    [base / 2, base],
+    popupAnchor:   [0, -(base + 4)],
+    tooltipOffset: [0, -(base + 4)],
+  };
+}
+
 function createMarker(loc) {
+  const dim   = getMarkerDimensions();
   const color = loc.unlocked ? eraColor(loc.era) : '#9e9e9e';
   const emoji = loc.unlocked ? eraEmoji(loc.era) : '🔒';
   const visitedStyle = loc.visited ? 'opacity:0.75;' : '';
@@ -138,14 +149,14 @@ function createMarker(loc) {
            style="background:${color};${visitedStyle}border-color:${loc.unlocked ? 'rgba(255,255,255,0.9)' : '#ccc'}">
         <div class="map-marker-inner">${emoji}</div>
       </div>`,
-    iconSize: [32, 32],
-    iconAnchor: [16, 32],
-    popupAnchor: [0, -36],
+    iconSize: dim.iconSize,
+    iconAnchor: dim.iconAnchor,
+    popupAnchor: dim.popupAnchor,
   });
 
   const marker = L.marker([loc.latitude, loc.longitude], { icon });
 
-  marker.bindTooltip(loc.name, { direction: 'top', offset: [0, -36], opacity: 0.9 });
+  marker.bindTooltip(loc.name, { direction: 'top', offset: dim.tooltipOffset, opacity: 0.9 });
 
   if (loc.unlocked) {
     marker.bindPopup(buildPopup(loc), { maxWidth: 240 });
