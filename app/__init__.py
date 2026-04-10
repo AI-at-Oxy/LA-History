@@ -32,14 +32,11 @@ def create_app(config_name=None):
     from .routes.progress import progress_bp
     from .routes.quiz import quiz_bp
     from .routes.chat import chat_bp
-    from .routes.voice import voice_bp
-
     app.register_blueprint(auth_bp)
     app.register_blueprint(map_bp)
     app.register_blueprint(progress_bp)
     app.register_blueprint(quiz_bp)
     app.register_blueprint(chat_bp)
-    app.register_blueprint(voice_bp)
 
     # Create tables
     with app.app_context():

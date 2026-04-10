@@ -166,57 +166,12 @@ function initSettingsModal() {
   // Voice input settings
   if (typeof Voice !== 'undefined') {
     const voiceEnabledToggle = document.getElementById('voice-enabled-toggle');
-    const voiceMethodSelect  = document.getElementById('voice-method-select');
-    const ollamaStatusRow    = document.getElementById('voice-ollama-status-row');
-    const ollamaStatusText   = document.getElementById('voice-ollama-status-text');
 
     if (voiceEnabledToggle) {
       voiceEnabledToggle.checked = (localStorage.getItem('voice_enabled') || 'on') === 'on';
       voiceEnabledToggle.onchange = () => {
         Voice.applySettings({ enabled: voiceEnabledToggle.checked });
       };
-    }
-
-    if (voiceMethodSelect) {
-      voiceMethodSelect.value = localStorage.getItem('voice_method') || 'browser';
-      // Show/hide Ollama status row based on current selection
-      function _updateOllamaRow() {
-        if (ollamaStatusRow) {
-          ollamaStatusRow.style.display = voiceMethodSelect.value === 'ollama' ? '' : 'none';
-        }
-      }
-      _updateOllamaRow();
-
-      voiceMethodSelect.onchange = () => {
-        Voice.applySettings({ method: voiceMethodSelect.value });
-        _updateOllamaRow();
-        // Populate status text if switching to ollama
-        if (voiceMethodSelect.value === 'ollama' && ollamaStatusText) {
-          if (Voice.ollamaAvailable === null) {
-            ollamaStatusText.textContent = 'Checking…';
-            ollamaStatusText.style.color = 'var(--text-muted)';
-          } else {
-            ollamaStatusText.textContent = Voice.ollamaAvailable
-              ? `Available (${Voice.ollamaModel})`
-              : 'Unavailable';
-            ollamaStatusText.style.color = Voice.ollamaAvailable
-              ? 'var(--success, #3a7a3a)'
-              : 'var(--text-muted)';
-          }
-        }
-      };
-    }
-
-    // Populate Ollama status if method is already set to ollama
-    if (voiceMethodSelect && voiceMethodSelect.value === 'ollama' && ollamaStatusText) {
-      if (Voice.ollamaAvailable !== null) {
-        ollamaStatusText.textContent = Voice.ollamaAvailable
-          ? `Available (${Voice.ollamaModel})`
-          : 'Unavailable';
-        ollamaStatusText.style.color = Voice.ollamaAvailable
-          ? 'var(--success, #3a7a3a)'
-          : 'var(--text-muted)';
-      }
     }
   }
 
