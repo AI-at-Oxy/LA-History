@@ -98,6 +98,8 @@ function initMap() {
   }).addTo(map);
 
   loadLocations();
+
+  map.on('zoomend', () => { if (typeof SFX !== 'undefined') SFX.play('zoom'); });
 }
 
 async function loadLocations() {
@@ -166,6 +168,7 @@ function createMarker(loc) {
       <div class="map-popup-name">🔒 ${loc.name}</div>
       <div class="map-popup-locked">Complete earlier quizzes to unlock ${eraLabel(loc.era)}.</div>
     `, { maxWidth: 220 });
+    marker.on('click', () => { if (typeof SFX !== 'undefined') SFX.play('locked'); });
   }
 
   return marker;
@@ -188,6 +191,14 @@ async function onMarkerClick(locationId) {
   activeLocationId = locationId;
   map.closePopup();
 
+  // Sound + bounce animation
+  if (typeof SFX !== 'undefined') SFX.play('marker-click');
+  const mIcon = markersById[locationId]?._icon?.querySelector('.map-marker');
+  if (mIcon) {
+    mIcon.classList.add('clicked');
+    mIcon.addEventListener('animationend', () => mIcon.classList.remove('clicked'), { once: true });
+  }
+
   try {
     const loc = await apiFetch(`/api/locations/${locationId}`);
     openDetailPanel(loc);
@@ -203,7 +214,11 @@ async function onMarkerClick(locationId) {
           // Refresh this marker
           const updated = { ...loc, visited: true, unlocked: true };
           refreshSingleMarker(updated);
-          loadProgress();
+          if (res.new_badges && res.new_badges.length > 0) {
+            handleNewBadges(res.new_badges);
+          } else {
+            loadProgress();
+          }
         })
         .catch(() => {});
     }
@@ -345,6 +360,7 @@ function timelineTTSToggle(btn, text) {
 }
 
 function closeDetailPanel() {
+  if (typeof SFX !== 'undefined') SFX.play('panel-close');
   document.getElementById('detail-panel').classList.remove('open');
   const desc = document.getElementById('detail-full-desc');
   if (desc) restoreDescHTML(desc);

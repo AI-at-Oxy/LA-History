@@ -69,10 +69,71 @@ function updatePointsDisplay(newTotal) {
 }
 
 function handleNewBadges(badges) {
-  badges.forEach(b => {
-    showToast(`${b.icon} Badge unlocked: ${b.name}!`, 'badge', 5000);
+  if (!badges.length) return;
+
+  // Show celebration overlay for each badge sequentially.
+  // Start after 600ms so the detail panel finishes opening and the
+  // user isn't mid-click when the overlay appears.
+  let delay = 600;
+  badges.forEach((b, i) => {
+    setTimeout(() => showBadgeCelebration(b), delay);
+    delay += 3000;  // stagger multiple badges
   });
-  loadProgress(); // Refresh badge grid
+
+  // Refresh sidebar after all celebrations
+  setTimeout(() => {
+    loadProgress().then(() => {
+      const badgeNames = badges.map(b => b.name);
+      document.querySelectorAll('.badge-item').forEach(el => {
+        const nameEl = el.querySelector('.badge-name');
+        if (nameEl && badgeNames.includes(nameEl.textContent)) {
+          el.classList.add('newly-earned');
+        }
+      });
+    });
+  }, delay);
+}
+
+function showBadgeCelebration(badge) {
+  if (typeof SFX !== 'undefined') SFX.play('badge-earned');
+
+  const overlay = document.createElement('div');
+  overlay.className = 'badge-celebration-overlay active';
+
+  // Build particle dots in a ring
+  let particlesHTML = '';
+  const count = 10;
+  for (let i = 0; i < count; i++) {
+    const angle = (360 / count) * i;
+    const rad = angle * Math.PI / 180;
+    const x = 50 + Math.cos(rad) * 46;
+    const y = 50 + Math.sin(rad) * 46;
+    const hue = 35 + (i * 8);  // gold spectrum
+    const d = 0.2 + i * 0.06;
+    particlesHTML += `<div class="particle" style="left:${x}%;top:${y}%;background:hsl(${hue},75%,58%);animation-delay:${d}s"></div>`;
+  }
+
+  overlay.innerHTML = `
+    <div class="badge-celebration-card">
+      <div class="badge-celebration-glow"></div>
+      <div class="badge-celebration-particles">${particlesHTML}</div>
+      <div class="badge-celebration-icon">${badge.icon}</div>
+      <div class="badge-celebration-label">Badge Unlocked</div>
+      <div class="badge-celebration-name">${badge.name}</div>
+      <div class="badge-celebration-desc">${badge.description || ''}</div>
+    </div>
+  `;
+
+  document.body.appendChild(overlay);
+
+  // Allow click to dismiss — but only after the card is fully visible (~500ms in),
+  // so accidental clicks during the initial transparent phase don't kill it.
+  setTimeout(() => {
+    overlay.addEventListener('click', () => overlay.remove());
+  }, 500);
+
+  // Auto-remove after animation completes
+  setTimeout(() => { if (overlay.parentNode) overlay.remove(); }, 2700);
 }
 
 // Sidebar toggle
@@ -82,6 +143,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (!sidebar || !toggle) return;
 
   toggle.addEventListener('click', () => {
+    if (typeof SFX !== 'undefined') SFX.play('sidebar-toggle');
     const collapsed = sidebar.classList.toggle('collapsed');
     toggle.textContent = collapsed ? '›' : '‹';
     toggle.classList.toggle('collapsed', collapsed);

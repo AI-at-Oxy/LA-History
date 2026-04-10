@@ -75,5 +75,6 @@ def submit_quiz(location_id):
         'points_earned': outcome['points_earned'],
         'total_points': current_user.total_points,
         'newly_unlocked': outcome['newly_unlocked'],
+        'new_badges': outcome['new_badges'],
         'results': results,
     })

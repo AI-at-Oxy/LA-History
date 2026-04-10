@@ -26,9 +26,11 @@ async function openQuiz(locationId) {
 
   renderQuizQuestion();
   overlay().classList.add('open');
+  if (typeof SFX !== 'undefined') SFX.play('quiz-open');
 }
 
 function closeQuiz() {
+  if (typeof SFX !== 'undefined') SFX.play('panel-close');
   overlay().classList.remove('open');
   TTS.stop();
 }
@@ -99,6 +101,9 @@ function selectOption(btn, q) {
   if (quizSubmitted) return;
   document.querySelectorAll('.quiz-option').forEach(b => b.classList.remove('selected'));
   btn.classList.add('selected');
+  btn.classList.add('just-selected');
+  btn.addEventListener('animationend', () => btn.classList.remove('just-selected'), { once: true });
+  if (typeof SFX !== 'undefined') SFX.play('hover');
   currentAnswers[q.id] = btn.dataset.value;
   document.getElementById('quiz-next-btn').disabled = false;
 }
@@ -155,10 +160,16 @@ async function submitQuiz() {
     }, 1500);
   }
 
-  loadProgress();
+  if (result.new_badges && result.new_badges.length > 0) {
+    handleNewBadges(result.new_badges);
+  } else {
+    loadProgress();
+  }
 }
 
 function renderResults(result) {
+  if (typeof SFX !== 'undefined') SFX.play(result.passed ? 'quiz-success' : 'quiz-error');
+
   const passed = result.passed;
   const pct = result.score_percent;
 
@@ -194,6 +205,10 @@ function renderResults(result) {
       </div>
     </div>
   `;
+
+  // Trigger results pop animation
+  const resultsEl = modal().querySelector('.quiz-results');
+  if (resultsEl) resultsEl.classList.add('animate');
 }
 
 function retryQuiz() {

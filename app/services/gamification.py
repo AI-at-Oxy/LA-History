@@ -30,10 +30,10 @@ def award_points(user, points):
 
 
 def record_visit(user_id, location_id):
-    """Mark a location visited and award points if first visit. Returns points earned."""
+    """Mark a location visited and award points if first visit. Returns dict with points and badges."""
     progress = get_or_create_progress(user_id, location_id)
     if progress.visited:
-        return 0
+        return {'points_earned': 0, 'new_badges': []}
 
     progress.visited = True
     progress.visited_at = datetime.utcnow()
@@ -43,8 +43,8 @@ def record_visit(user_id, location_id):
     award_points(user, POINTS_VISIT)
     db.session.commit()
 
-    check_and_award_badges(user)
-    return POINTS_VISIT
+    new_badges = check_and_award_badges(user)
+    return {'points_earned': POINTS_VISIT, 'new_badges': new_badges}
 
 
 def record_quiz_result(user_id, location_id, score_percent, quiz_points_reward):
@@ -80,12 +80,13 @@ def record_quiz_result(user_id, location_id, score_percent, quiz_points_reward):
     db.session.commit()
 
     newly_unlocked = check_era_unlocks(user_id)
-    check_and_award_badges(user)
+    new_badges = check_and_award_badges(user)
 
     return {
         'passed': passed,
         'points_earned': points_earned,
         'newly_unlocked': newly_unlocked,
+        'new_badges': new_badges,
     }
 
 

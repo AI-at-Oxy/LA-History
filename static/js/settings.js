@@ -3,12 +3,14 @@
    ========================================= */
 
 function openSettings() {
+  if (typeof SFX !== 'undefined') SFX.play('settings-open');
   document.getElementById('settings-overlay').classList.add('open');
   initSettingsModal();
 }
 
 function closeSettings(e) {
   if (e && e.target !== document.getElementById('settings-overlay')) return;
+  if (typeof SFX !== 'undefined') SFX.play('panel-close');
   document.getElementById('settings-overlay').classList.remove('open');
 }
 
@@ -129,6 +131,13 @@ function initSettingsModal() {
       hlToggle.checked = localStorage.getItem('tts_word_highlight') === 'on';
       hlToggle.onchange = () => localStorage.setItem('tts_word_highlight', hlToggle.checked ? 'on' : 'off');
     }
+  }
+
+  // Sound effects toggle
+  const sfxToggle = document.getElementById('sfx-toggle');
+  if (sfxToggle && typeof SFX !== 'undefined') {
+    sfxToggle.checked = SFX.isEnabled();
+    sfxToggle.onchange = () => SFX.setEnabled(sfxToggle.checked);
   }
 
   // Font size slider

@@ -20,6 +20,7 @@ function openChat(locationId, locationName) {
 }
 
 function toggleChat() {
+  if (typeof SFX !== 'undefined') SFX.play('chat-toggle');
   const panel = document.getElementById('chat-panel');
   chatOpen = !chatOpen;
   panel.classList.toggle('open', chatOpen);
@@ -57,6 +58,7 @@ async function sendChatMessage() {
 
   input.value = '';
   input.style.height = 'auto';
+  if (typeof SFX !== 'undefined') SFX.play('chat-send');
   appendMessage('user', text);
   showTyping();
   chatLoading = true;
@@ -68,6 +70,7 @@ async function sendChatMessage() {
       location_id: chatLocationId,
     });
     removeTyping();
+    if (typeof SFX !== 'undefined') SFX.play('chat-receive');
     appendMessage('assistant', data.reply);
   } catch (e) {
     removeTyping();
@@ -143,6 +146,7 @@ function escapeHtml(text) {
 
 async function clearChatHistory() {
   if (!confirm('Clear your conversation history?')) return;
+  if (typeof SFX !== 'undefined') SFX.play('clear-chat');
   try {
     await apiFetch('/api/chat/history', 'DELETE');
     const messages = document.getElementById('chat-messages');

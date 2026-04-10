@@ -144,6 +144,14 @@ a:hover { color: var(--accent-dark); text-decoration: underline; }
   font-size: 0.8rem;
 }
 
+.navbar-greeting {
+  color: #c8bfb0;
+  font-size: 0.9rem;
+  font-weight: 500;
+  margin-left: 10px;
+  white-space: nowrap;
+}
+
 /* ---- Flash messages ---- */
 .flash-container {
   position: fixed;
