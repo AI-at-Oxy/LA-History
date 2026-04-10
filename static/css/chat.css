@@ -98,6 +98,10 @@
   transition: background 0.18s, color 0.18s, border-color 0.18s;
 }
 .chat-action-btn:hover { background: rgba(255,255,255,0.18); border-color: rgba(255,255,255,0.30); color: #e8e4dc; }
+.chat-action-btn svg { transition: transform 0.3s cubic-bezier(0.22,1,0.36,1); }
+#chat-clear-btn:hover svg { transform: rotate(-15deg) scale(1.1); }
+#chat-toggle-btn { transition: background 0.18s, color 0.18s, border-color 0.18s, transform 0.3s cubic-bezier(0.22,1,0.36,1); }
+#chat-toggle-btn:hover { transform: translateY(-2px); }
 
 /* Messages area */
 .chat-messages {

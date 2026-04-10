@@ -100,7 +100,9 @@ a:hover { color: var(--accent-dark); text-decoration: underline; }
   height: 26px;
   opacity: 0.9;
   flex-shrink: 0;
+  transition: transform 0.5s cubic-bezier(0.22,1,0.36,1);
 }
+.navbar-brand:hover .navbar-brand-icon { transform: rotate(30deg); }
 
 .navbar-brand-text { display: flex; align-items: baseline; gap: 5px; }
 .navbar-brand-text .la { color: var(--accent-gold); }
@@ -399,10 +401,10 @@ html.dark-map .leaflet-tile-pane {
   padding: 5px 8px;
   border-radius: 6px;
   line-height: 1;
-  transition: background 0.18s;
+  transition: background 0.18s, transform 0.35s cubic-bezier(0.22,1,0.36,1);
   color: #b0a898;
 }
-#dark-mode-btn:hover { background: rgba(255,255,255,0.08); }
+#dark-mode-btn:hover { background: rgba(255,255,255,0.08); transform: rotate(-25deg); }
 
 /* Settings gear button */
 #settings-btn {
@@ -473,9 +475,9 @@ html.dark-map .leaflet-tile-pane {
   color: var(--text-muted);
   padding: 2px 6px;
   border-radius: 5px;
-  transition: background 0.15s, color 0.15s;
+  transition: background 0.15s, color 0.15s, transform 0.25s cubic-bezier(0.22,1,0.36,1);
 }
-.settings-close:hover { background: var(--border-light); color: var(--text); }
+.settings-close:hover { background: var(--border-light); color: var(--text); transform: rotate(90deg); }
 
 /* ---- Accordion ---- */
 .settings-accordion {

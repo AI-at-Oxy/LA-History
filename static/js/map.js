@@ -91,6 +91,7 @@ function initMap() {
     maxBounds: [[33.65, -118.80], [34.45, -117.55]],
     maxBoundsViscosity: 1.0,
   });
+  window._leafletMap = map;
 
   L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
     attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors © <a href="https://carto.com/attributions">CARTO</a>',

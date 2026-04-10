@@ -257,10 +257,10 @@
   justify-content: center;
   color: var(--text-muted);
   font-size: 0.72rem;
-  transition: left 0.3s cubic-bezier(0.4,0,0.2,1), background 0.18s, color 0.18s;
+  transition: left 0.3s cubic-bezier(0.4,0,0.2,1), background 0.18s, color 0.18s, box-shadow 0.18s;
   box-shadow: 2px 0 6px rgba(0,0,0,0.08);
 }
-.sidebar-toggle:hover { background: #eee8d8; color: var(--accent); }
+.sidebar-toggle:hover { background: #eee8d8; color: var(--accent); box-shadow: 3px 0 12px rgba(184,115,26,0.18); }
 .sidebar-toggle.collapsed { left: 0; }
 
 /* ---- Map loading overlay ---- */
@@ -440,9 +440,9 @@
   border-radius: 5px;
   line-height: 1;
   margin-left: auto;
-  transition: background 0.18s, color 0.18s;
+  transition: background 0.18s, color 0.18s, transform 0.25s cubic-bezier(0.22,1,0.36,1);
 }
-.detail-close:hover { background: #eee8d8; color: var(--text); }
+.detail-close:hover { background: #eee8d8; color: var(--text); transform: rotate(90deg); }
 
 .detail-panel-body {
   flex: 1;

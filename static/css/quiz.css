@@ -77,9 +77,9 @@
   border-radius: 6px;
   line-height: 1;
   flex-shrink: 0;
-  transition: background 0.18s, color 0.18s;
+  transition: background 0.18s, color 0.18s, transform 0.25s cubic-bezier(0.22,1,0.36,1);
 }
-.quiz-close:hover { background: #eee8d8; color: var(--text); }
+.quiz-close:hover { background: #eee8d8; color: var(--text); transform: rotate(90deg); }
 
 /* Progress bar */
 .quiz-progress-bar {

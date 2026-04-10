@@ -148,5 +148,9 @@ document.addEventListener('DOMContentLoaded', () => {
     toggle.textContent = collapsed ? '›' : '‹';
     toggle.classList.toggle('collapsed', collapsed);
     toggle.style.left = collapsed ? '0' : 'var(--sidebar-w)';
+    // Let the CSS transition finish, then tell Leaflet to recalculate its size
+    setTimeout(() => {
+      if (window._leafletMap) window._leafletMap.invalidateSize();
+    }, 320);
   });
 });
