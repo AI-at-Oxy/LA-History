@@ -94,7 +94,20 @@
     </div>
   </div>
   <div class="chat-input-area">
-    <textarea id="chat-input" placeholder="Ask about this location…" rows="1"></textarea>
+    <div class="chat-input-wrap">
+      <textarea id="chat-input" placeholder="Ask about this location…" rows="1"></textarea>
+      <button class="chat-mic-btn" id="chat-mic-btn"
+              title="Voice input"
+              aria-label="Start voice input"
+              aria-pressed="false">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="9" y="2" width="6" height="11" rx="3"/>
+          <path d="M5 10a7 7 0 0 0 14 0"/>
+          <line x1="12" y1="19" x2="12" y2="23"/>
+          <line x1="8" y1="23" x2="16" y2="23"/>
+        </svg>
+      </button>
+    </div>
     <button class="chat-send-btn" id="chat-send-btn" title="Send">
       <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M13 7.5L2 2l2.5 5.5L2 13l11-5.5z" fill="currentColor"/></svg>
     </button>
@@ -119,5 +132,6 @@
 <script src="{{ url_for('static', filename='js/progress.js') }}"></script>
 <script src="{{ url_for('static', filename='js/quiz.js') }}"></script>
 <script src="{{ url_for('static', filename='js/chat.js') }}"></script>
+<script src="{{ url_for('static', filename='js/voice.js') }}"></script>
 <script src="{{ url_for('static', filename='js/map.js') }}"></script>
 {% endblock %}

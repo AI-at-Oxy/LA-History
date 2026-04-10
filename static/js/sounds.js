@@ -235,6 +235,27 @@ const SFX = (() => {
       osc.start(); osc.stop(ctx.currentTime + 0.04);
       return new Promise(r => setTimeout(r, 40));
     },
+
+    // Two ascending notes — microphone recording started
+    'mic-start': (ctx) => {
+      note(ctx, 660, 'sine', 0.10, 0,    0.08);  // E5
+      note(ctx, 880, 'sine', 0.11, 0.07, 0.10);  // A5
+      return new Promise(r => setTimeout(r, 170));
+    },
+
+    // Single descending note — microphone recording stopped
+    'mic-stop': (ctx) => {
+      const osc = ctx.createOscillator();
+      const vol = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(660, ctx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(440, ctx.currentTime + 0.10);
+      vol.gain.setValueAtTime(0.10, ctx.currentTime);
+      vol.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.12);
+      osc.connect(vol).connect(ctx.destination);
+      osc.start(); osc.stop(ctx.currentTime + 0.12);
+      return new Promise(r => setTimeout(r, 120));
+    },
   };
 
   return { isEnabled, setEnabled, play };

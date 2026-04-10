@@ -35,7 +35,7 @@ Flask 3 with modular blueprints, SQLAlchemy ORM, Flask-Login auth, CSRF protecti
 - `app/__init__.py` — `create_app()` factory, registers all blueprints, redirects `/` to `/map`
 - `app/models/` — SQLAlchemy models: User, Location, HistoricalEvent, UserProgress, Badge, UserBadge, Quiz, QuizQuestion, ChatSession, ChatMessage
 - `app/routes/` — Blueprints: `auth` (login/register/logout), `map` (/api/locations), `progress` (/api/progress), `quiz` (/api/quiz), `chat` (/api/chat)
-- `app/services/gamification.py` — Points/badge/era-unlock logic (10 pts visit, 50 pts quiz pass, 100 pts era complete; era unlock gates via quiz-pass thresholds)
+- `app/services/gamification.py` — Points/badge/era-unlock logic (10 pts visit; quiz pass on first attempt = full reward, retry = half; +20 bonus for ≥90%; 100 pts era complete; era unlock gates via quiz-pass thresholds)
 - `app/services/ollama_service.py` — Socratic tutor; connects to local Ollama, keeps 6-message rolling context per session
 
 ### Frontend (`templates/` + `static/`)
@@ -43,12 +43,20 @@ Flask 3 with modular blueprints, SQLAlchemy ORM, Flask-Login auth, CSRF protecti
 Flask-rendered Jinja2 templates with vanilla JS and custom CSS.
 
 - `templates/map/index.html` — Main map page (sidebar, Leaflet map, detail panel, quiz modal, chat)
-- `templates/auth/` — Login and register forms
-- `templates/base.html` — Base layout
+- `templates/dashboard/index.html` — Progress dashboard
+- `templates/auth/` — Login, register, forgot-password, reset-password forms
+- `templates/base.html` — Base layout (navbar, settings modal, flash messages)
 - `static/js/map.js` — Leaflet map init, marker rendering, location detail
 - `static/js/quiz.js` — Quiz modal logic
 - `static/js/chat.js` — Socratic tutor chat panel
 - `static/js/progress.js` — Era progress and badge display
+- `static/js/tts.js` — Text-to-speech for location descriptions
+- `static/js/sounds.js` — Sound effects
+- `static/js/settings.js` — Settings modal (theme, TTS, SFX, font/marker size, reset progress)
+- `static/js/utils.js` — Shared utilities
+- `static/css/main.css` — Global styles and theme variables
+- `static/css/map.css`, `quiz.css`, `chat.css`, `auth.css` — Component styles
+- `static/css/animations.css` — Transition and animation definitions
 
 ### Data Flow
 
@@ -74,6 +82,7 @@ Flask-rendered Jinja2 templates with vanilla JS and custom CSS.
 | `app/extensions.py` | Flask extensions: `db`, `login_manager`, `bcrypt`, `csrf` |
 | `data/locations.json` | Source of truth for 57 historical locations |
 | `data/quizzes.json` | Quiz questions per location |
+| `static/favicon.svg` | Browser tab icon (compass design) |
 
 ## Environment Variables
 
