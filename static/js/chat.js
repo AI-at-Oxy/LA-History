@@ -26,6 +26,7 @@ function toggleChat() {
   panel.classList.toggle('open', chatOpen);
   const btn = document.getElementById('chat-toggle-btn');
   if (btn) btn.textContent = chatOpen ? '▼' : '▲';
+  try { localStorage.setItem('chat_panel_open', chatOpen ? '1' : '0'); } catch (e) {}
 }
 
 async function loadChatHistory(locationId) {
@@ -149,6 +150,7 @@ async function clearChatHistory() {
   if (typeof SFX !== 'undefined') SFX.play('clear-chat');
   try {
     await apiFetch('/api/chat/history', 'DELETE');
+    chatLocationId = null;
     const messages = document.getElementById('chat-messages');
     messages.innerHTML = `
       <div class="chat-intro">
@@ -183,6 +185,24 @@ function chatTTSToggle(btn, content) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+  // Restore chat session and panel state after page navigation
+  (async () => {
+    try {
+      const data = await apiFetch('/api/chat/history');
+      if (!data.messages || data.messages.length === 0) return;
+      const messages = document.getElementById('chat-messages');
+      messages.innerHTML = '';
+      data.messages.forEach(m => appendMessage(m.role, m.content, false));
+      scrollToBottom();
+      const wasOpen = localStorage.getItem('chat_panel_open') === '1';
+      if (wasOpen) {
+        const panel = document.getElementById('chat-panel');
+        panel.classList.add('open');
+        chatOpen = true;
+      }
+    } catch (e) { console.error('Failed to restore chat history:', e); }
+  })();
+
   // Header toggle
   document.getElementById('chat-panel-header').addEventListener('click', e => {
     if (e.target.closest('.chat-panel-actions')) return;

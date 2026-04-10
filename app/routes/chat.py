@@ -67,6 +67,18 @@ def chat():
     return jsonify({'reply': reply})
 
 
+@chat_bp.route('/api/chat/history', methods=['GET'])
+@login_required
+def get_general_history():
+    session = ChatSession.query.filter_by(
+        user_id=current_user.id, location_id=None
+    ).first()
+    if not session:
+        return jsonify({'messages': []})
+    messages = [msg.to_dict() for msg in session.messages]
+    return jsonify({'messages': messages})
+
+
 @chat_bp.route('/api/chat/history/<int:location_id>')
 @login_required
 def get_history(location_id):

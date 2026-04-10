@@ -77,7 +77,7 @@ function renderQuizQuestion() {
 function buildOptions(q) {
   if (q.question_type === 'true_false') {
     return ['True', 'False'].map((label, i) => {
-      const val = i === 0 ? 't' : 'f';
+      const val = i === 0 ? 'a' : 'b';
       return optionHTML(val, label.charAt(0), label);
     }).join('');
   }

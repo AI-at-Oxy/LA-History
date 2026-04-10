@@ -389,7 +389,7 @@ html.dark .location-table tr:hover td { background: #2a231c; }
         <span class="hero-stat-label">Quizzes Passed</span>
       </div>
       <div class="hero-stat">
-        <span class="hero-stat-value">{{ summary.badges | length }}</span>
+        <span class="hero-stat-value">{{ summary.badges | selectattr('earned') | list | length }}</span>
         <span class="hero-stat-label">Badges</span>
       </div>
     </div>
