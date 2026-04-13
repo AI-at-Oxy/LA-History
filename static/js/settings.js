@@ -79,6 +79,14 @@ function applyMarkerSize(size) {
   }
 }
 
+function applyAnimSpeed(preset) {
+  const html = document.documentElement;
+  html.classList.remove('anim-reduced', 'anim-off');
+  if (preset === 'reduced') html.classList.add('anim-reduced');
+  if (preset === 'off')     html.classList.add('anim-off');
+  localStorage.setItem('anim_speed', preset);
+}
+
 // Apply saved settings on page load (before modal is ever opened)
 (function applySavedSettings() {
   const savedFontSize = localStorage.getItem('font_size');
@@ -89,6 +97,10 @@ function applyMarkerSize(size) {
   if (savedMarkerSize) {
     document.documentElement.style.setProperty('--marker-size', (parseInt(savedMarkerSize) + 2) + 'px');
   }
+  const savedAnimSpeed = localStorage.getItem('anim_speed');
+  if (savedAnimSpeed && savedAnimSpeed !== 'normal') applyAnimSpeed(savedAnimSpeed);
+  const savedVol = localStorage.getItem('sfx_volume');
+  if (savedVol && typeof SFX !== 'undefined') SFX.setVolume(parseFloat(savedVol));
 })();
 
 function initSettingsModal() {
@@ -98,6 +110,20 @@ function initSettingsModal() {
     const current = localStorage.getItem('darkMode') || 'light';
     themeSel.value = (current === 'true') ? 'semi-dark' : (current === 'false' ? 'light' : current);
     themeSel.onchange = () => setTheme(themeSel.value);
+  }
+
+  // Map tile style
+  const tileSel = document.getElementById('map-tile-select');
+  if (tileSel) {
+    tileSel.value = localStorage.getItem('map_tile_style') || 'voyager';
+    tileSel.onchange = () => { if (typeof setTileStyle === 'function') setTileStyle(tileSel.value); };
+  }
+
+  // Animation speed preset
+  const animSel = document.getElementById('anim-speed-select');
+  if (animSel) {
+    animSel.value = localStorage.getItem('anim_speed') || 'normal';
+    animSel.onchange = () => applyAnimSpeed(animSel.value);
   }
 
   // TTS settings (only if TTS is available)
@@ -138,6 +164,18 @@ function initSettingsModal() {
   if (sfxToggle && typeof SFX !== 'undefined') {
     sfxToggle.checked = SFX.isEnabled();
     sfxToggle.onchange = () => SFX.setEnabled(sfxToggle.checked);
+  }
+
+  // SFX volume slider
+  const volSlider = document.getElementById('sfx-volume-slider');
+  const volVal    = document.getElementById('sfx-volume-val');
+  if (volSlider && typeof SFX !== 'undefined') {
+    volSlider.value = SFX.getVolume();
+    if (volVal) volVal.textContent = Math.round(SFX.getVolume() * 100) + '%';
+    volSlider.oninput = () => {
+      SFX.setVolume(parseFloat(volSlider.value));
+      if (volVal) volVal.textContent = Math.round(volSlider.value * 100) + '%';
+    };
   }
 
   // Font size slider

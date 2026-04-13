@@ -22,6 +22,9 @@ function renderSidebar(data) {
   const counterEl = document.getElementById('sidebar-visited-counter');
   if (counterEl) counterEl.textContent = `${data.total_visited}/${data.total_locations} visited`;
 
+  // Milestone toasts
+  checkMilestoneToasts(data.total_visited);
+
   // Overall completion ring (based on quizzes passed)
   const ringFill = document.getElementById('sidebar-ring-fill');
   const ringPct  = document.getElementById('sidebar-ring-pct');
@@ -36,11 +39,21 @@ function renderSidebar(data) {
   // Era progress bars
   const list = document.getElementById('era-progress-list');
   if (list) {
-    list.innerHTML = data.eras.map(era => {
+    // Jump bar
+    const jumpBar = `
+      <div class="era-jump-bar">
+        ${data.eras.map(era => `
+          <button class="era-jump-btn" style="color:${eraColor(era.era)}"
+                  onclick="document.getElementById('era-section-${era.era}')?.scrollIntoView({behavior:'smooth',block:'start'})">
+            ${eraEmoji(era.era)} ${era.era.charAt(0).toUpperCase() + era.era.slice(1)}
+          </button>`).join('')}
+      </div>`;
+
+    const items = data.eras.map(era => {
       const pct = era.total > 0 ? Math.round((era.passed / era.total) * 100) : 0;
       const color = eraColor(era.era);
       return `
-        <div class="era-progress-item">
+        <div class="era-progress-item" id="era-section-${era.era}">
           <div class="era-progress-header">
             <span class="era-progress-name">${eraEmoji(era.era)} ${era.era.charAt(0).toUpperCase() + era.era.slice(1)}</span>
             <span class="era-progress-stat">${era.passed}/${era.total} passed</span>
@@ -56,6 +69,8 @@ function renderSidebar(data) {
         </div>
       `;
     }).join('');
+
+    list.innerHTML = jumpBar + items;
   }
 
   // Badges
@@ -154,6 +169,21 @@ function showBadgeCelebration(badge) {
 
   // Auto-remove after animation completes
   setTimeout(() => { if (overlay.parentNode) overlay.remove(); }, 2700);
+}
+
+function checkMilestoneToasts(totalVisited) {
+  const milestones = [1, 5, 10, 15, 20, 25, 30, 40, 50];
+  const prev = parseInt(localStorage.getItem('last_milestone_visited') || '0');
+  for (const m of milestones) {
+    if (totalVisited >= m && prev < m) {
+      localStorage.setItem('last_milestone_visited', String(m));
+      setTimeout(() => {
+        showToast(`🎉 ${m} location${m === 1 ? '' : 's'} visited! Keep exploring!`, 'milestone', 5000);
+        if (typeof SFX !== 'undefined') SFX.play('quiz-success');
+      }, 500);
+      break;
+    }
+  }
 }
 
 // Sidebar toggle

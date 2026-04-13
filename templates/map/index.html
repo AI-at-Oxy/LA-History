@@ -68,6 +68,21 @@
       <div class="map-loader-ring"></div>
       <span class="map-loader-text">Loading map…</span>
     </div>
+
+    <!-- Era filter toolbar -->
+    <div id="era-filter-bar">
+      <button class="era-filter-btn active" data-era="all" onclick="applyEraFilter('all')">All</button>
+      <button class="era-filter-btn active" data-era="native" onclick="applyEraFilter('native')">🌿 Tongva</button>
+      <button class="era-filter-btn active" data-era="spanish" onclick="applyEraFilter('spanish')">⚓ Spanish</button>
+      <button class="era-filter-btn active" data-era="rancho" onclick="applyEraFilter('rancho')">🏗️ Rancho</button>
+      <button class="era-filter-btn active" data-era="modern" onclick="applyEraFilter('modern')">🌆 Modern</button>
+    </div>
+
+    <!-- Location search bar -->
+    <div id="map-search-wrap">
+      <input id="map-search-input" type="search" placeholder="Search locations…" autocomplete="off" spellcheck="false">
+      <div id="map-search-results"></div>
+    </div>
   </div>
 
   <!-- Right Detail Panel -->
@@ -171,8 +186,10 @@
 
     <div class="cm-panel-footer">
       <div class="cm-footer-left">
-        <span class="cm-edge-count" id="cm-edge-count">0 connections</span>
+        <span class="cm-edge-count" id="cm-graph-stats">0 connections</span>
         <span class="cm-save-indicator" id="cm-save-indicator"></span>
+        <button class="cm-btn cm-btn-secondary" id="cm-fit-btn" title="Fit all nodes in view">⤢ Fit</button>
+        <button class="cm-btn cm-btn-secondary" id="cm-layout-btn" title="Auto-arrange nodes">⟳ Layout</button>
         <button class="cm-btn cm-btn-secondary cm-clear-all-btn" id="cm-clear-btn">Clear All</button>
       </div>
       <div class="cm-footer-right">

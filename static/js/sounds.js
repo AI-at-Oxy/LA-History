@@ -5,15 +5,33 @@
 
 const SFX = (() => {
   let audioCtx = null;
+  let masterGain = null;
   let enabled = localStorage.getItem('sfx_enabled') !== 'off';
+  let volume = parseFloat(localStorage.getItem('sfx_volume') || '0.8');
   let playing = false;
 
   function getCtx() {
     if (!audioCtx) {
       audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      masterGain = audioCtx.createGain();
+      masterGain.gain.value = volume;
+      masterGain.connect(audioCtx.destination);
     }
     return audioCtx;
   }
+
+  function getMasterGain() {
+    getCtx(); // ensure initialized
+    return masterGain;
+  }
+
+  function setVolume(val) {
+    volume = Math.max(0, Math.min(1, val));
+    if (masterGain) masterGain.gain.value = volume;
+    localStorage.setItem('sfx_volume', String(volume));
+  }
+
+  function getVolume() { return volume; }
 
   function isEnabled() { return enabled; }
 
@@ -44,7 +62,7 @@ const SFX = (() => {
     osc.frequency.setValueAtTime(freq, ctx.currentTime + start);
     vol.gain.setValueAtTime(gain, ctx.currentTime + start);
     vol.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + start + dur);
-    osc.connect(vol).connect(ctx.destination);
+    osc.connect(vol).connect(getMasterGain());
     osc.start(ctx.currentTime + start);
     osc.stop(ctx.currentTime + start + dur);
   }
@@ -61,7 +79,7 @@ const SFX = (() => {
       osc.frequency.exponentialRampToValueAtTime(440, ctx.currentTime + 0.1);
       vol.gain.setValueAtTime(0.15, ctx.currentTime);
       vol.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.12);
-      osc.connect(vol).connect(ctx.destination);
+      osc.connect(vol).connect(getMasterGain());
       osc.start(); osc.stop(ctx.currentTime + 0.12);
       return new Promise(r => setTimeout(r, 120));
     },
@@ -107,7 +125,7 @@ const SFX = (() => {
       osc.frequency.setValueAtTime(1200, ctx.currentTime);
       vol.gain.setValueAtTime(0.06, ctx.currentTime);
       vol.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.03);
-      osc.connect(vol).connect(ctx.destination);
+      osc.connect(vol).connect(getMasterGain());
       osc.start(); osc.stop(ctx.currentTime + 0.03);
       return new Promise(r => setTimeout(r, 30));
     },
@@ -121,7 +139,7 @@ const SFX = (() => {
       osc.frequency.exponentialRampToValueAtTime(300, ctx.currentTime + 0.12);
       vol.gain.setValueAtTime(0.10, ctx.currentTime);
       vol.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.14);
-      osc.connect(vol).connect(ctx.destination);
+      osc.connect(vol).connect(getMasterGain());
       osc.start(); osc.stop(ctx.currentTime + 0.14);
       return new Promise(r => setTimeout(r, 140));
     },
@@ -141,7 +159,7 @@ const SFX = (() => {
       osc.frequency.setValueAtTime(700, ctx.currentTime);
       vol.gain.setValueAtTime(0.09, ctx.currentTime);
       vol.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.08);
-      osc.connect(vol).connect(ctx.destination);
+      osc.connect(vol).connect(getMasterGain());
       osc.start(); osc.stop(ctx.currentTime + 0.08);
       return new Promise(r => setTimeout(r, 80));
     },
@@ -155,7 +173,7 @@ const SFX = (() => {
       osc.frequency.exponentialRampToValueAtTime(180, ctx.currentTime + 0.09);
       vol.gain.setValueAtTime(0.12, ctx.currentTime);
       vol.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.11);
-      osc.connect(vol).connect(ctx.destination);
+      osc.connect(vol).connect(getMasterGain());
       osc.start(); osc.stop(ctx.currentTime + 0.11);
       return new Promise(r => setTimeout(r, 110));
     },
@@ -169,7 +187,7 @@ const SFX = (() => {
       osc.frequency.exponentialRampToValueAtTime(350, ctx.currentTime + 0.09);
       vol.gain.setValueAtTime(0.10, ctx.currentTime);
       vol.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.11);
-      osc.connect(vol).connect(ctx.destination);
+      osc.connect(vol).connect(getMasterGain());
       osc.start(); osc.stop(ctx.currentTime + 0.11);
       return new Promise(r => setTimeout(r, 110));
     },
@@ -183,7 +201,7 @@ const SFX = (() => {
       osc.frequency.exponentialRampToValueAtTime(900, ctx.currentTime + 0.12);
       vol.gain.setValueAtTime(0.10, ctx.currentTime);
       vol.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.14);
-      osc.connect(vol).connect(ctx.destination);
+      osc.connect(vol).connect(getMasterGain());
       osc.start(); osc.stop(ctx.currentTime + 0.14);
       return new Promise(r => setTimeout(r, 140));
     },
@@ -204,7 +222,7 @@ const SFX = (() => {
       osc.frequency.exponentialRampToValueAtTime(150, ctx.currentTime + 0.18);
       vol.gain.setValueAtTime(0.10, ctx.currentTime);
       vol.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.20);
-      osc.connect(vol).connect(ctx.destination);
+      osc.connect(vol).connect(getMasterGain());
       osc.start(); osc.stop(ctx.currentTime + 0.20);
       return new Promise(r => setTimeout(r, 200));
     },
@@ -218,7 +236,7 @@ const SFX = (() => {
       osc.frequency.exponentialRampToValueAtTime(80, ctx.currentTime + 0.12);
       vol.gain.setValueAtTime(0.12, ctx.currentTime);
       vol.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.15);
-      osc.connect(vol).connect(ctx.destination);
+      osc.connect(vol).connect(getMasterGain());
       osc.start(); osc.stop(ctx.currentTime + 0.15);
       return new Promise(r => setTimeout(r, 150));
     },
@@ -231,7 +249,7 @@ const SFX = (() => {
       osc.frequency.setValueAtTime(1400, ctx.currentTime);
       vol.gain.setValueAtTime(0.06, ctx.currentTime);
       vol.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.04);
-      osc.connect(vol).connect(ctx.destination);
+      osc.connect(vol).connect(getMasterGain());
       osc.start(); osc.stop(ctx.currentTime + 0.04);
       return new Promise(r => setTimeout(r, 40));
     },
@@ -252,11 +270,67 @@ const SFX = (() => {
       osc.frequency.exponentialRampToValueAtTime(440, ctx.currentTime + 0.10);
       vol.gain.setValueAtTime(0.10, ctx.currentTime);
       vol.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.12);
-      osc.connect(vol).connect(ctx.destination);
+      osc.connect(vol).connect(getMasterGain());
       osc.start(); osc.stop(ctx.currentTime + 0.12);
       return new Promise(r => setTimeout(r, 120));
     },
+
+    // Soft triangle click — era filter toggle
+    'filter-toggle': (ctx) => {
+      const osc = ctx.createOscillator();
+      const vol = ctx.createGain();
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(900, ctx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(650, ctx.currentTime + 0.06);
+      vol.gain.setValueAtTime(0.07, ctx.currentTime);
+      vol.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.07);
+      osc.connect(vol).connect(getMasterGain());
+      osc.start(); osc.stop(ctx.currentTime + 0.07);
+      return new Promise(r => setTimeout(r, 70));
+    },
+
+    // Two ascending sine notes — search result found (E6 → A6)
+    'search-ping': (ctx) => {
+      note(ctx, 1318.5, 'sine', 0.10, 0,    0.08);  // E6
+      note(ctx, 1760.0, 'sine', 0.10, 0.07, 0.10);  // A6
+      return new Promise(r => setTimeout(r, 170));
+    },
+
+    // Soft ascending pop — concept map node added
+    'node-add': (ctx) => {
+      const osc = ctx.createOscillator();
+      const vol = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(400, ctx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(700, ctx.currentTime + 0.08);
+      vol.gain.setValueAtTime(0.10, ctx.currentTime);
+      vol.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.10);
+      osc.connect(vol).connect(getMasterGain());
+      osc.start(); osc.stop(ctx.currentTime + 0.10);
+      return new Promise(r => setTimeout(r, 100));
+    },
+
+    // Two-tone triangle click — concept map edge created
+    'edge-create': (ctx) => {
+      note(ctx, 520, 'triangle', 0.09, 0,    0.07);
+      note(ctx, 820, 'triangle', 0.09, 0.06, 0.08);
+      return new Promise(r => setTimeout(r, 140));
+    },
+
+    // Descending reverse pop — undo action
+    'undo': (ctx) => {
+      const osc = ctx.createOscillator();
+      const vol = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(700, ctx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(350, ctx.currentTime + 0.09);
+      vol.gain.setValueAtTime(0.09, ctx.currentTime);
+      vol.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.10);
+      osc.connect(vol).connect(getMasterGain());
+      osc.start(); osc.stop(ctx.currentTime + 0.10);
+      return new Promise(r => setTimeout(r, 100));
+    },
   };
 
-  return { isEnabled, setEnabled, play };
+  return { isEnabled, setEnabled, play, setVolume, getVolume };
 })();

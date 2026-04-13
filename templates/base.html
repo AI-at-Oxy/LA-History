@@ -108,6 +108,22 @@ function setTheme(mode) {
               <option value="dark">Dark</option>
             </select>
           </div>
+          <div class="settings-row">
+            <label for="map-tile-select">Map Style</label>
+            <select id="map-tile-select">
+              <option value="voyager">Voyager (default)</option>
+              <option value="positron">Light (Positron)</option>
+              <option value="dark_matter">Dark Matter</option>
+            </select>
+          </div>
+          <div class="settings-row">
+            <label for="anim-speed-select">Animations</label>
+            <select id="anim-speed-select">
+              <option value="normal">Normal</option>
+              <option value="reduced">Reduced</option>
+              <option value="off">Off</option>
+            </select>
+          </div>
         </div>
       </div>
 
@@ -155,6 +171,10 @@ function setTheme(mode) {
               <input type="checkbox" id="sfx-toggle">
               <span class="settings-toggle-track"></span>
             </label>
+          </div>
+          <div class="settings-row">
+            <label for="sfx-volume-slider">Volume <span id="sfx-volume-val">80%</span></label>
+            <input type="range" id="sfx-volume-slider" min="0" max="1" step="0.05" value="0.8">
           </div>
         </div>
       </div>
@@ -223,6 +243,45 @@ function setTheme(mode) {
     </div>
   </div>
 </div>
+<!-- Keyboard Shortcuts Overlay -->
+<div class="shortcut-overlay" id="shortcut-overlay" onclick="if(event.target===this)this.classList.remove('open')" role="dialog" aria-label="Keyboard shortcuts" aria-modal="true">
+  <div class="shortcut-modal">
+    <div class="shortcut-modal-header">
+      <span>Keyboard Shortcuts</span>
+      <button class="settings-close" onclick="document.getElementById('shortcut-overlay').classList.remove('open')">×</button>
+    </div>
+    <table class="shortcut-table">
+      <tbody>
+        <tr><td><kbd>?</kbd></td><td>Show / hide this overlay</td></tr>
+        <tr class="shortcut-section-label"><td colspan="2">Map</td></tr>
+        <tr><td><kbd>Esc</kbd></td><td>Close open panel</td></tr>
+        <tr class="shortcut-section-label"><td colspan="2">Concept Map</td></tr>
+        <tr><td><kbd>Ctrl</kbd> <kbd>Z</kbd></td><td>Undo last action</td></tr>
+        <tr><td><kbd>Ctrl</kbd> <kbd>Y</kbd></td><td>Redo last action</td></tr>
+        <tr><td><kbd>Tab</kbd></td><td>Cycle through nodes</td></tr>
+        <tr><td><kbd>Shift</kbd> <kbd>Tab</kbd></td><td>Cycle nodes (reverse)</td></tr>
+        <tr><td><kbd>↑</kbd> <kbd>↓</kbd> <kbd>←</kbd> <kbd>→</kbd></td><td>Move selected node</td></tr>
+        <tr><td><kbd>Shift</kbd> + arrows</td><td>Move node (large step)</td></tr>
+        <tr><td><kbd>Delete</kbd></td><td>Remove selected node / edge</td></tr>
+        <tr><td><kbd>Enter</kbd></td><td>Start connection from selected node</td></tr>
+        <tr><td><kbd>Esc</kbd></td><td>Cancel / close menus</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('keydown', function(e) {
+    if (e.key === '?' && !['INPUT','TEXTAREA','SELECT'].includes(document.activeElement.tagName)) {
+      document.getElementById('shortcut-overlay').classList.toggle('open');
+    }
+    if (e.key === 'Escape') {
+      var so = document.getElementById('shortcut-overlay');
+      if (so && so.classList.contains('open')) so.classList.remove('open');
+    }
+  });
+</script>
+
 <script>
   if (typeof CSRF_TOKEN === 'undefined') var CSRF_TOKEN = "{{ csrf_token() }}";
 </script>

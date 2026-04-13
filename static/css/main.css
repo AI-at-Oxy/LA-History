@@ -229,10 +229,11 @@ a:hover { color: var(--accent-dark); text-decoration: underline; }
   border: 1px solid rgba(255,255,255,0.07);
 }
 
-.toast-points { border-left: 3px solid var(--accent-gold); }
-.toast-unlock { border-left: 3px solid #56b364; }
-.toast-badge  { border-left: 3px solid #9e6abf; }
-.toast-error  { border-left: 3px solid var(--danger); }
+.toast-points    { border-left: 3px solid var(--accent-gold); }
+.toast-unlock    { border-left: 3px solid #56b364; }
+.toast-badge     { border-left: 3px solid #9e6abf; }
+.toast-error     { border-left: 3px solid var(--danger); }
+.toast-milestone { border-left: 3px solid var(--accent-gold); background: #1e1708; font-weight: 600; animation: milestoneToastIn 0.4s cubic-bezier(0.22,1,0.36,1); }
 
 @keyframes toastIn {
   from { opacity: 0; transform: translateY(14px) scale(0.96); }
@@ -663,3 +664,90 @@ html.dark .settings-toggle-track { background: #3a3228; }
 html.dark .settings-toggle-track::before { background: #c8c0b4; }
 html.dark .settings-toggle-label input:checked + .settings-toggle-track { background: var(--accent, #b8731a); }
 html.dark .settings-toggle-label input:checked + .settings-toggle-track::before { background: #fff; }
+
+/* ---- Keyboard Shortcut Overlay ---- */
+.shortcut-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(10,8,5,0.55);
+  z-index: 1200;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(3px);
+  animation: fadeInOverlay 0.2s ease;
+}
+.shortcut-overlay.open { display: flex; }
+
+.shortcut-modal {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-lg);
+  width: 420px;
+  max-width: calc(100vw - 32px);
+  max-height: calc(100vh - 60px);
+  overflow-y: auto;
+  animation: slideUpModal 0.25s cubic-bezier(0.22,1,0.36,1);
+}
+
+.shortcut-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border-light);
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--text);
+  position: sticky;
+  top: 0;
+  background: var(--bg-card);
+  z-index: 1;
+}
+
+.shortcut-table {
+  width: 100%;
+  border-collapse: collapse;
+  padding: 8px 0;
+}
+
+.shortcut-table td {
+  padding: 7px 20px;
+  font-size: 0.84rem;
+  color: var(--text);
+  border-bottom: 1px solid var(--border-light);
+}
+
+.shortcut-table tr:last-child td { border-bottom: none; }
+
+.shortcut-table td:first-child {
+  width: 160px;
+  white-space: nowrap;
+}
+
+.shortcut-section-label td {
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
+  font-weight: 700;
+  background: var(--bg);
+  padding: 8px 20px 5px;
+  border-bottom: 1px solid var(--border-light);
+}
+
+kbd {
+  display: inline-block;
+  background: var(--bg-dark);
+  color: var(--accent-gold);
+  border-radius: 4px;
+  padding: 1px 6px;
+  font-size: 0.78rem;
+  font-family: var(--font-mono, monospace);
+  font-weight: 600;
+  border: 1px solid rgba(255,255,255,0.08);
+  box-shadow: 0 1px 2px rgba(0,0,0,0.3);
+  margin: 0 1px;
+}

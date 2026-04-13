@@ -2,13 +2,31 @@
    LA History — Interaction Animations
    ========================================= */
 
-/* ---- Respect reduced motion ---- */
+/* ---- Respect reduced motion (system preference) ---- */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
+}
+
+/* ---- Animation speed presets (user override) ---- */
+html.anim-reduced *, html.anim-reduced *::before, html.anim-reduced *::after {
+  animation-duration: 0.15s !important;
+  transition-duration: 0.10s !important;
+}
+html.anim-off *, html.anim-off *::before, html.anim-off *::after {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+}
+
+/* ---- Milestone toast entrance ---- */
+@keyframes milestoneToastIn {
+  from { opacity: 0; transform: translateY(20px) scale(0.85); }
+  60%  { transform: translateY(-4px) scale(1.03); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
 }
 
 /* ---- 1. Marker bounce on click ---- */

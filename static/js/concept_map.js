@@ -15,6 +15,9 @@ let cmAutoSaveTimer = null;
 let cmSubmitted = false;
 let cmKeyboardNodeIndex = -1;     // for Tab-to-cycle-nodes keyboard nav
 let cmContextTarget = null;       // { type: 'node'|'edge', id } for right-click menu
+let cmUndoStack = [];             // undo/redo stacks
+let cmRedoStack = [];
+let _previewSvg = null;          // ghost edge preview line
 
 // ── Entry point ───────────────────────────────
 function openConceptMap(eraOrder) {
@@ -197,6 +200,7 @@ function initCytoscape() {
           cy.nodes().removeClass('selected-source');
           node.addClass('selected-source');
           cmPendingEdgeSource = node.id();
+          showPreviewLine();
         },
       },
       {
@@ -238,6 +242,7 @@ function initCytoscape() {
       cy.nodes().removeClass('selected-source');
       node.addClass('selected-source');
       cmPendingEdgeSource = nodeId;
+      showPreviewLine();
     } else if (cmPendingEdgeSource === nodeId) {
       clearSourceSelection();
     } else {
@@ -256,6 +261,22 @@ function initCytoscape() {
       evt.renderedPosition,
       edge.data('label'),
     );
+  });
+
+  // ── Edge highlight on node hover
+  cy.on('mouseover', 'node', function(evt) {
+    evt.target.connectedEdges().style({
+      'line-color': '#d4a843',
+      'target-arrow-color': '#d4a843',
+      'width': 3,
+    });
+  });
+  cy.on('mouseout', 'node', function(evt) {
+    evt.target.connectedEdges().style({
+      'line-color': '#c4b89a',
+      'target-arrow-color': '#c4b89a',
+      'width': 2,
+    });
   });
 }
 
@@ -318,6 +339,26 @@ function cmAddNode(locData) {
     },
     position: pos,
   });
+
+  // Node entrance animation: scale in from 0
+  const newNode = cy.getElementById(nodeId);
+  newNode.style({ 'width': 4, 'height': 4, 'opacity': 0 });
+  newNode.animate(
+    { style: { 'width': 64, 'height': 32, 'opacity': 1 } },
+    {
+      duration: 280,
+      easing: 'spring(400, 20)',
+      complete: function() {
+        newNode.style({ 'width': 'label', 'height': 'label' });
+      },
+    },
+  );
+
+  if (typeof SFX !== 'undefined') SFX.play('node-add');
+
+  // Push to undo stack
+  cmUndoStack.push({ type: 'add-node', nodeId, nodeData: { data: { ...newNode.data() }, position: { ...pos } } });
+  cmRedoStack = [];
 
   // Dim the palette entry to signal it's on the map
   const nameEl = document.getElementById('palette-name-' + locData.id);
@@ -396,15 +437,19 @@ function confirmEdge() {
     const isCrossEra = sourceNode.data('cross_era') || targetNode.data('cross_era')
       || sourceNode.data('era_order') !== targetNode.data('era_order');
 
-    cy.add({
-      group: 'edges',
-      data: {
-        source: sourceId,
-        target: targetId,
-        label,
-        cross_era: isCrossEra,
-      },
-    });
+    const edgeData = {
+      source: sourceId,
+      target: targetId,
+      label,
+      cross_era: isCrossEra,
+    };
+    const addedEdge = cy.add({ group: 'edges', data: edgeData });
+    const edgeId = addedEdge.id();
+
+    // Push to undo stack + play sound
+    cmUndoStack.push({ type: 'add-edge', edgeId, edgeData });
+    cmRedoStack = [];
+    if (typeof SFX !== 'undefined') SFX.play('edge-create');
   }
 
   clearSourceSelection();
@@ -417,6 +462,7 @@ function confirmEdge() {
 function clearSourceSelection() {
   cy && cy.nodes().removeClass('selected-source');
   cmPendingEdgeSource = null;
+  removePreviewLine();
 }
 
 // ── Edge popup event listeners ────────────────
@@ -461,6 +507,38 @@ document.addEventListener('DOMContentLoaded', () => {
   // Canvas keyboard nav
   const canvas = document.getElementById('cm-canvas');
   canvas.addEventListener('keydown', handleCanvasKeydown);
+
+  // Zoom to fit button
+  document.getElementById('cm-fit-btn').addEventListener('click', () => {
+    if (!cy) return;
+    cy.animate({ fit: { padding: 40 }, duration: 400, easing: 'ease-out' });
+    if (typeof SFX !== 'undefined') SFX.play('hover');
+  });
+
+  // Auto-layout button
+  document.getElementById('cm-layout-btn').addEventListener('click', () => {
+    if (!cy || cmSubmitted) return;
+    cy.layout({
+      name: 'cose',
+      animate: true,
+      animationDuration: 600,
+      animationEasing: 'ease-out-cubic',
+      nodeRepulsion: 4500,
+      idealEdgeLength: 120,
+      randomize: false,
+    }).run();
+    if (typeof SFX !== 'undefined') SFX.play('panel-close');
+    scheduleAutoSave();
+  });
+
+  // Undo/Redo keyboard shortcuts
+  document.addEventListener('keydown', e => {
+    const overlay = document.getElementById('cm-overlay');
+    if (!overlay || !overlay.classList.contains('open')) return;
+    if (document.activeElement && (document.activeElement.tagName === 'INPUT' || document.activeElement.tagName === 'TEXTAREA')) return;
+    if ((e.ctrlKey || e.metaKey) && e.key === 'z') { e.preventDefault(); undoLastAction(); }
+    if ((e.ctrlKey || e.metaKey) && (e.key === 'y' || (e.shiftKey && e.key === 'z'))) { e.preventDefault(); redoLastAction(); }
+  });
 });
 
 // ── Save & auto-save ──────────────────────────
@@ -612,10 +690,14 @@ function updateSubmitButton() {
   tooltip.textContent = '';
 }
 
-function updateEdgeCount() {
-  const count = cy ? cy.edges().length : 0;
-  document.getElementById('cm-edge-count').textContent =
-    count + ' connection' + (count !== 1 ? 's' : '');
+function updateEdgeCount() { updateGraphStats(); }
+
+function updateGraphStats() {
+  const nodeCount = cy ? cy.nodes().length : 0;
+  const edgeCount = cy ? cy.edges().length : 0;
+  const el = document.getElementById('cm-graph-stats');
+  if (el) el.textContent =
+    `${nodeCount} node${nodeCount !== 1 ? 's' : ''} · ${edgeCount} connection${edgeCount !== 1 ? 's' : ''}`;
 }
 
 // ── Cross-era picker ──────────────────────────
@@ -689,6 +771,9 @@ function closeConceptMap() {
   cmEditingEdgeId = null;
   cmSubmitted = false;
   cmKeyboardNodeIndex = -1;
+  cmUndoStack = [];
+  cmRedoStack = [];
+  removePreviewLine();
 
   // Reset results panel for next open
   document.getElementById('cm-results-panel').hidden = true;
@@ -798,6 +883,10 @@ function cmRemoveNode(nodeId) {
   const node = cy.getElementById(nodeId);
   if (!node.length) return;
 
+  // Capture connected edges for undo
+  const removedEdges = node.connectedEdges().map(e => ({ edgeId: e.id(), edgeData: { ...e.data() } }));
+  const nodeData = { data: { ...node.data() }, position: { ...node.position() } };
+
   // Un-dim the palette entry so the node can be re-added
   const locId = node.data('location_id');
   if (locId) {
@@ -806,6 +895,9 @@ function cmRemoveNode(nodeId) {
   }
 
   node.remove(); // cytoscape also removes connected edges
+  cmUndoStack.push({ type: 'remove-node', nodeId, nodeData, removedEdges });
+  cmRedoStack = [];
+
   updateEdgeCount();
   updateSubmitButton();
   scheduleAutoSave();
@@ -813,7 +905,12 @@ function cmRemoveNode(nodeId) {
 
 function cmRemoveEdge(edgeId) {
   if (!cy) return;
-  cy.getElementById(edgeId).remove();
+  const edge = cy.getElementById(edgeId);
+  if (!edge.length) return;
+  const edgeData = { ...edge.data() };
+  edge.remove();
+  cmUndoStack.push({ type: 'remove-edge', edgeId, edgeData });
+  cmRedoStack = [];
   updateEdgeCount();
   updateSubmitButton();
   scheduleAutoSave();
@@ -839,6 +936,121 @@ function cmClearAll() {
   updateEdgeCount();
   updateSubmitButton();
   scheduleAutoSave();
+}
+
+// ── Undo / Redo ───────────────────────────────
+function undoLastAction() {
+  if (!cy || cmSubmitted || cmUndoStack.length === 0) return;
+  const cmd = cmUndoStack.pop();
+  if (cmd.type === 'add-node') {
+    const node = cy.getElementById(cmd.nodeId);
+    if (node.length) {
+      const locId = node.data('location_id');
+      if (locId) {
+        const nameEl = document.getElementById('palette-name-' + locId);
+        if (nameEl) nameEl.classList.remove('on-map');
+      }
+      node.remove();
+    }
+    cmRedoStack.push(cmd);
+  } else if (cmd.type === 'remove-node') {
+    cy.add({ group: 'nodes', data: cmd.nodeData.data, position: cmd.nodeData.position });
+    // Re-add connected edges whose endpoints still exist
+    cmd.removedEdges.forEach(({ edgeData }) => {
+      if (cy.getElementById(edgeData.source).length && cy.getElementById(edgeData.target).length) {
+        cy.add({ group: 'edges', data: edgeData });
+      }
+    });
+    const locId = cmd.nodeData.data.location_id;
+    if (locId) {
+      const nameEl = document.getElementById('palette-name-' + locId);
+      if (nameEl) nameEl.classList.add('on-map');
+    }
+    cmRedoStack.push(cmd);
+  } else if (cmd.type === 'add-edge') {
+    const edge = cy.getElementById(cmd.edgeId);
+    if (edge.length) edge.remove();
+    cmRedoStack.push(cmd);
+  } else if (cmd.type === 'remove-edge') {
+    const src = cy.getElementById(cmd.edgeData.source);
+    const tgt = cy.getElementById(cmd.edgeData.target);
+    if (src.length && tgt.length) cy.add({ group: 'edges', data: cmd.edgeData });
+    cmRedoStack.push(cmd);
+  }
+  if (typeof SFX !== 'undefined') SFX.play('undo');
+  updateEdgeCount();
+  updateSubmitButton();
+  scheduleAutoSave();
+}
+
+function redoLastAction() {
+  if (!cy || cmSubmitted || cmRedoStack.length === 0) return;
+  const cmd = cmRedoStack.pop();
+  if (cmd.type === 'add-node') {
+    cy.add({ group: 'nodes', data: cmd.nodeData.data, position: cmd.nodeData.position });
+    const locId = cmd.nodeData.data.location_id;
+    if (locId) {
+      const nameEl = document.getElementById('palette-name-' + locId);
+      if (nameEl) nameEl.classList.add('on-map');
+    }
+    cmUndoStack.push(cmd);
+  } else if (cmd.type === 'remove-node') {
+    const node = cy.getElementById(cmd.nodeId);
+    if (node.length) {
+      const locId = node.data('location_id');
+      if (locId) {
+        const nameEl = document.getElementById('palette-name-' + locId);
+        if (nameEl) nameEl.classList.remove('on-map');
+      }
+      node.remove();
+    }
+    cmUndoStack.push(cmd);
+  } else if (cmd.type === 'add-edge') {
+    const src = cy.getElementById(cmd.edgeData.source);
+    const tgt = cy.getElementById(cmd.edgeData.target);
+    if (src.length && tgt.length) cy.add({ group: 'edges', data: cmd.edgeData });
+    cmUndoStack.push(cmd);
+  } else if (cmd.type === 'remove-edge') {
+    const edge = cy.getElementById(cmd.edgeId);
+    if (edge.length) edge.remove();
+    cmUndoStack.push(cmd);
+  }
+  if (typeof SFX !== 'undefined') SFX.play('hover');
+  updateEdgeCount();
+  updateSubmitButton();
+  scheduleAutoSave();
+}
+
+// ── Connection preview line (ghost edge while drawing) ────
+function showPreviewLine() {
+  if (_previewSvg || !cy) return;
+  const canvasArea = document.querySelector('.cm-canvas-area');
+  if (!canvasArea) return;
+  _previewSvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+  _previewSvg.id = 'cm-preview-svg';
+  _previewSvg.setAttribute('style', 'position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:5;');
+  _previewSvg.innerHTML = '<line id="cm-preview-line" stroke="#d4a843" stroke-width="2" stroke-dasharray="6,4" opacity="0.7" x1="0" y1="0" x2="0" y2="0"/>';
+  canvasArea.appendChild(_previewSvg);
+  document.getElementById('cm-canvas').addEventListener('mousemove', _updatePreviewLine);
+}
+
+function _updatePreviewLine(e) {
+  const line = document.getElementById('cm-preview-line');
+  if (!line || !cmPendingEdgeSource || !cy) return;
+  const sourceNode = cy.getElementById(cmPendingEdgeSource);
+  if (!sourceNode.length) return;
+  const rp = sourceNode.renderedPosition();
+  const rect = document.getElementById('cm-canvas').getBoundingClientRect();
+  line.setAttribute('x1', rp.x);
+  line.setAttribute('y1', rp.y);
+  line.setAttribute('x2', e.clientX - rect.left);
+  line.setAttribute('y2', e.clientY - rect.top);
+}
+
+function removePreviewLine() {
+  if (_previewSvg) { _previewSvg.remove(); _previewSvg = null; }
+  const canvas = document.getElementById('cm-canvas');
+  if (canvas) canvas.removeEventListener('mousemove', _updatePreviewLine);
 }
 
 // ── Helpers ───────────────────────────────────
