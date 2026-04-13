@@ -47,6 +47,7 @@ def get_location(location_id):
     data['full_description'] = loc.full_description
     data['events'] = [e.to_dict() for e in loc.events]
     data['has_quiz'] = loc.quiz is not None
+    data['quiz_attempts'] = prog.quiz_attempts if prog else 0
     if loc.quiz:
         data['quiz_passing_score'] = loc.quiz.passing_score
         data['quiz_points_reward'] = loc.quiz.points_reward

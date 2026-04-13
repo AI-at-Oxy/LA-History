@@ -22,7 +22,7 @@
   gap: 40px;
   flex-wrap: wrap;
   position: relative;
-  overflow: hidden;
+  overflow: visible;
   box-shadow: var(--shadow-lg);
   border: 1px solid rgba(212,168,67,0.15);
 }
@@ -32,6 +32,8 @@
   content: '';
   position: absolute;
   inset: 0;
+  border-radius: 12px;
+  overflow: hidden;
   background:
     repeating-linear-gradient(
       135deg,
@@ -357,6 +359,55 @@
   padding-top: 8px;
 }
 
+/* ---- Stat tooltips ---- */
+.hero-stat-points,
+.hero-stat-has-tip {
+  position: relative;
+  cursor: default;
+}
+
+.points-breakdown-tip,
+.hero-stat-tip {
+  display: none;
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--bg-dark);
+  border: 1px solid rgba(212,168,67,0.25);
+  border-radius: 8px;
+  padding: 9px 14px;
+  white-space: nowrap;
+  z-index: 10;
+  flex-direction: column;
+  gap: 5px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.35);
+  pointer-events: none;
+}
+
+.points-breakdown-tip span,
+.hero-stat-tip span {
+  font-size: 0.78rem;
+  color: #c8baa8;
+  letter-spacing: 0.02em;
+}
+
+.points-breakdown-tip::after,
+.hero-stat-tip::after {
+  content: '';
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 6px solid transparent;
+  border-bottom-color: rgba(212,168,67,0.25);
+}
+
+.hero-stat-points:hover .points-breakdown-tip,
+.hero-stat-has-tip:hover .hero-stat-tip {
+  display: flex;
+}
+
 /* ---- Dashboard dark mode overrides ---- */
 html.dark .badge-card-icon { background: linear-gradient(135deg, #2e2820, #3a3028); }
 html.dark .location-table th { background: #1e1a14; }
@@ -376,21 +427,39 @@ html.dark .location-table tr:hover td { background: #2a231c; }
       <p>Your Los Angeles history journey</p>
     </div>
     <div class="hero-stats">
-      <div class="hero-stat">
+      <div class="hero-stat hero-stat-points" tabindex="0"
+           title="{{ summary.points_breakdown.visit_pts }} from visits · {{ summary.points_breakdown.quiz_pts }} from quizzes">
         <span class="hero-stat-value">{{ summary.user.total_points }}</span>
         <span class="hero-stat-label">Points</span>
+        <div class="points-breakdown-tip">
+          <span>🗺 {{ summary.points_breakdown.visit_pts }} visit pts</span>
+          <span>📝 {{ summary.points_breakdown.quiz_pts }} quiz pts</span>
+        </div>
       </div>
-      <div class="hero-stat">
+      <div class="hero-stat hero-stat-has-tip" tabindex="0">
         <span class="hero-stat-value">{{ summary.total_visited }}</span>
         <span class="hero-stat-label">Visited</span>
+        <div class="hero-stat-tip">
+          <span>🗺 {{ summary.total_visited }} of {{ summary.total_locations }} locations</span>
+          <span>⬜ {{ summary.total_locations - summary.total_visited }} remaining</span>
+        </div>
       </div>
-      <div class="hero-stat">
+      <div class="hero-stat hero-stat-has-tip" tabindex="0">
         <span class="hero-stat-value">{{ summary.total_passed }}</span>
         <span class="hero-stat-label">Quizzes Passed</span>
+        <div class="hero-stat-tip">
+          <span>✅ {{ summary.total_passed }} of {{ summary.total_locations }} quizzes</span>
+          <span>❌ {{ summary.total_locations - summary.total_passed }} not yet passed</span>
+        </div>
       </div>
-      <div class="hero-stat">
-        <span class="hero-stat-value">{{ summary.badges | selectattr('earned') | list | length }}</span>
+      {% set earned_count = summary.badges | selectattr('earned') | list | length %}
+      <div class="hero-stat hero-stat-has-tip" tabindex="0">
+        <span class="hero-stat-value">{{ earned_count }}</span>
         <span class="hero-stat-label">Badges</span>
+        <div class="hero-stat-tip">
+          <span>🏅 {{ earned_count }} of {{ summary.badges | length }} earned</span>
+          <span>🔒 {{ summary.badges | length - earned_count }} still locked</span>
+        </div>
       </div>
     </div>
   </div>
@@ -465,6 +534,7 @@ html.dark .location-table tr:hover td { background: #2a231c; }
         <th>Era</th>
         <th>Status</th>
         <th>Quiz</th>
+        <th>Tries</th>
         <th>Points</th>
       </tr>
     </thead>
@@ -490,6 +560,13 @@ html.dark .location-table tr:hover td { background: #2a231c; }
               <span style="color:var(--text-muted);font-size:0.8rem">Not taken</span>
             {% else %}
               <span style="color:var(--border)">—</span>
+            {% endif %}
+          </td>
+          <td style="color:var(--text-muted);font-size:0.82rem">
+            {% if loc.quiz_attempts and loc.quiz_attempts > 0 %}
+              {{ loc.quiz_attempts }}×
+            {% else %}
+              —
             {% endif %}
           </td>
           <td style="font-weight:600;color:var(--accent)">{{ loc.points_earned or 0 }}</td>

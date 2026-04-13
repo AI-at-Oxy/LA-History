@@ -37,6 +37,57 @@
   overflow: hidden;
 }
 
+.sidebar-header-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+  position: relative;
+}
+
+/* Sidebar overall-completion ring */
+.sidebar-ring {
+  position: relative;
+  width: 52px;
+  height: 52px;
+  flex-shrink: 0;
+}
+
+.sidebar-ring svg { transform: rotate(-90deg); }
+
+.sidebar-ring-bg   { fill: none; stroke: rgba(255,255,255,0.1); stroke-width: 5; }
+.sidebar-ring-fill {
+  fill: none;
+  stroke: var(--accent-gold);
+  stroke-width: 5;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 1s cubic-bezier(0.22,1,0.36,1);
+}
+
+.sidebar-ring-text {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sidebar-ring-pct {
+  font-family: var(--font-display);
+  font-size: 0.62rem;
+  font-weight: 800;
+  color: var(--accent-gold);
+  line-height: 1;
+}
+
+/* Visited counter inside points bar */
+.sidebar-visited-counter {
+  font-size: 0.67rem;
+  color: #7a7060;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+
 /* Decorative diagonal lines in header background */
 .sidebar-header::before {
   content: '';
@@ -594,6 +645,20 @@
   display: flex;
   flex-direction: column;
   gap: 10px;
+}
+
+.detail-quiz-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.quiz-attempts-label {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  letter-spacing: 0.02em;
+  white-space: nowrap;
 }
 
 .locked-notice {

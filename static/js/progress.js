@@ -18,6 +18,21 @@ function renderSidebar(data) {
   const pointsEl = document.getElementById('sidebar-points');
   if (pointsEl) pointsEl.textContent = data.user.total_points;
 
+  // Visited counter
+  const counterEl = document.getElementById('sidebar-visited-counter');
+  if (counterEl) counterEl.textContent = `${data.total_visited}/${data.total_locations} visited`;
+
+  // Overall completion ring (based on quizzes passed)
+  const ringFill = document.getElementById('sidebar-ring-fill');
+  const ringPct  = document.getElementById('sidebar-ring-pct');
+  if (ringFill && ringPct && data.total_locations > 0) {
+    const pct = Math.round((data.total_passed / data.total_locations) * 100);
+    const circumference = 125.7;
+    const offset = circumference - (circumference * pct / 100);
+    ringFill.style.strokeDashoffset = offset;
+    ringPct.textContent = `${pct}%`;
+  }
+
   // Era progress bars
   const list = document.getElementById('era-progress-list');
   if (list) {

@@ -14,11 +14,28 @@
   <!-- Left Sidebar -->
   <aside class="sidebar" id="sidebar">
     <div class="sidebar-header">
-      <h3>Your Journey</h3>
-      <div class="sidebar-username">{{ current_user.username }}</div>
+      <div class="sidebar-header-top">
+        <div>
+          <h3>Your Journey</h3>
+          <div class="sidebar-username">{{ current_user.username }}</div>
+        </div>
+        <!-- Overall completion ring -->
+        <div class="sidebar-ring" id="sidebar-ring" title="Overall completion">
+          <svg width="52" height="52" viewBox="0 0 52 52">
+            <circle class="sidebar-ring-bg" cx="26" cy="26" r="20"/>
+            <circle class="sidebar-ring-fill" id="sidebar-ring-fill" cx="26" cy="26" r="20"
+              stroke-dasharray="125.7"
+              stroke-dashoffset="125.7"/>
+          </svg>
+          <div class="sidebar-ring-text">
+            <span class="sidebar-ring-pct" id="sidebar-ring-pct">0%</span>
+          </div>
+        </div>
+      </div>
       <div class="sidebar-points">
         <span class="points-label">Points</span>
         <span class="points-value" id="sidebar-points">{{ current_user.total_points or 0 }}</span>
+        <span class="sidebar-visited-counter" id="sidebar-visited-counter">0/0 visited</span>
       </div>
     </div>
     <div class="sidebar-body">

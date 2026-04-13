@@ -165,10 +165,7 @@ function createMarker(loc) {
     marker.bindPopup(buildPopup(loc), { maxWidth: 240 });
     marker.on('click', () => onMarkerClick(loc.id));
   } else {
-    marker.bindPopup(`
-      <div class="map-popup-name">🔒 ${loc.name}</div>
-      <div class="map-popup-locked">Complete earlier quizzes to unlock ${eraLabel(loc.era)}.</div>
-    `, { maxWidth: 220 });
+    marker.bindPopup(buildLockedPopup(loc), { maxWidth: 240 });
     marker.on('click', () => { if (typeof SFX !== 'undefined') SFX.play('locked'); });
   }
 
@@ -186,6 +183,34 @@ function buildPopup(loc) {
       Explore →
     </button>
   `;
+}
+
+function buildLockedPopup(loc) {
+  const hint = getUnlockHint(loc.era_order);
+  return `
+    <div class="map-popup-name">🔒 ${loc.name}</div>
+    <div class="map-popup-locked">${hint}</div>
+  `;
+}
+
+function getUnlockHint(eraOrder) {
+  if (eraOrder <= 1 || !locationsData.length) {
+    return 'Complete earlier quizzes to unlock this era.';
+  }
+  const prevEraLocs = locationsData.filter(l => l.era_order === eraOrder - 1 && l.has_quiz);
+  const prevPassed  = prevEraLocs.filter(l => l.quiz_passed).length;
+  const prevTotal   = prevEraLocs.length;
+
+  if (eraOrder === 2) {
+    const needed = Math.ceil(prevTotal * 0.5) - prevPassed;
+    if (needed <= 0) return 'Almost there — keep exploring!';
+    return `Pass ${needed} more quiz${needed === 1 ? '' : 'zes'} in Era 1 to unlock the Spanish era.`;
+  } else {
+    const needed = prevTotal - prevPassed;
+    const prevEraName = eraOrder === 3 ? 'Spanish' : 'Rancho';
+    if (needed <= 0) return 'Almost there — keep exploring!';
+    return `Pass ${needed} more quiz${needed === 1 ? '' : 'zes'} in the ${prevEraName} era to unlock this.`;
+  }
 }
 
 async function onMarkerClick(locationId) {
@@ -279,18 +304,29 @@ function openDetailPanel(loc) {
 function buildQuizSection(loc) {
   if (!loc.has_quiz) return '';
 
+  const attempts = loc.quiz_attempts || 0;
+  const attemptsLabel = attempts > 0
+    ? `<span class="quiz-attempts-label">${attempts} attempt${attempts === 1 ? '' : 's'}</span>`
+    : '';
+
   if (loc.quiz_passed) {
     return `
       <div class="detail-actions">
-        <span class="quiz-passed-badge">✓ Quiz Passed — ${loc.quiz_score}%</span>
+        <div class="detail-quiz-row">
+          <span class="quiz-passed-badge">✓ Quiz Passed — ${loc.quiz_score}%</span>
+          ${attemptsLabel}
+        </div>
       </div>`;
   }
 
   return `
     <div class="detail-actions">
-      <button class="btn btn-primary" onclick="openQuiz(${loc.id})">
-        📝 Take the Quiz
-      </button>
+      <div class="detail-quiz-row">
+        <button class="btn btn-primary" onclick="openQuiz(${loc.id})">
+          📝 Take the Quiz
+        </button>
+        ${attemptsLabel}
+      </div>
     </div>`;
 }
 

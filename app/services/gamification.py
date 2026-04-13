@@ -257,6 +257,7 @@ def get_progress_summary(user_id):
             'visited': prog.visited if prog else False,
             'quiz_passed': prog.quiz_passed if prog else False,
             'quiz_score': prog.quiz_score if prog else None,
+            'quiz_attempts': prog.quiz_attempts if prog else 0,
             'points_earned': prog.points_earned if prog else 0,
         })
         eras[key]['total'] += 1
@@ -279,6 +280,9 @@ def get_progress_summary(user_id):
             entry['earned'] = False
         badges.append(entry)
 
+    visit_pts = sum(1 for p in all_progress.values() if p.visited) * POINTS_VISIT
+    quiz_pts  = max(0, (user.total_points or 0) - visit_pts)
+
     return {
         'user': {
             'id': user.id,
@@ -290,4 +294,8 @@ def get_progress_summary(user_id):
         'total_visited': sum(1 for p in all_progress.values() if p.visited),
         'total_passed': sum(1 for p in all_progress.values() if p.quiz_passed),
         'total_locations': len(all_locations),
+        'points_breakdown': {
+            'visit_pts': visit_pts,
+            'quiz_pts': quiz_pts,
+        },
     }
