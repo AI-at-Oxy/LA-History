@@ -1,3 +1,4 @@
+import json
 import requests
 from flask import current_app
 
@@ -73,3 +74,101 @@ def chat_with_ollama(messages, system_prompt):
         return None, 'The tutor took too long to respond. Please try again.'
     except requests.exceptions.RequestException as e:
         return None, f'Tutor service error: {str(e)}'
+
+
+CONCEPT_MAP_EVAL_PROMPT = """You are reviewing a student's concept map about {era_name} Los Angeles history.
+
+LOCATION CONTEXT (use to assess connections — do not recite verbatim):
+{locations_context}
+
+STUDENT'S GRAPH:
+{graph_json}
+
+YOUR TASK:
+For every directed edge in the graph, write a brief Socratic comment that:
+- Asks one probing question if the connection seems insightful or partially correct
+- Gently surfaces a factual concern through a question if something seems inaccurate (never say "this is wrong")
+- Notes surprising or creative connections without over-praising
+
+STRICT RULES — no exceptions:
+1. Return ONLY valid JSON — no prose, no markdown fences before or after the JSON
+2. Never tell the student what connections they SHOULD have made
+3. Never assign a letter grade or include a percentage in any comment text
+4. Never praise a factually incorrect connection without raising a Socratic challenge
+5. The follow_up_question must extend the student's thinking beyond the map itself
+6. synthesis_score is an integer 0-100 reflecting conceptual depth and accuracy
+
+REQUIRED JSON STRUCTURE (exactly these keys, no others):
+{{
+  "edge_feedback": [
+    {{"source": "source node label", "target": "target node label", "label": "edge label", "comment": "Socratic question or observation"}}
+  ],
+  "overall_comment": "2-3 sentence synthesis observation — no grades, no percentages",
+  "synthesis_score": 72,
+  "follow_up_question": "One open-ended question to extend thinking"
+}}"""
+
+
+def evaluate_concept_map(era_name, locations_context, graph_json):
+    """
+    Send a student's concept map to Ollama for Socratic evaluation.
+    Returns (feedback_dict, error). One will be None.
+    feedback_dict keys: edge_feedback, overall_comment, synthesis_score, follow_up_question
+    """
+    base_url = current_app.config.get('OLLAMA_BASE_URL', 'http://localhost:11434')
+    model    = current_app.config.get('OLLAMA_MODEL', 'llama3.2')
+
+    prompt = CONCEPT_MAP_EVAL_PROMPT.format(
+        era_name=era_name,
+        locations_context=locations_context,
+        graph_json=graph_json,
+    )
+
+    payload = {
+        'model': model,
+        'messages': [{'role': 'user', 'content': prompt}],
+        'stream': False,
+    }
+
+    raw = ''
+    try:
+        response = requests.post(
+            f'{base_url}/api/chat',
+            json=payload,
+            timeout=120,
+        )
+        response.raise_for_status()
+        data = response.json()
+        raw = data.get('message', {}).get('content', '').strip()
+        if not raw:
+            return None, 'The evaluator returned an empty response. Please try again.'
+
+        # llama3.2 often wraps JSON in ```json ... ``` even when told not to
+        if raw.startswith('```'):
+            parts = raw.split('```')
+            raw = parts[1] if len(parts) > 1 else raw
+            if raw.startswith('json'):
+                raw = raw[4:]
+            raw = raw.strip()
+
+        feedback = json.loads(raw)
+        feedback.setdefault('edge_feedback', [])
+        feedback.setdefault('overall_comment', '')
+        feedback.setdefault('synthesis_score', 0)
+        feedback.setdefault('follow_up_question', '')
+        return feedback, None
+
+    except json.JSONDecodeError:
+        fallback = {
+            'edge_feedback': [],
+            'overall_comment': raw[:500] if raw else 'The evaluator response could not be parsed.',
+            'synthesis_score': 0,
+            'follow_up_question': 'What patterns do you notice across the connections you drew?',
+        }
+        return fallback, None
+    except requests.exceptions.ConnectionError:
+        return None, 'Could not connect to Ollama. Make sure Ollama is running on port 11434.'
+    except requests.exceptions.Timeout:
+        return None, 'The evaluator took too long. Please try again.'
+    except requests.exceptions.RequestException as e:
+        return None, f'Evaluation service error: {str(e)}'

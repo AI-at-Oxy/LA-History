@@ -79,6 +79,36 @@ def seed_badges():
             'description': 'Passed every quiz on the map.',
             'icon': '🎓',
         },
+        {
+            'slug': 'era_synthesizer_1',
+            'name': 'Tongva Synthesizer',
+            'description': 'Submitted a concept map connecting Era 1 (Tongva) locations.',
+            'icon': '🌿',
+        },
+        {
+            'slug': 'era_synthesizer_2',
+            'name': 'Colonial Synthesizer',
+            'description': 'Submitted a concept map connecting Era 2 (Spanish/Mexican) locations.',
+            'icon': '🧩',
+        },
+        {
+            'slug': 'era_synthesizer_3',
+            'name': 'Rancho Synthesizer',
+            'description': 'Submitted a concept map connecting Era 3 (Rancho/American) locations.',
+            'icon': '🔗',
+        },
+        {
+            'slug': 'era_synthesizer_4',
+            'name': 'Modern Synthesizer',
+            'description': 'Submitted a concept map connecting Era 4 (Modern LA) locations.',
+            'icon': '🌐',
+        },
+        {
+            'slug': 'master_cartographer',
+            'name': 'Master Cartographer',
+            'description': 'Submitted concept maps for all 4 eras.',
+            'icon': '🗺️',
+        },
     ]
     for data in badges:
         if not Badge.query.filter_by(slug=data['slug']).first():

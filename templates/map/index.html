@@ -6,6 +6,7 @@
 <link rel="stylesheet" href="{{ url_for('static', filename='css/map.css') }}">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/chat.css') }}">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/quiz.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/concept_map.css') }}">
 {% endblock %}
 
 {% block content %}
@@ -88,6 +89,105 @@
   </div>
 </div>
 
+<!-- Concept Map Overlay -->
+<div class="cm-overlay" id="cm-overlay" role="dialog" aria-modal="true" aria-label="Concept Map">
+  <div class="cm-panel">
+
+    <div class="cm-panel-header">
+      <div class="cm-panel-title">
+        <span class="cm-era-pill" id="cm-era-pill"></span>
+        <span>Concept Map</span>
+      </div>
+      <div class="cm-header-actions">
+        <span class="cm-status" id="cm-status"></span>
+        <button class="cm-close-btn" id="cm-close-btn" aria-label="Close concept map">×</button>
+      </div>
+    </div>
+
+    <div class="cm-body">
+
+      <!-- Palette -->
+      <aside class="cm-palette" id="cm-palette" aria-label="Location palette">
+        <div class="cm-palette-section">
+          <h4 class="cm-palette-heading">Era Locations</h4>
+          <div id="cm-palette-list"></div>
+        </div>
+        <div class="cm-palette-section">
+          <h4 class="cm-palette-heading">Cross-Era</h4>
+          <button class="cm-btn cm-btn-secondary" id="cm-add-cross-era-btn">+ Add from another era</button>
+          <div id="cm-cross-era-list"></div>
+        </div>
+        <div class="cm-instructions">
+          <strong>How to connect:</strong><br>
+          1. Click "+ Add" to place a node<br>
+          2. Click a node to select it<br>
+          3. Click another node to draw an arrow<br>
+          4. Type the relationship label
+        </div>
+      </aside>
+
+      <!-- Canvas area -->
+      <div class="cm-canvas-area">
+        <div id="cm-canvas" tabindex="0" aria-label="Concept map canvas"></div>
+
+        <!-- Edge label popup -->
+        <div class="cm-edge-popup" id="cm-edge-popup" aria-hidden="true">
+          <label class="cm-edge-popup-label" for="cm-edge-label-input">Describe the relationship</label>
+          <input type="text" id="cm-edge-label-input"
+                 placeholder="e.g. both displaced by Mission system"
+                 aria-label="Relationship label" maxlength="120" autocomplete="off">
+          <div class="cm-edge-popup-actions">
+            <button class="cm-btn cm-btn-secondary" id="cm-edge-cancel-btn">Cancel</button>
+            <button class="cm-btn cm-btn-primary" id="cm-edge-add-btn">Add Connection</button>
+          </div>
+        </div>
+
+        <!-- Cross-era picker -->
+        <div class="cm-cross-era-picker" id="cm-cross-era-picker" aria-hidden="true">
+          <div class="cm-cross-era-picker-inner">
+            <div class="cm-cross-era-picker-header">
+              <span>Add location from another era</span>
+              <button class="cm-close-btn" id="cm-picker-close" aria-label="Close picker">×</button>
+            </div>
+            <div id="cm-picker-list"></div>
+          </div>
+        </div>
+
+        <!-- Right-click context menu -->
+        <div class="cm-context-menu" id="cm-context-menu" role="menu" aria-hidden="true">
+          <div id="cm-context-menu-items"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- AI feedback panel (hidden until submission) -->
+    <div class="cm-results-panel" id="cm-results-panel" hidden>
+      <div class="cm-results-header">
+        <span>AI Feedback</span>
+        <span class="cm-synthesis-score" id="cm-synthesis-score"></span>
+      </div>
+      <div class="cm-results-body" id="cm-results-body"></div>
+    </div>
+
+    <div class="cm-panel-footer">
+      <div class="cm-footer-left">
+        <span class="cm-edge-count" id="cm-edge-count">0 connections</span>
+        <span class="cm-save-indicator" id="cm-save-indicator"></span>
+        <button class="cm-btn cm-btn-secondary cm-clear-all-btn" id="cm-clear-btn">Clear All</button>
+      </div>
+      <div class="cm-footer-right">
+        <button class="cm-btn cm-btn-secondary" id="cm-save-btn">Save</button>
+        <div class="cm-submit-wrapper">
+          <button class="cm-btn cm-btn-primary" id="cm-submit-btn" disabled
+                  aria-describedby="cm-submit-tooltip">Submit for Feedback</button>
+          <span class="cm-submit-tooltip" id="cm-submit-tooltip" role="tooltip"></span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
 <!-- Chat Panel -->
 <div class="chat-panel" id="chat-panel">
   <div class="chat-panel-header" id="chat-panel-header">
@@ -135,6 +235,7 @@
 
 {% block extra_js %}
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://unpkg.com/cytoscape@3.30.2/dist/cytoscape.min.js"></script>
 <script>
   const CURRENT_USER = {
     id: {{ current_user.id }},
@@ -151,4 +252,5 @@
 <script src="{{ url_for('static', filename='js/chat.js') }}"></script>
 <script src="{{ url_for('static', filename='js/voice.js') }}"></script>
 <script src="{{ url_for('static', filename='js/map.js') }}"></script>
+<script src="{{ url_for('static', filename='js/concept_map.js') }}"></script>
 {% endblock %}

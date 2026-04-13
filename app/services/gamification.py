@@ -3,6 +3,7 @@ from ..extensions import db
 from ..models.location import Location
 from ..models.progress import UserProgress, Badge, UserBadge
 from ..models.user import User
+from ..models.concept_map import ConceptMap
 
 
 # Points awarded for each action
@@ -11,6 +12,15 @@ POINTS_QUIZ_PASS_FIRST = 50
 POINTS_QUIZ_PASS_RETRY = 25
 POINTS_QUIZ_BONUS_90 = 20
 POINTS_ERA_COMPLETE = 100
+POINTS_CONCEPT_MAP_SUBMIT = 75
+POINTS_CONCEPT_MAP_BONUS  = 25
+
+ERA_SYNTHESIZER_BADGES = {
+    1: 'era_synthesizer_1',
+    2: 'era_synthesizer_2',
+    3: 'era_synthesizer_3',
+    4: 'era_synthesizer_4',
+}
 
 
 def get_or_create_progress(user_id, location_id):
@@ -219,6 +229,16 @@ def check_and_award_badges(user):
     if quiz_passed_count >= total_locations:
         candidates.append('quiz_master')
 
+    submitted_era_orders = {
+        cm.era_order
+        for cm in ConceptMap.query.filter_by(user_id=user_id, submitted=True).all()
+    }
+    for era_num, slug in ERA_SYNTHESIZER_BADGES.items():
+        if era_num in submitted_era_orders:
+            candidates.append(slug)
+    if len(submitted_era_orders) >= 4:
+        candidates.append('master_cartographer')
+
     new_badges = []
     for slug in candidates:
         if slug not in earned_slugs:
@@ -283,6 +303,10 @@ def get_progress_summary(user_id):
     visit_pts = sum(1 for p in all_progress.values() if p.visited) * POINTS_VISIT
     quiz_pts  = max(0, (user.total_points or 0) - visit_pts)
 
+    concept_maps_submitted = ConceptMap.query.filter_by(
+        user_id=user_id, submitted=True
+    ).count()
+
     return {
         'user': {
             'id': user.id,
@@ -294,6 +318,7 @@ def get_progress_summary(user_id):
         'total_visited': sum(1 for p in all_progress.values() if p.visited),
         'total_passed': sum(1 for p in all_progress.values() if p.quiz_passed),
         'total_locations': len(all_locations),
+        'concept_maps_submitted': concept_maps_submitted,
         'points_breakdown': {
             'visit_pts': visit_pts,
             'quiz_pts': quiz_pts,

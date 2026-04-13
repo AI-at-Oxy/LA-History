@@ -48,6 +48,11 @@ function renderSidebar(data) {
           <div class="era-bar-bg">
             <div class="era-bar-fill ${era.era}" style="width:${pct}%;background:${color}"></div>
           </div>
+          <button class="cm-era-trigger-btn era-${era.era}"
+                  data-era-order="${era.era_order}"
+                  onclick="openConceptMap(${era.era_order})">
+            🗺 Concept Map
+          </button>
         </div>
       `;
     }).join('');
