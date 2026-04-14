@@ -39,38 +39,55 @@ function renderSidebar(data) {
   // Era progress bars
   const list = document.getElementById('era-progress-list');
   if (list) {
-    // Jump bar
-    const jumpBar = `
-      <div class="era-jump-bar">
-        ${data.eras.map(era => `
-          <button class="era-jump-btn" style="color:${eraColor(era.era)}"
-                  onclick="document.getElementById('era-section-${era.era}')?.scrollIntoView({behavior:'smooth',block:'start'})">
-            ${eraEmoji(era.era)} ${era.era.charAt(0).toUpperCase() + era.era.slice(1)}
-          </button>`).join('')}
-      </div>`;
-
     const items = data.eras.map(era => {
       const pct = era.total > 0 ? Math.round((era.passed / era.total) * 100) : 0;
       const color = eraColor(era.era);
-      return `
-        <div class="era-progress-item" id="era-section-${era.era}">
-          <div class="era-progress-header">
-            <span class="era-progress-name">${eraEmoji(era.era)} ${era.era.charAt(0).toUpperCase() + era.era.slice(1)}</span>
-            <span class="era-progress-stat">${era.passed}/${era.total} passed</span>
-          </div>
-          <div class="era-bar-bg">
-            <div class="era-bar-fill ${era.era}" style="width:${pct}%;background:${color}"></div>
-          </div>
+      const eraLocked = !era.era_unlocked;
+      const cmSubmitted = !!era.concept_map_submitted;
+
+      let cmBtn;
+      if (eraLocked) {
+        const prevEraName = data.eras.find(e => e.era_order === era.era_order - 1);
+        const hint = prevEraName
+          ? `Complete all ${prevEraName.era} quizzes and submit that era's concept map to unlock`
+          : 'Complete the previous era to unlock';
+        cmBtn = `
+          <button class="cm-era-trigger-btn era-${era.era} cm-btn-locked"
+                  disabled title="${hint}">
+            🔒 Concept Map
+          </button>`;
+      } else if (cmSubmitted) {
+        cmBtn = `
+          <button class="cm-era-trigger-btn era-${era.era} cm-btn-submitted"
+                  data-era-order="${era.era_order}"
+                  onclick="openConceptMap(${era.era_order})">
+            ✅ Concept Map
+          </button>`;
+      } else {
+        cmBtn = `
           <button class="cm-era-trigger-btn era-${era.era}"
                   data-era-order="${era.era_order}"
                   onclick="openConceptMap(${era.era_order})">
             🗺 Concept Map
-          </button>
+          </button>`;
+      }
+
+      const lockedHeader = eraLocked
+        ? `<span class="era-locked-badge">🔒 Locked</span>` : '';
+
+      return `
+        <div class="era-progress-item${eraLocked ? ' era-item-locked' : ''}">
+          <div class="era-progress-header">
+            <span class="era-progress-name">${eraEmoji(era.era)} ${era.era.charAt(0).toUpperCase() + era.era.slice(1)}</span>
+            <span class="era-progress-stat">${eraLocked ? lockedHeader : `${era.passed}/${era.total} passed`}</span>
+          </div>
+          ${eraLocked ? '' : `<div class="era-bar-bg"><div class="era-bar-fill ${era.era}" style="width:${pct}%;background:${color}"></div></div>`}
+          ${cmBtn}
         </div>
       `;
     }).join('');
 
-    list.innerHTML = jumpBar + items;
+    list.innerHTML = items;
   }
 
   // Badges

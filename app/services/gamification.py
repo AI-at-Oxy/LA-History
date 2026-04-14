@@ -65,7 +65,7 @@ def record_quiz_result(user_id, location_id, score_percent, quiz_points_reward):
     progress = get_or_create_progress(user_id, location_id)
     user = User.query.get(user_id)
 
-    passed = score_percent >= 70
+    passed = score_percent >= 75
     is_first_attempt = progress.quiz_attempts == 0
     already_passed = progress.quiz_passed
 
@@ -104,11 +104,17 @@ def check_era_unlocks(user_id):
     """
     Check whether the user's progress unlocks any new eras.
     Returns a list of location ids that are newly accessible.
+    Unlock condition: all previous era quizzes passed AND previous era concept map submitted.
     """
     all_locations = Location.query.order_by(Location.era_order).all()
     user_progress = {
         p.location_id: p
         for p in UserProgress.query.filter_by(user_id=user_id).all()
+    }
+
+    submitted_concept_maps = {
+        cm.era_order
+        for cm in ConceptMap.query.filter_by(user_id=user_id, submitted=True).all()
     }
 
     # Group locations by era_order
@@ -131,15 +137,10 @@ def check_era_unlocks(user_id):
             if user_progress.get(loc.id) and user_progress[loc.id].quiz_passed
         )
         prev_total = len(prev_era_locs)
+        prev_concept_map_submitted = (era_order - 1) in submitted_concept_maps
 
-        # Era 2: unlock when 50% of era 1 passed
-        # Era 3+: unlock when 100% of previous era passed
-        if era_order == 2:
-            threshold_met = prev_passed >= (prev_total * 0.5)
-        else:
-            threshold_met = prev_passed == prev_total
-
-        if threshold_met:
+        # All previous era quizzes must be passed AND concept map must be submitted
+        if prev_passed == prev_total and prev_concept_map_submitted:
             for loc in eras[era_order]:
                 prog = user_progress.get(loc.id)
                 # If they haven't visited yet, this location is "newly accessible"
@@ -150,7 +151,9 @@ def check_era_unlocks(user_id):
 
 
 def is_location_unlocked(user_id, location):
-    """Return True if the given location is accessible to this user."""
+    """Return True if the given location is accessible to this user.
+    Unlock condition: all previous era quizzes passed AND previous era concept map submitted.
+    """
     if location.is_starter:
         return True
 
@@ -173,10 +176,35 @@ def is_location_unlocked(user_id, location):
         if user_progress.get(loc.id) and user_progress[loc.id].quiz_passed
     )
     prev_total = len(prev_era_locs)
+    prev_concept_map_submitted = ConceptMap.query.filter_by(
+        user_id=user_id, era_order=location.era_order - 1, submitted=True
+    ).first() is not None
 
-    if location.era_order == 2:
-        return prev_passed >= (prev_total * 0.5)
-    return prev_passed == prev_total
+    return prev_passed == prev_total and prev_concept_map_submitted
+
+
+def is_era_unlocked_for_user(user_id, era_order):
+    """Return True if the given era is accessible to this user."""
+    if era_order == 1:
+        return True
+
+    prev_era_locs = Location.query.filter_by(era_order=era_order - 1).all()
+    if not prev_era_locs:
+        return True
+
+    user_progress = {
+        p.location_id: p
+        for p in UserProgress.query.filter_by(user_id=user_id).all()
+    }
+    prev_passed = sum(
+        1 for loc in prev_era_locs
+        if user_progress.get(loc.id) and user_progress[loc.id].quiz_passed
+    )
+    prev_concept_map_submitted = ConceptMap.query.filter_by(
+        user_id=user_id, era_order=era_order - 1, submitted=True
+    ).first() is not None
+
+    return prev_passed == len(prev_era_locs) and prev_concept_map_submitted
 
 
 def check_and_award_badges(user):
@@ -262,6 +290,11 @@ def get_progress_summary(user_id):
         for p in UserProgress.query.filter_by(user_id=user_id).all()
     }
 
+    submitted_concept_maps = {
+        cm.era_order
+        for cm in ConceptMap.query.filter_by(user_id=user_id, submitted=True).all()
+    }
+
     eras = {}
     for loc in all_locations:
         key = loc.era_order
@@ -285,6 +318,19 @@ def get_progress_summary(user_id):
             eras[key]['visited'] += 1
         if prog and prog.quiz_passed:
             eras[key]['passed'] += 1
+
+    # Annotate each era with unlock state and concept map submission status
+    sorted_era_orders = sorted(eras.keys())
+    for era_order in sorted_era_orders:
+        era_data = eras[era_order]
+        era_data['concept_map_submitted'] = era_order in submitted_concept_maps
+        if era_order == 1:
+            era_data['era_unlocked'] = True
+        else:
+            prev = eras.get(era_order - 1, {})
+            prev_all_passed = prev.get('passed', 0) == prev.get('total', 1)
+            prev_cm_submitted = (era_order - 1) in submitted_concept_maps
+            era_data['era_unlocked'] = prev_all_passed and prev_cm_submitted
 
     earned_map = {
         ub.badge_id: ub.earned_at

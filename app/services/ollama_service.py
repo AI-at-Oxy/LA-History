@@ -128,6 +128,7 @@ def evaluate_concept_map(era_name, locations_context, graph_json):
         'model': model,
         'messages': [{'role': 'user', 'content': prompt}],
         'stream': False,
+        'format': 'json',
     }
 
     raw = ''
@@ -142,14 +143,6 @@ def evaluate_concept_map(era_name, locations_context, graph_json):
         raw = data.get('message', {}).get('content', '').strip()
         if not raw:
             return None, 'The evaluator returned an empty response. Please try again.'
-
-        # llama3.2 often wraps JSON in ```json ... ``` even when told not to
-        if raw.startswith('```'):
-            parts = raw.split('```')
-            raw = parts[1] if len(parts) > 1 else raw
-            if raw.startswith('json'):
-                raw = raw[4:]
-            raw = raw.strip()
 
         feedback = json.loads(raw)
         feedback.setdefault('edge_feedback', [])

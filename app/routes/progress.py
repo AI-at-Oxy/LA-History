@@ -1,9 +1,45 @@
+import json
 from flask import Blueprint, jsonify, render_template, abort
 from flask_login import login_required, current_user
 from ..extensions import db
 from ..models.location import Location
 from ..models.progress import UserProgress, UserBadge
+from ..models.concept_map import ConceptMap
 from ..services.gamification import record_visit, get_progress_summary
+
+
+def _parse_cm_for_dashboard(cm):
+    """Return graph stats and AI score for a ConceptMap row."""
+    result = {
+        'era_order':     cm.era_order,
+        'submitted':     cm.submitted,
+        'points_earned': cm.points_earned,
+        'updated_at':    cm.updated_at.isoformat() if cm.updated_at else None,
+        'node_count':    0,
+        'edge_count':    0,
+        'node_labels':   [],
+        'synthesis_score': None,
+    }
+    if cm.graph_json:
+        try:
+            g = json.loads(cm.graph_json)
+            els = g.get('elements', {})
+            nodes = els.get('nodes', []) if isinstance(els, dict) else [e for e in els if e.get('group') == 'nodes']
+            edges = els.get('edges', []) if isinstance(els, dict) else [e for e in els if e.get('group') == 'edges']
+            result['node_count'] = len(nodes)
+            result['edge_count'] = len(edges)
+            result['node_labels'] = [
+                n['data'].get('label', '') for n in nodes
+                if n.get('data', {}).get('label')
+            ][:10]
+        except Exception:
+            pass
+    if cm.ai_feedback:
+        try:
+            result['synthesis_score'] = json.loads(cm.ai_feedback).get('synthesis_score')
+        except Exception:
+            pass
+    return result
 
 progress_bp = Blueprint('progress', __name__)
 
@@ -33,7 +69,9 @@ def get_progress():
 @login_required
 def dashboard():
     summary = get_progress_summary(current_user.id)
-    return render_template('dashboard/index.html', summary=summary)
+    raw_cms = ConceptMap.query.filter_by(user_id=current_user.id).all()
+    concept_maps = {cm.era_order: _parse_cm_for_dashboard(cm) for cm in raw_cms}
+    return render_template('dashboard/index.html', summary=summary, concept_maps=concept_maps)
 
 
 @progress_bp.route('/api/progress/reset', methods=['POST'])
@@ -41,6 +79,7 @@ def dashboard():
 def reset_progress():
     UserProgress.query.filter_by(user_id=current_user.id).delete()
     UserBadge.query.filter_by(user_id=current_user.id).delete()
+    ConceptMap.query.filter_by(user_id=current_user.id).delete()
     current_user.total_points = 0
     db.session.commit()
     return jsonify({'success': True, 'message': 'All progress has been reset.'})

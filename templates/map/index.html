@@ -71,7 +71,6 @@
 
     <!-- Era filter toolbar -->
     <div id="era-filter-bar">
-      <button class="era-filter-btn active" data-era="all" onclick="applyEraFilter('all')">All</button>
       <button class="era-filter-btn active" data-era="native" onclick="applyEraFilter('native')">🌿 Tongva</button>
       <button class="era-filter-btn active" data-era="spanish" onclick="applyEraFilter('spanish')">⚓ Spanish</button>
       <button class="era-filter-btn active" data-era="rancho" onclick="applyEraFilter('rancho')">🏗️ Rancho</button>
@@ -144,6 +143,12 @@
       <!-- Canvas area -->
       <div class="cm-canvas-area">
         <div id="cm-canvas" tabindex="0" aria-label="Concept map canvas"></div>
+
+        <!-- Zoom controls -->
+        <div class="cm-zoom-controls">
+          <button class="cm-zoom-btn" id="cm-zoom-in-btn" title="Zoom in">+</button>
+          <button class="cm-zoom-btn" id="cm-zoom-out-btn" title="Zoom out">−</button>
+        </div>
 
         <!-- Edge label popup -->
         <div class="cm-edge-popup" id="cm-edge-popup" aria-hidden="true">

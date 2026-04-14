@@ -7,7 +7,6 @@ let markersById = {};
 let locationsData = [];
 let activeLocationId = null;
 let ttsActive = false;
-let visitedTrail = null;
 let _suppressZoomSFX = false;
 
 // ---- TTS word-highlight helpers ----
@@ -148,48 +147,27 @@ function renderMarkers(locations) {
     markersById[loc.id] = marker;
   });
 
-  renderVisitedTrail(locations);
 }
 
 // ---- Era filter ----
-const activeEraFilters = new Set(['all', 'native', 'spanish', 'rancho', 'modern']);
+const activeEraFilters = new Set(['native', 'spanish', 'rancho', 'modern']);
 
 function applyEraFilter(era) {
   if (typeof SFX !== 'undefined') SFX.play('filter-toggle');
-  const allBtn = document.querySelector('.era-filter-btn[data-era="all"]');
 
-  if (era === 'all') {
-    // Toggle all on/off
-    const allActive = ['native', 'spanish', 'rancho', 'modern'].every(e => activeEraFilters.has(e));
-    if (allActive) {
-      activeEraFilters.clear();
-    } else {
-      ['all', 'native', 'spanish', 'rancho', 'modern'].forEach(e => activeEraFilters.add(e));
-    }
+  if (activeEraFilters.has(era)) {
+    activeEraFilters.delete(era);
   } else {
-    if (activeEraFilters.has(era)) {
-      activeEraFilters.delete(era);
-    } else {
-      activeEraFilters.add(era);
-    }
-    // Sync "All" button state
-    const allEras = ['native', 'spanish', 'rancho', 'modern'];
-    if (allEras.every(e => activeEraFilters.has(e))) {
-      activeEraFilters.add('all');
-    } else {
-      activeEraFilters.delete('all');
-    }
+    activeEraFilters.add(era);
   }
 
   // Update button visual state
   document.querySelectorAll('.era-filter-btn').forEach(btn => {
     const btnEra = btn.dataset.era;
-    const isActive = activeEraFilters.has(btnEra) || (btnEra === 'all' && activeEraFilters.has('all'));
+    const isActive = activeEraFilters.has(btnEra);
     btn.classList.toggle('active', isActive);
-    if (btnEra !== 'all') {
-      btn.style.background = isActive ? eraColor(btnEra) : '';
-      btn.style.borderColor = isActive ? eraColor(btnEra) : '';
-    }
+    btn.style.background = isActive ? eraColor(btnEra) : '';
+    btn.style.borderColor = isActive ? eraColor(btnEra) : '';
   });
 
   updateMarkerVisibility();
@@ -242,7 +220,11 @@ function initMapSearch() {
       const row = document.createElement('div');
       row.className = 'map-search-result';
       row.innerHTML = `<span class="map-search-result-name">${loc.name}</span><span class="map-search-result-era">${eraEmoji(loc.era)} ${loc.era.charAt(0).toUpperCase() + loc.era.slice(1)}</span>`;
-      row.addEventListener('click', () => flyToLocation(loc));
+      row.addEventListener('click', () => {
+        results.innerHTML = '';
+        input.value = '';
+        onMarkerClick(loc.id);
+      });
       results.appendChild(row);
     });
   });
@@ -272,20 +254,6 @@ function flyToLocation(loc) {
   if (searchInput) searchInput.value = '';
 }
 
-function renderVisitedTrail(locations) {
-  if (visitedTrail) { visitedTrail.remove(); visitedTrail = null; }
-  const visited = locations
-    .filter(l => l.visited)
-    .sort((a, b) => (a.era_order - b.era_order) || (a.id - b.id));
-  if (visited.length < 2) return;
-  const coords = visited.map(l => [l.latitude, l.longitude]);
-  visitedTrail = L.polyline(coords, {
-    color: 'rgba(212,168,67,0.45)',
-    weight: 2,
-    dashArray: '5, 8',
-    className: 'visited-trail',
-  }).addTo(map);
-}
 
 function getMarkerDimensions() {
   const base = parseInt(localStorage.getItem('marker_size')) || 32;
@@ -392,7 +360,7 @@ async function onMarkerClick(locationId) {
   const locForFly = locationsData.find(l => l.id === locationId);
   if (locForFly) {
     _suppressZoomSFX = true;
-    map.flyTo([locForFly.latitude, locForFly.longitude], Math.max(map.getZoom(), 14), {
+    map.flyTo([locForFly.latitude, locForFly.longitude], Math.max(map.getZoom(), 13), {
       animate: true,
       duration: 0.9,
       easeLinearity: 0.25,
@@ -646,6 +614,19 @@ function refreshSingleMarker(loc) {
 // Expose so quiz.js can trigger a full refresh after unlock
 window.refreshMapMarkers = loadLocations;
 
+// Expose so quiz.js can refresh the detail panel after a quiz pass
+window.refreshDetailPanel = async function(locationId) {
+  try {
+    const loc = await apiFetch(`/api/locations/${locationId}`);
+    const idx = locationsData.findIndex(l => l.id === locationId);
+    if (idx !== -1) locationsData[idx] = { ...locationsData[idx], ...loc };
+    if (activeLocationId === locationId) openDetailPanel(loc);
+    refreshSingleMarker(loc);
+  } catch (e) {
+    // silently ignore — panel will be correct on next open
+  }
+};
+
 function openImageLightbox(src, caption) {
   let overlay = document.getElementById('image-lightbox-overlay');
   if (!overlay) {
@@ -706,7 +687,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const hashMatch = location.hash.match(/^#loc-(\d+)$/);
   if (hashMatch) {
     const targetId = parseInt(hashMatch[1]);
-    // Wait for markers to load then trigger click
     const checkLoaded = setInterval(() => {
       if (locationsData.length > 0) {
         clearInterval(checkLoaded);
@@ -714,5 +694,24 @@ document.addEventListener('DOMContentLoaded', () => {
         if (loc && loc.unlocked) onMarkerClick(targetId);
       }
     }, 200);
+  }
+
+  // Deep-link: open concept map from ?cm={era_order}
+  const cmParam = new URLSearchParams(location.search).get('cm');
+  if (cmParam) {
+    const eraOrder = parseInt(cmParam);
+    if (eraOrder >= 1 && eraOrder <= 4) {
+      const waitForSidebar = setInterval(() => {
+        if (typeof openConceptMap === 'function' && locationsData.length > 0 && typeof progressData !== 'undefined' && progressData) {
+          clearInterval(waitForSidebar);
+          const eraInfo = progressData.eras && progressData.eras.find(e => e.era_order === eraOrder);
+          if (eraInfo && !eraInfo.era_unlocked) {
+            showToast('That era is locked. Complete the previous era\'s quizzes and concept map first.', 'warning');
+            return;
+          }
+          setTimeout(() => openConceptMap(eraOrder), 300);
+        }
+      }, 200);
+    }
   }
 });

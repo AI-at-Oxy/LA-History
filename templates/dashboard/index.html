@@ -408,10 +408,216 @@
   display: flex;
 }
 
+/* ---- Location map link button ---- */
+.loc-map-btn {
+  display: inline-flex;
+  align-items: center;
+  margin-left: 7px;
+  padding: 2px 7px;
+  font-size: 0.68rem;
+  color: var(--accent);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  text-decoration: none;
+  vertical-align: middle;
+  white-space: nowrap;
+  transition: background 0.12s, color 0.12s, border-color 0.12s;
+}
+.loc-map-btn:hover {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
+}
+
+/* ---- Concept map dashboard cards ---- */
+.cm-dash-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(205px, 1fr));
+  gap: 18px;
+  margin-bottom: 40px;
+}
+
+.cm-dash-card {
+  background: var(--bg-card);
+  border-radius: 10px;
+  padding: 20px;
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+}
+
+.cm-dash-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  border-radius: 10px 10px 0 0;
+}
+.cm-dash-card.native::before  { background: var(--era-native); }
+.cm-dash-card.spanish::before { background: var(--era-spanish); }
+.cm-dash-card.rancho::before  { background: var(--era-rancho); }
+.cm-dash-card.modern::before  { background: var(--era-modern); }
+
+.cm-dash-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+}
+
+.cm-dash-card-name {
+  font-weight: 700;
+  font-size: 0.88rem;
+  color: var(--text);
+}
+
+.cm-dash-status {
+  font-size: 0.67rem;
+  padding: 2px 8px;
+  border-radius: 99px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+}
+.cm-dash-status.submitted   { background: rgba(42,110,48,0.12);  color: var(--success); }
+.cm-dash-status.in-progress { background: rgba(212,168,67,0.15); color: var(--accent); }
+.cm-dash-status.not-started { background: var(--border-light);   color: var(--text-muted); }
+.cm-dash-status.locked      { background: var(--border-light);   color: var(--text-muted); }
+
+.cm-dash-stats {
+  font-size: 0.77rem;
+  color: var(--text-muted);
+}
+
+.cm-dash-score {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.cm-score-bar-bg {
+  flex: 1;
+  height: 5px;
+  border-radius: 3px;
+  background: var(--border-light);
+  overflow: hidden;
+}
+.cm-score-bar-fill {
+  height: 100%;
+  border-radius: 3px;
+  background: linear-gradient(to right, var(--accent), var(--accent-gold));
+}
+.cm-score-val {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 0.85rem;
+  color: var(--accent-gold);
+  white-space: nowrap;
+}
+
+.cm-dash-concepts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+.cm-concept-tag {
+  font-size: 0.67rem;
+  padding: 2px 7px;
+  background: #f0ebe0;
+  border-radius: 4px;
+  color: var(--text-muted);
+  border: 1px solid var(--border-light);
+}
+
+.cm-dash-footer {
+  margin-top: auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 4px;
+  border-top: 1px solid var(--border-light);
+}
+.cm-dash-pts {
+  font-size: 0.74rem;
+  color: var(--accent);
+  font-weight: 600;
+}
+.cm-dash-open-btn {
+  font-size: 0.74rem;
+  padding: 4px 12px;
+  border-radius: 6px;
+  background: var(--bg-dark);
+  color: var(--accent-gold);
+  border: 1px solid rgba(212,168,67,0.3);
+  text-decoration: none;
+  transition: background 0.15s;
+}
+.cm-dash-open-btn:hover { background: rgba(212,168,67,0.1); }
+.cm-dash-open-btn-disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  color: var(--text-muted);
+  border-color: var(--border);
+}
+.cm-dash-card-locked {
+  opacity: 0.65;
+  filter: grayscale(30%);
+}
+.cm-dash-locked-hint {
+  font-style: italic;
+  font-size: 0.73rem;
+}
+
+/* ---- Sort bar ---- */
+.sort-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: -10px;
+  margin-bottom: 18px;
+}
+.sort-label {
+  font-family: var(--font-display);
+  font-size: 0.78rem;
+  font-style: italic;
+  letter-spacing: 0.04em;
+  color: var(--text-muted);
+  font-weight: 600;
+  white-space: nowrap;
+}
+.sort-select {
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  letter-spacing: 0.02em;
+  padding: 4px 28px 4px 10px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: var(--bg-card);
+  color: var(--text);
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23b87316'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 9px center;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.sort-select:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px rgba(184,115,26,0.15);
+}
+
 /* ---- Dashboard dark mode overrides ---- */
 html.dark .badge-card-icon { background: linear-gradient(135deg, #2e2820, #3a3028); }
 html.dark .location-table th { background: #1e1a14; }
 html.dark .location-table tr:hover td { background: #2a231c; }
+html.dark .cm-concept-tag { background: #2a231c; }
+html.dark .cm-dash-open-btn { background: #1e1a14; }
+html.dark .sort-select { background-color: #1e1a14; }
 </style>
 {% endblock %}
 
@@ -502,10 +708,24 @@ html.dark .location-table tr:hover td { background: #2a231c; }
 
   <!-- Badges -->
   <h2 class="section-title">Badge Collection</h2>
-  <div class="badge-showcase">
+  <div class="sort-bar">
+    <span class="sort-label">Sort:</span>
+    <select class="sort-select" id="badge-sort">
+      <option value="default">Default</option>
+      <option value="name">Name A→Z</option>
+      <option value="name-desc">Name Z→A</option>
+      <option value="earned">Earned First</option>
+      <option value="date-new">Date (Newest)</option>
+      <option value="date-old">Date (Oldest)</option>
+    </select>
+  </div>
+  <div class="badge-showcase" id="badge-showcase">
     {% for badge in summary.badges %}
     {% if badge.earned %}
-    <div class="badge-card">
+    <div class="badge-card"
+         data-name="{{ badge.name }}"
+         data-earned="1"
+         data-date="{{ badge.earned_at[:10] }}">
       <div class="badge-card-icon">{{ badge.icon }}</div>
       <div class="badge-card-info">
         <h4>{{ badge.name }}</h4>
@@ -514,7 +734,10 @@ html.dark .location-table tr:hover td { background: #2a231c; }
       </div>
     </div>
     {% else %}
-    <div class="badge-card badge-card-locked">
+    <div class="badge-card badge-card-locked"
+         data-name="{{ badge.name }}"
+         data-earned="0"
+         data-date="">
       <div class="badge-card-icon">{{ badge.icon }}</div>
       <div class="badge-card-info">
         <h4>🔒 {{ badge.name }}</h4>
@@ -527,7 +750,18 @@ html.dark .location-table tr:hover td { background: #2a231c; }
 
   <!-- Location Breakdown -->
   <h2 class="section-title">Location Breakdown</h2>
-  <table class="location-table">
+  <div class="sort-bar">
+    <span class="sort-label">Sort:</span>
+    <select class="sort-select" id="location-sort">
+      <option value="era">By Era</option>
+      <option value="name">Name A→Z</option>
+      <option value="name-desc">Name Z→A</option>
+      <option value="visited">Visited First</option>
+      <option value="quiz">Quiz Score ↓</option>
+      <option value="points">Points ↓</option>
+    </select>
+  </div>
+  <table class="location-table" id="location-table">
     <thead>
       <tr>
         <th>Location</th>
@@ -541,8 +775,18 @@ html.dark .location-table tr:hover td { background: #2a231c; }
     <tbody>
       {% for era in summary.eras %}
         {% for loc in era.locations %}
-        <tr>
-          <td style="font-weight:500">{{ loc.name }}</td>
+        <tr data-name="{{ loc.name }}"
+            data-era-order="{{ era.era_order }}"
+            data-visited="{{ '1' if loc.visited else '0' }}"
+            data-locked="{{ '0' if loc.unlocked else '1' }}"
+            data-quiz-score="{{ loc.quiz_score if loc.quiz_passed else '0' }}"
+            data-points="{{ loc.points_earned or 0 }}">
+          <td style="font-weight:500">
+            {{ loc.name }}
+            {% if loc.unlocked %}
+            <a href="{{ url_for('map.map_page') }}#loc-{{ loc.id }}" class="loc-map-btn" title="View on map">↗ Map</a>
+            {% endif %}
+          </td>
           <td><span class="era-badge {{ era.era }}">{{ era.era }}</span></td>
           <td>
             {% if not loc.unlocked %}
@@ -576,9 +820,179 @@ html.dark .location-table tr:hover td { background: #2a231c; }
     </tbody>
   </table>
 
+  <!-- Concept Maps -->
+  <h2 class="section-title">Concept Maps</h2>
+  {% set era_css_map    = {'native':'native','spanish':'spanish','rancho':'rancho','modern':'modern'} %}
+  {% set era_emoji_map  = {'native':'🌿','spanish':'⛵','rancho':'🤠','modern':'🏙️'} %}
+  <div class="cm-dash-grid">
+    {% for era in summary.eras %}
+    {% set cm = concept_maps.get(era.era_order) %}
+    {% set era_css   = era_css_map.get(era.era, '') %}
+    {% set era_emoji = era_emoji_map.get(era.era, '🗺') %}
+    <div class="cm-dash-card {{ era_css }}{% if not era.era_unlocked %} cm-dash-card-locked{% endif %}">
+
+      <div class="cm-dash-card-header">
+        <span class="cm-dash-card-name">{{ era_emoji }} Era {{ era.era_order }}: {{ era.era | capitalize }}</span>
+        {% if not era.era_unlocked %}
+          <span class="cm-dash-status locked">🔒 Locked</span>
+        {% elif cm %}
+          {% if cm.submitted %}
+            <span class="cm-dash-status submitted">Submitted ✓</span>
+          {% else %}
+            <span class="cm-dash-status in-progress">In Progress</span>
+          {% endif %}
+        {% else %}
+          <span class="cm-dash-status not-started">Not Started</span>
+        {% endif %}
+      </div>
+
+      {% if not era.era_unlocked %}
+        <div class="cm-dash-stats cm-dash-locked-hint">
+          Pass all Era {{ era.era_order - 1 }} quizzes and submit that concept map to unlock
+        </div>
+      {% elif cm and cm.node_count > 0 %}
+        <div class="cm-dash-stats">{{ cm.node_count }} concept{{ 's' if cm.node_count != 1 }} · {{ cm.edge_count }} connection{{ 's' if cm.edge_count != 1 }}</div>
+      {% elif not cm %}
+        <div class="cm-dash-stats" style="font-style:italic">No map created yet</div>
+      {% else %}
+        <div class="cm-dash-stats" style="font-style:italic">Empty map</div>
+      {% endif %}
+
+      {% if cm and cm.submitted and cm.synthesis_score is not none %}
+        <div class="cm-dash-score">
+          <div class="cm-score-bar-bg">
+            <div class="cm-score-bar-fill" style="width:{{ cm.synthesis_score }}%"></div>
+          </div>
+          <span class="cm-score-val">{{ cm.synthesis_score }}/100</span>
+        </div>
+      {% endif %}
+
+      {% if cm and cm.node_labels %}
+        <div class="cm-dash-concepts">
+          {% for label in cm.node_labels[:6] %}
+            <span class="cm-concept-tag">{{ label }}</span>
+          {% endfor %}
+          {% if cm.node_labels | length > 6 %}
+            <span class="cm-concept-tag">+{{ cm.node_labels | length - 6 }} more</span>
+          {% endif %}
+        </div>
+      {% endif %}
+
+      <div class="cm-dash-footer">
+        <span class="cm-dash-pts">
+          {% if cm and cm.points_earned %}✦ {{ cm.points_earned }} pts{% endif %}
+        </span>
+        {% if era.era_unlocked %}
+          <a href="{{ url_for('map.map_page') }}?cm={{ era.era_order }}" class="cm-dash-open-btn">Open →</a>
+        {% else %}
+          <span class="cm-dash-open-btn cm-dash-open-btn-disabled">🔒 Locked</span>
+        {% endif %}
+      </div>
+
+    </div>
+    {% endfor %}
+  </div>
+
   <div class="dashboard-footer">
     <a href="{{ url_for('map.map_page') }}" class="btn btn-primary btn-lg">Continue Exploring →</a>
   </div>
 
 </div>
+
+<script>
+(function () {
+  // ---- Badge sorting ----
+  const badgeShowcase = document.getElementById('badge-showcase');
+  const badgeSelect   = document.getElementById('badge-sort');
+
+  if (badgeShowcase && badgeSelect) {
+    // Tag each card with its original DOM index so we can restore it
+    Array.from(badgeShowcase.children).forEach((el, i) => { el.dataset.idx = i; });
+
+    badgeSelect.addEventListener('change', () => {
+      const method = badgeSelect.value;
+      const cards  = Array.from(badgeShowcase.querySelectorAll('.badge-card'));
+
+      cards.sort((a, b) => {
+        switch (method) {
+          case 'name':
+            return a.dataset.name.localeCompare(b.dataset.name);
+          case 'name-desc':
+            return b.dataset.name.localeCompare(a.dataset.name);
+          case 'earned':
+            // earned first, then by original order within each group
+            if (a.dataset.earned !== b.dataset.earned)
+              return parseInt(b.dataset.earned) - parseInt(a.dataset.earned);
+            return parseInt(a.dataset.idx) - parseInt(b.dataset.idx);
+          case 'date-new':
+            // earned before locked, then newest date first
+            if (a.dataset.earned !== b.dataset.earned)
+              return parseInt(b.dataset.earned) - parseInt(a.dataset.earned);
+            return (b.dataset.date || '').localeCompare(a.dataset.date || '');
+          case 'date-old':
+            if (a.dataset.earned !== b.dataset.earned)
+              return parseInt(b.dataset.earned) - parseInt(a.dataset.earned);
+            return (a.dataset.date || '').localeCompare(b.dataset.date || '');
+          default: // original order
+            return parseInt(a.dataset.idx) - parseInt(b.dataset.idx);
+        }
+      });
+
+      cards.forEach(c => badgeShowcase.appendChild(c));
+    });
+  }
+
+  // ---- Location table sorting ----
+  const locationTable  = document.getElementById('location-table');
+  const locationSelect = document.getElementById('location-sort');
+
+  if (locationTable && locationSelect) {
+    const tbody = locationTable.querySelector('tbody');
+
+    // Tag each row with its original DOM index
+    Array.from(tbody.rows).forEach((row, i) => { row.dataset.idx = i; });
+
+    locationSelect.addEventListener('change', () => {
+      const method = locationSelect.value;
+      const rows   = Array.from(tbody.rows);
+
+      rows.sort((a, b) => {
+        switch (method) {
+          case 'name':
+            return a.dataset.name.localeCompare(b.dataset.name);
+          case 'name-desc':
+            return b.dataset.name.localeCompare(a.dataset.name);
+          case 'visited':
+            // visited > unvisited > locked, then original order
+            {
+              const visitedA = parseInt(a.dataset.locked) ? -1 : parseInt(a.dataset.visited);
+              const visitedB = parseInt(b.dataset.locked) ? -1 : parseInt(b.dataset.visited);
+              if (visitedA !== visitedB) return visitedB - visitedA;
+              return parseInt(a.dataset.idx) - parseInt(b.dataset.idx);
+            }
+          case 'quiz':
+            // highest score first; unscored rows go to the bottom
+            {
+              const scoreA = parseInt(a.dataset.quizScore) || 0;
+              const scoreB = parseInt(b.dataset.quizScore) || 0;
+              if (scoreA !== scoreB) return scoreB - scoreA;
+              return parseInt(a.dataset.idx) - parseInt(b.dataset.idx);
+            }
+          case 'points':
+            {
+              const ptA = parseInt(a.dataset.points) || 0;
+              const ptB = parseInt(b.dataset.points) || 0;
+              if (ptA !== ptB) return ptB - ptA;
+              return parseInt(a.dataset.idx) - parseInt(b.dataset.idx);
+            }
+          default: // era (original order preserves era grouping)
+            return parseInt(a.dataset.idx) - parseInt(b.dataset.idx);
+        }
+      });
+
+      rows.forEach(r => tbody.appendChild(r));
+    });
+  }
+})();
+</script>
 {% endblock %}

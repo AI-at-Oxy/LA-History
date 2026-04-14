@@ -153,6 +153,10 @@ async function submitQuiz() {
     showToast(`+${result.points_earned} points earned!`, 'points');
   }
 
+  if (result.passed && window.refreshDetailPanel) {
+    window.refreshDetailPanel(currentQuizLocationId);
+  }
+
   if (result.newly_unlocked && result.newly_unlocked.length > 0) {
     setTimeout(() => {
       showToast(`🔓 New locations unlocked! Explore the map.`, 'unlock', 5000);

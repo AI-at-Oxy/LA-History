@@ -189,30 +189,48 @@ function initCytoscape() {
     if (evt.target === cy) hideContextMenu();
   });
 
-  // ── right-click node → context menu
+  // ── right-click node → same as left-click (no-op here, handled by tap)
   cy.on('cxttap', 'node', function(evt) {
     if (cmSubmitted) return;
-    const node = evt.target;
-    showContextMenu([
-      {
-        label: '🔗 Start connection from here',
-        action() {
-          cy.nodes().removeClass('selected-source');
-          node.addClass('selected-source');
-          cmPendingEdgeSource = node.id();
-          showPreviewLine();
-        },
-      },
-      {
-        label: 'Remove from map',
-        danger: true,
-        action() { cmRemoveNode(node.id()); },
-      },
-    ], evt.renderedPosition);
+    // Handled by left-click tap below
   });
 
-  // ── right-click edge → context menu
-  cy.on('cxttap', 'edge', function(evt) {
+
+  // ── tap node → show options popup, or complete edge if one is pending
+  cy.on('tap', 'node', function(evt) {
+    if (cmSubmitted) return;
+    const node = evt.target;
+    const nodeId = node.id();
+
+    if (!cmPendingEdgeSource) {
+      // Show options popup on left click
+      showContextMenu([
+        {
+          label: '🔗 Start connection from here',
+          action() {
+            cy.nodes().removeClass('selected-source');
+            node.addClass('selected-source');
+            cmPendingEdgeSource = nodeId;
+            showPreviewLine();
+          },
+        },
+        {
+          label: '🗑️ Remove from map',
+          danger: true,
+          action() { cmRemoveNode(nodeId); },
+        },
+      ], evt.renderedPosition);
+    } else if (cmPendingEdgeSource === nodeId) {
+      hideContextMenu();
+      clearSourceSelection();
+    } else {
+      hideContextMenu();
+      showEdgePopup(cmPendingEdgeSource, nodeId, evt.renderedPosition);
+    }
+  });
+
+  // ── single tap edge → edit label or delete
+  cy.on('tap', 'edge', function(evt) {
     if (cmSubmitted) return;
     const edge = evt.target;
     showContextMenu([
@@ -229,38 +247,6 @@ function initCytoscape() {
         action() { cmRemoveEdge(edge.id()); },
       },
     ], evt.renderedPosition);
-  });
-
-  // ── tap node → edge state machine
-  cy.on('tap', 'node', function(evt) {
-    if (cmSubmitted) return;
-    hideContextMenu();
-    const node = evt.target;
-    const nodeId = node.id();
-
-    if (!cmPendingEdgeSource) {
-      cy.nodes().removeClass('selected-source');
-      node.addClass('selected-source');
-      cmPendingEdgeSource = nodeId;
-      showPreviewLine();
-    } else if (cmPendingEdgeSource === nodeId) {
-      clearSourceSelection();
-    } else {
-      showEdgePopup(cmPendingEdgeSource, nodeId, evt.renderedPosition);
-    }
-  });
-
-  // ── double-tap edge → edit label
-  cy.on('dblclick', 'edge', function(evt) {
-    if (cmSubmitted) return;
-    const edge = evt.target;
-    cmEditingEdgeId = edge.id();
-    showEdgePopup(
-      edge.data('source'),
-      edge.data('target'),
-      evt.renderedPosition,
-      edge.data('label'),
-    );
   });
 
   // ── Edge highlight on node hover
@@ -302,6 +288,67 @@ function renderPalette(locations) {
   `).join('');
 }
 
+// ── Find a free position that doesn't overlap existing nodes ─────────────
+function cmFindFreePosition() {
+  const nodes = cy.nodes();
+
+  if (nodes.length === 0) return { x: 0, y: 0 };
+
+  const NODE_W = 140;   // conservative node width estimate (graph coords)
+  const NODE_H = 60;    // conservative node height estimate
+  const GAP    = 24;    // minimum gap between node edges
+
+  // Collect bounding boxes of all placed nodes
+  const bboxes = nodes.map(n => n.boundingBox());
+
+  function overlaps(x, y) {
+    const hw = (NODE_W + GAP) / 2;
+    const hh = (NODE_H + GAP) / 2;
+    return bboxes.some(bb =>
+      x + hw > bb.x1 - GAP && x - hw < bb.x2 + GAP &&
+      y + hh > bb.y1 - GAP && y - hh < bb.y2 + GAP
+    );
+  }
+
+  const ext  = cy.extent();
+  const vw   = ext.x2 - ext.x1;
+  const vh   = ext.y2 - ext.y1;
+
+  // 1) Try a regular grid across the current viewport
+  const cols = Math.max(4, Math.ceil(vw / (NODE_W + GAP)));
+  const rows = Math.max(4, Math.ceil(vh / (NODE_H + GAP)));
+  const candidates = [];
+
+  for (let r = 0; r <= rows; r++) {
+    for (let c = 0; c <= cols; c++) {
+      const x = ext.x1 + (c / cols) * vw;
+      const y = ext.y1 + (r / rows) * vh;
+      if (!overlaps(x, y)) candidates.push({ x, y });
+    }
+  }
+
+  if (candidates.length > 0) {
+    return candidates[Math.floor(Math.random() * candidates.length)];
+  }
+
+  // 2) No clear spot inside viewport — spiral outward from the graph centre
+  const cx = (ext.x1 + ext.x2) / 2;
+  const cy2 = (ext.y1 + ext.y2) / 2;
+  const radius = Math.max(vw, vh) * 0.6;
+
+  for (let attempt = 0; attempt < 60; attempt++) {
+    const angle = (attempt / 60) * 2 * Math.PI;
+    const dist  = radius + attempt * (NODE_W + GAP) * 0.25;
+    const x = cx + Math.cos(angle) * dist;
+    const y = cy2 + Math.sin(angle) * dist;
+    if (!overlaps(x, y)) return { x, y };
+  }
+
+  // 3) Absolute fallback — place to the right of the rightmost node
+  const rightmost = Math.max(...bboxes.map(bb => bb.x2));
+  return { x: rightmost + NODE_W + GAP, y: cy2 };
+}
+
 function cmAddNode(locData) {
   const nodeId = 'loc-' + locData.id;
   if (cy.getElementById(nodeId).length > 0) {
@@ -311,13 +358,7 @@ function cmAddNode(locData) {
     return;
   }
 
-  const canvasEl = document.getElementById('cm-canvas');
-  const w = canvasEl.offsetWidth || 600;
-  const h = canvasEl.offsetHeight || 400;
-  const pos = {
-    x: 60 + Math.random() * (w - 120),
-    y: 60 + Math.random() * (h - 120),
-  };
+  const pos = cmFindFreePosition();
 
   const color = typeof eraColor === 'function' ? eraColor(locData.era) : '#888';
   const shortLabel = locData.name.length > 22
@@ -350,6 +391,8 @@ function cmAddNode(locData) {
       easing: 'spring(400, 20)',
       complete: function() {
         newNode.style({ 'width': 'label', 'height': 'label' });
+        // Always fit so a node placed outside the current viewport is revealed
+        cy.animate({ fit: { padding: 40 }, duration: 350, easing: 'ease-out' });
       },
     },
   );
@@ -515,7 +558,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (typeof SFX !== 'undefined') SFX.play('hover');
   });
 
-  // Auto-layout button
+  // Auto-layout button — compact spacing
   document.getElementById('cm-layout-btn').addEventListener('click', () => {
     if (!cy || cmSubmitted) return;
     cy.layout({
@@ -523,12 +566,29 @@ document.addEventListener('DOMContentLoaded', () => {
       animate: true,
       animationDuration: 600,
       animationEasing: 'ease-out-cubic',
-      nodeRepulsion: 4500,
-      idealEdgeLength: 120,
+      nodeRepulsion: 1200,
+      idealEdgeLength: 50,
+      nodeOverlap: 10,
+      gravity: 80,
+      numIter: 1000,
       randomize: false,
+      fit: true,
+      padding: 30,
     }).run();
     if (typeof SFX !== 'undefined') SFX.play('panel-close');
     scheduleAutoSave();
+  });
+
+  // Zoom in / out buttons
+  document.getElementById('cm-zoom-in-btn').addEventListener('click', () => {
+    if (!cy) return;
+    cy.zoom({ level: cy.zoom() * 1.25, renderedPosition: { x: cy.width() / 2, y: cy.height() / 2 } });
+    if (typeof SFX !== 'undefined') SFX.play('hover');
+  });
+  document.getElementById('cm-zoom-out-btn').addEventListener('click', () => {
+    if (!cy) return;
+    cy.zoom({ level: cy.zoom() / 1.25, renderedPosition: { x: cy.width() / 2, y: cy.height() / 2 } });
+    if (typeof SFX !== 'undefined') SFX.play('hover');
   });
 
   // Undo/Redo keyboard shortcuts

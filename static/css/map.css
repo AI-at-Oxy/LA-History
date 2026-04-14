@@ -448,7 +448,7 @@
 /* Fog of war — unlocked but not yet visited */
 .map-marker.unlocked:not(.visited) {
   opacity: 0.55;
-  filter: saturate(0.65);
+  filter: saturate(0.60);
   transition: opacity 0.3s, filter 0.3s;
 }
 .map-marker.unlocked:not(.visited):hover {
@@ -948,7 +948,7 @@ html.dark .tts-progress-bar { background: #2e2820; }
   top: 10px;
   left: 50%;
   transform: translateX(-50%);
-  z-index: 400;
+  z-index: 1001;
   display: flex;
   gap: 5px;
   background: var(--bg-card);
@@ -979,7 +979,7 @@ html.dark .tts-progress-bar { background: #2e2820; }
   position: absolute;
   top: 10px;
   right: 46px;
-  z-index: 400;
+  z-index: 1001;
   width: 220px;
 }
 #map-search-input {
@@ -1012,6 +1012,7 @@ html.dark .tts-progress-bar { background: #2e2820; }
   max-height: 260px;
   overflow-y: auto;
 }
+#map-search-results:empty { display: none; }
 .map-search-result {
   padding: 9px 12px;
   font-size: 0.82rem;

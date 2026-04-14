@@ -10,6 +10,7 @@ from ..models.user import User
 from ..services.gamification import (
     award_points, check_and_award_badges,
     POINTS_CONCEPT_MAP_SUBMIT, POINTS_CONCEPT_MAP_BONUS,
+    is_era_unlocked_for_user,
 )
 from ..services.ollama_service import evaluate_concept_map
 
@@ -71,6 +72,9 @@ def get_concept_map(era_order):
     if not locations:
         return jsonify({'error': 'Era not found.'}), 404
 
+    if not is_era_unlocked_for_user(current_user.id, era_order):
+        return jsonify({'error': 'This era is locked. Complete all previous era quizzes and submit the concept map to unlock it.'}), 403
+
     location_data = [
         {
             'id': loc.id,
@@ -102,6 +106,9 @@ def get_concept_map(era_order):
 @concept_map_bp.route('/api/concept_map/<int:era_order>/save', methods=['POST'])
 @login_required
 def save_concept_map(era_order):
+    if not is_era_unlocked_for_user(current_user.id, era_order):
+        return jsonify({'error': 'This era is locked.'}), 403
+
     data = request.get_json()
     if not data or 'graph_json' not in data:
         return jsonify({'error': 'graph_json is required.'}), 400
@@ -135,6 +142,9 @@ def evaluate_map(era_order):
     if not locations:
         return jsonify({'error': 'Era not found.'}), 404
 
+    if not is_era_unlocked_for_user(current_user.id, era_order):
+        return jsonify({'error': 'This era is locked.'}), 403
+
     # Server-side gate: all era quizzes must be passed
     if not all(
         user_progress.get(loc.id) and user_progress[loc.id].quiz_passed
@@ -165,7 +175,7 @@ def evaluate_map(era_order):
         f'- {loc.name}: {loc.short_description}' for loc in locations
     )
 
-    feedback, error = evaluate_concept_map(era_name, locations_context, concept_map.graph_json)
+    feedback, error = evaluate_concept_map(era_name, locations_context, _minimal_graph(concept_map.graph_json))
     if error:
         return jsonify({'error': error}), 503
 
