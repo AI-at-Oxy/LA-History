@@ -40,6 +40,7 @@
   <a href="{{ url_for('map.map_page') }}" class="navbar-link {% if request.endpoint == 'map.map_page' %}active{% endif %}">Map</a>
   <a href="{{ url_for('progress.dashboard') }}" class="navbar-link {% if request.endpoint == 'progress.dashboard' %}active{% endif %}">Dashboard</a>
   <span class="navbar-points">✦ {{ current_user.total_points or 0 }} pts</span>
+  <button id="help-btn" title="Tutorial" aria-label="Open tutorial">?</button>
   <button id="settings-btn" onclick="openSettings()" title="Settings">⚙</button>
   <form action="{{ url_for('auth.logout') }}" method="post" style="margin:0">
     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
@@ -222,6 +223,22 @@ function setTheme(mode) {
               <option value="44">Large</option>
             </select>
           </div>
+        </div>
+      </div>
+
+      <div class="accordion-section" id="acc-tutorial">
+        <button class="accordion-header" onclick="toggleAccordion('acc-tutorial')">
+          <span>🎓 Tutorial</span>
+          <span class="accordion-chevron">▾</span>
+        </button>
+        <div class="accordion-body" style="display:none">
+          <p style="font-size:0.82rem;color:var(--text-muted);margin-bottom:8px;">
+            Replay the interactive walkthrough to learn how to use the map, quizzes, badges, and AI tutor.
+          </p>
+          <button class="btn btn-secondary" style="width:100%"
+            onclick="closeSettings();if(typeof Tutorial!=='undefined')Tutorial.replay()">
+            Replay Tutorial
+          </button>
         </div>
       </div>
 

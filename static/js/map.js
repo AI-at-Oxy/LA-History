@@ -129,6 +129,7 @@ async function loadLocations() {
     initMapSearch();
     const loader = document.getElementById('map-loading');
     if (loader) { loader.classList.add('hidden'); setTimeout(() => loader.remove(), 400); }
+    if (typeof Tutorial !== 'undefined') Tutorial.init();
   } catch (e) {
     console.error('Failed to load locations:', e);
     const loader = document.getElementById('map-loading');
