@@ -164,7 +164,48 @@
   box-shadow: var(--shadow);
   transition: transform 0.2s, box-shadow 0.2s;
   position: relative;
-  overflow: hidden;
+  overflow: visible;
+}
+
+/* ---- Era card tooltip ---- */
+.era-card-tip {
+  display: none;
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--bg-dark);
+  border: 1px solid rgba(212,168,67,0.25);
+  border-radius: 8px;
+  padding: 10px 14px;
+  white-space: nowrap;
+  z-index: 20;
+  flex-direction: column;
+  gap: 5px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.35);
+  pointer-events: none;
+  min-width: 190px;
+}
+.era-card-tip span {
+  font-size: 0.78rem;
+  color: #c8baa8;
+  letter-spacing: 0.02em;
+}
+.era-card-tip span strong {
+  color: #f0ece4;
+  font-weight: 600;
+}
+.era-card-tip::before {
+  content: '';
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 6px solid transparent;
+  border-bottom-color: rgba(212,168,67,0.25);
+}
+.era-card:hover .era-card-tip {
+  display: flex;
 }
 .era-card:hover {
   transform: translateY(-3px);
@@ -237,6 +278,13 @@
   margin-top: 4px;
 }
 .era-card-stats span strong { color: var(--text); font-weight: 600; }
+
+.era-card-status {
+  font-size: 0.74rem;
+  color: var(--text-muted);
+  margin-top: 8px;
+  text-align: center;
+}
 
 /* ---- Badge showcase ---- */
 .badge-showcase {
@@ -663,6 +711,62 @@ html.dark .location-table tr:hover td { background: #2a231c; }
 html.dark .cm-concept-tag { background: #2a231c; }
 html.dark .cm-dash-open-btn { background: #1e1a14; }
 html.dark .sort-select { background-color: #1e1a14; }
+
+/* ---- Location image hover preview ---- */
+#loc-img-preview {
+  display: none;
+  position: fixed;
+  z-index: 9999;
+  pointer-events: none;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 6px 24px rgba(0,0,0,0.35);
+  border: 2px solid rgba(212,168,67,0.4);
+  background: var(--bg-dark);
+  width: 160px;
+}
+#loc-img-preview img {
+  display: block;
+  width: 160px;
+  height: 110px;
+  object-fit: cover;
+}
+#loc-img-preview-name {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: #f0ece4;
+  padding: 5px 8px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  background: rgba(0,0,0,0.5);
+  letter-spacing: 0.02em;
+}
+
+/* ---- Concept map mini-preview ---- */
+.cm-mini-preview {
+  border-radius: 6px;
+  overflow: hidden;
+  background: #f8f4ec;
+  border: 1px solid var(--border-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 110px;
+}
+.cm-mini-preview svg {
+  display: block;
+}
+.cm-mini-preview-empty {
+  color: var(--text-muted);
+  font-size: 0.72rem;
+  font-style: italic;
+  padding: 16px;
+  text-align: center;
+}
+html.dark .cm-mini-preview {
+  background: #1e1a14;
+}
 </style>
 {% endblock %}
 
@@ -737,8 +841,9 @@ html.dark .sort-select { background-color: #1e1a14; }
   <!-- Era Progress -->
   <h2 class="section-title">Era Progress</h2>
   <div class="era-cards">
-    {% set era_colors = {'native': '#b87316', 'spanish': '#5c7a2e', 'rancho': '#2d5f96', 'modern': '#a82828'} %}
-    {% set era_labels = {'native': 'Tongva People', 'spanish': '1769–1847', 'rancho': '1848–1899', 'modern': '1900–Present'} %}
+    {% set era_colors  = {'native': '#b87316', 'spanish': '#5c7a2e', 'rancho': '#2d5f96', 'modern': '#a82828'} %}
+    {% set era_labels  = {'native': 'Tongva People', 'spanish': '1769–1847', 'rancho': '1848–1899', 'modern': '1900–Present'} %}
+    {% set era_emojis  = {'native': '🌿', 'spanish': '⛵', 'rancho': '🤠', 'modern': '🏙️'} %}
     {% for era in summary.eras %}
     {% set pct = ((era.passed / era.total) * 100) | int if era.total > 0 else 0 %}
     {% set color = era_colors.get(era.era, '#999') %}
@@ -763,8 +868,28 @@ html.dark .sort-select { background-color: #1e1a14; }
         </div>
       </div>
       <div class="era-card-stats">
-        <span>Visited: <strong>{{ era.visited }}/{{ era.total }}</strong></span>
-        <span>Passed: <strong>{{ era.passed }}/{{ era.total }}</strong></span>
+        <span>📍 Visited: <strong>{{ era.visited }}/{{ era.total }}</strong></span>
+        <span>✅ Passed: <strong>{{ era.passed }}/{{ era.total }}</strong></span>
+      </div>
+      <div class="era-card-status">
+        {% if not era.era_unlocked %}
+          🔒 Locked
+        {% elif era.passed == era.total %}
+          🏆 Era complete!
+        {% else %}
+          ⬜ {{ era.total - era.passed }} quiz{{ 'zes' if (era.total - era.passed) != 1 else '' }} remaining
+        {% endif %}
+      </div>
+      <div class="era-card-tip">
+        <span>{{ era_emojis.get(era.era, '🗺') }} <strong>{{ era_labels.get(era.era, '') }}</strong></span>
+        <span>📊 Completion: <strong>{{ pct }}%</strong></span>
+        {% if not era.era_unlocked %}
+          <span>🔒 Locked — complete Era {{ era.era_order - 1 }} to unlock</span>
+        {% elif era.passed == era.total %}
+          <span>🏆 Era complete!</span>
+        {% else %}
+          <span>⬜ {{ era.total - era.passed }} quiz{{ 'zes' if (era.total - era.passed) != 1 else '' }} remaining</span>
+        {% endif %}
       </div>
     </div>
     {% endfor %}
@@ -844,7 +969,8 @@ html.dark .sort-select { background-color: #1e1a14; }
             data-visited="{{ '1' if loc.visited else '0' }}"
             data-locked="{{ '0' if loc.unlocked else '1' }}"
             data-quiz-score="{{ loc.quiz_score if loc.quiz_passed else '0' }}"
-            data-points="{{ loc.points_earned or 0 }}">
+            data-points="{{ loc.points_earned or 0 }}"
+            data-image="{{ loc.image_url or '' }}">
           <td style="font-weight:500">
             {{ loc.name }}
             {% if loc.unlocked %}
@@ -888,6 +1014,7 @@ html.dark .sort-select { background-color: #1e1a14; }
   <h2 class="section-title">Concept Maps</h2>
   {% set era_css_map    = {'native':'native','spanish':'spanish','rancho':'rancho','modern':'modern'} %}
   {% set era_emoji_map  = {'native':'🌿','spanish':'⛵','rancho':'🤠','modern':'🏙️'} %}
+  {% set era_colors     = {'native': '#b87316', 'spanish': '#5c7a2e', 'rancho': '#2d5f96', 'modern': '#a82828'} %}
   <div class="cm-dash-grid">
     {% for era in summary.eras %}
     {% set cm = concept_maps.get(era.era_order) %}
@@ -931,14 +1058,11 @@ html.dark .sort-select { background-color: #1e1a14; }
         </div>
       {% endif %}
 
-      {% if cm and cm.node_labels %}
-        <div class="cm-dash-concepts">
-          {% for label in cm.node_labels[:6] %}
-            <span class="cm-concept-tag">{{ label }}</span>
-          {% endfor %}
-          {% if cm.node_labels | length > 6 %}
-            <span class="cm-concept-tag">+{{ cm.node_labels | length - 6 }} more</span>
-          {% endif %}
+      {% if era.era_unlocked %}
+        <div class="cm-mini-preview"
+             data-nodes='{{ (cm.node_labels if cm else []) | tojson }}'
+             data-edges='{{ (cm.edge_pairs if cm else []) | tojson }}'
+             data-era-color="{{ era_colors.get(era.era, '#999') }}">
         </div>
       {% endif %}
 
@@ -1057,6 +1181,105 @@ html.dark .sort-select { background-color: #1e1a14; }
       rows.forEach(r => tbody.appendChild(r));
     });
   }
+})();
+
+// ---- Location image hover preview ----
+(function () {
+  const preview = document.createElement('div');
+  preview.id = 'loc-img-preview';
+  preview.innerHTML = '<img src="" alt=""><div id="loc-img-preview-name"></div>';
+  document.body.appendChild(preview);
+
+  const previewImg  = preview.querySelector('img');
+  const previewName = preview.querySelector('#loc-img-preview-name');
+  const PAD = 16; // px offset from cursor
+
+  function position(e) {
+    let x = e.clientX + PAD;
+    let y = e.clientY + PAD;
+    // Keep inside viewport
+    if (x + 180 > window.innerWidth)  x = e.clientX - 180 - PAD;
+    if (y + 150 > window.innerHeight) y = e.clientY - 150 - PAD;
+    preview.style.left = x + 'px';
+    preview.style.top  = y + 'px';
+  }
+
+  document.querySelectorAll('#location-table tbody tr').forEach(row => {
+    const imgUrl = row.dataset.image;
+    if (!imgUrl) return;
+
+    row.addEventListener('mouseenter', e => {
+      previewImg.src = imgUrl;
+      previewName.textContent = row.dataset.name || '';
+      position(e);
+      preview.style.display = 'block';
+    });
+    row.addEventListener('mousemove', position);
+    row.addEventListener('mouseleave', () => {
+      preview.style.display = 'none';
+    });
+  });
+})();
+
+// ---- Concept map mini-preview ----
+(function () {
+  const isDark = () => document.documentElement.classList.contains('dark');
+
+  function renderMiniMap(container) {
+    const nodes = JSON.parse(container.dataset.nodes || '[]');
+    const edges = JSON.parse(container.dataset.edges || '[]');
+    const color = container.dataset.eraColor || '#b87316';
+
+    if (!nodes.length) {
+      container.innerHTML = '<div class="cm-mini-preview-empty">No concepts added yet</div>';
+      return;
+    }
+
+    const W = 200, H = 130;
+    const cx = W / 2, cy = H / 2;
+    const n = nodes.length;
+    // Arrange nodes in a circle; single node goes in center
+    const positions = nodes.map((_, i) => {
+      if (n === 1) return { x: cx, y: cy };
+      const angle = (2 * Math.PI * i / n) - Math.PI / 2;
+      const r = Math.min(W, H) * 0.36;
+      return { x: cx + r * Math.cos(angle), y: cy + r * Math.sin(angle) };
+    });
+
+    const dark = isDark();
+    const nodeFill   = dark ? '#2e2820' : '#f8f4ec';
+    const nodeStroke = color;
+    const textFill   = dark ? '#d4c4a8' : '#5a4535';
+    const edgeStroke = dark ? 'rgba(255,255,255,0.12)' : 'rgba(0,0,0,0.12)';
+
+    let svgParts = [`<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg">`];
+
+    // Edges
+    for (const [si, ti] of edges) {
+      if (si < 0 || ti < 0 || si >= n || ti >= n) continue;
+      const p1 = positions[si], p2 = positions[ti];
+      svgParts.push(`<line x1="${p1.x.toFixed(1)}" y1="${p1.y.toFixed(1)}" x2="${p2.x.toFixed(1)}" y2="${p2.y.toFixed(1)}" stroke="${edgeStroke}" stroke-width="1.5"/>`);
+    }
+
+    // Nodes
+    for (let i = 0; i < n; i++) {
+      const p = positions[i];
+      const label = nodes[i].length > 9 ? nodes[i].slice(0, 8) + '…' : nodes[i];
+      svgParts.push(`<circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="15" fill="${nodeFill}" stroke="${nodeStroke}" stroke-width="1.5"/>`);
+      svgParts.push(`<text x="${p.x.toFixed(1)}" y="${p.y.toFixed(1)}" text-anchor="middle" dominant-baseline="middle" font-size="5.5" font-family="sans-serif" fill="${textFill}">${label}</text>`);
+    }
+
+    svgParts.push('</svg>');
+    container.innerHTML = svgParts.join('');
+  }
+
+  document.querySelectorAll('.cm-mini-preview').forEach(renderMiniMap);
+
+  // Re-render on theme toggle so colors update
+  const observer = new MutationObserver(() => {
+    document.querySelectorAll('.cm-mini-preview').forEach(renderMiniMap);
+  });
+  observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
 })();
 </script>
 {% endblock %}

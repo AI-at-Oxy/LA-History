@@ -18,6 +18,7 @@ def _parse_cm_for_dashboard(cm):
         'node_count':    0,
         'edge_count':    0,
         'node_labels':   [],
+        'edge_pairs':    [],
         'synthesis_score': None,
     }
     if cm.graph_json:
@@ -28,10 +29,21 @@ def _parse_cm_for_dashboard(cm):
             edges = els.get('edges', []) if isinstance(els, dict) else [e for e in els if e.get('group') == 'edges']
             result['node_count'] = len(nodes)
             result['edge_count'] = len(edges)
-            result['node_labels'] = [
-                n['data'].get('label', '') for n in nodes
-                if n.get('data', {}).get('label')
-            ][:10]
+            # Take up to 12 nodes for the mini-preview
+            preview_nodes = [n for n in nodes if n.get('data', {}).get('label')][:12]
+            result['node_labels'] = [n['data']['label'] for n in preview_nodes]
+            # Build id→index map for edge lookup
+            id_to_idx = {n['data']['id']: i for i, n in enumerate(preview_nodes)}
+            # Extract edges between preview nodes (up to 24)
+            pairs = []
+            for e in edges:
+                s = e.get('data', {}).get('source')
+                t = e.get('data', {}).get('target')
+                if s in id_to_idx and t in id_to_idx:
+                    pairs.append([id_to_idx[s], id_to_idx[t]])
+                if len(pairs) >= 24:
+                    break
+            result['edge_pairs'] = pairs
         except Exception:
             pass
     if cm.ai_feedback:

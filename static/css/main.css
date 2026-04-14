@@ -417,13 +417,14 @@ html.dark-map .leaflet-tile-pane {
   padding: 6px 10px;
   border-radius: 6px;
   line-height: 1;
-  transition: background 0.18s, border-color 0.18s;
+  transition: background 0.18s, border-color 0.18s, transform 0.3s;
   color: #e0d8cc;
   font-family: var(--font-body, 'DM Sans', sans-serif);
 }
 #help-btn:hover {
   background: rgba(255,255,255,0.18);
   border-color: rgba(255,255,255,0.30);
+  transform: rotate(45deg);
 }
 
 /* Settings gear button */

@@ -306,6 +306,7 @@ def get_progress_summary(user_id):
             'id': loc.id,
             'name': loc.name,
             'slug': loc.slug,
+            'image_url': loc.image_url,
             'unlocked': unlocked,
             'visited': prog.visited if prog else False,
             'quiz_passed': prog.quiz_passed if prog else False,
