@@ -256,12 +256,16 @@ function flyToLocation(loc) {
 
 
 function getMarkerDimensions() {
-  const base = parseInt(localStorage.getItem('marker_size')) || 32;
+  const base    = parseInt(localStorage.getItem('marker_size')) || 32;
+  // CSS --marker-size is set to base+2, so match Leaflet's iconSize to avoid mismatch
+  const visual  = base + 2;
+  // Add padding so shadows and scale-on-hover aren't clipped by the icon container
+  const padded  = visual + 12;
   return {
-    iconSize:      [base, base],
-    iconAnchor:    [base / 2, base],
-    popupAnchor:   [0, -(base + 4)],
-    tooltipOffset: [0, -(base + 4)],
+    iconSize:      [padded, padded],
+    iconAnchor:    [padded / 2, padded - 6],
+    popupAnchor:   [0, -(visual + 8)],
+    tooltipOffset: [0, -(visual + 8)],
   };
 }
 
@@ -307,6 +311,10 @@ function createMarker(loc) {
     marker.bindPopup(buildLockedPopup(loc), { maxWidth: 240 });
     marker.on('click', () => { if (typeof SFX !== 'undefined') SFX.play('locked'); });
   }
+
+  // Raise z-index on hover so hovered marker appears above overlapping ones
+  marker.on('mouseover', () => marker.setZIndexOffset(500));
+  marker.on('mouseout',  () => marker.setZIndexOffset(0));
 
   return marker;
 }

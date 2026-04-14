@@ -357,6 +357,20 @@
   transition: right 0.35s cubic-bezier(0.4, 0, 0.2, 1), transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+/* ---- Leaflet div-icon container reset ---- */
+/* Leaflet applies a white background + border to .leaflet-div-icon by default;
+   clear it so custom markers render without a white square behind them. */
+.leaflet-div-icon {
+  background: none !important;
+  border: none !important;
+  overflow: visible !important;
+}
+
+/* Allow shadows and scale animations to bleed outside the icon container */
+.leaflet-marker-icon {
+  overflow: visible !important;
+}
+
 /* Leaflet attribution */
 .leaflet-control-attribution {
   font-size: 0.65rem !important;
@@ -415,19 +429,32 @@
   padding: 4px 0;
 }
 
-/* Custom marker styles */
+/* Custom marker styles
+   The Leaflet icon container is padded (visual size + 12px) so shadows and
+   the scale-on-hover animation never get clipped. The inner .map-marker is
+   centered inside that padded container via absolute positioning. */
+.leaflet-div-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .map-marker {
+  position: absolute;
   width: var(--marker-size, 34px);
   height: var(--marker-size, 34px);
+  /* Center within the padded container (container = visual + 12px) */
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(-45deg);
   border-radius: 50% 50% 50% 0;
-  transform: rotate(-45deg);
   border: 2.5px solid rgba(255,255,255,0.88);
   box-shadow: 0 3px 10px rgba(0,0,0,0.28), 0 1px 3px rgba(0,0,0,0.2);
   cursor: pointer;
   transition: transform 0.2s cubic-bezier(0.22,1,0.36,1), box-shadow 0.2s;
 }
 .map-marker:hover {
-  transform: rotate(-45deg) scale(1.15);
+  transform: translate(-50%, -50%) rotate(-45deg) scale(1.15);
   box-shadow: 0 5px 16px rgba(0,0,0,0.35);
 }
 
@@ -447,9 +474,11 @@
 
 /* Fog of war — unlocked but not yet visited */
 .map-marker.unlocked:not(.visited) {
-  opacity: 0.55;
-  filter: saturate(0.60);
-  transition: opacity 0.3s, filter 0.3s;
+  opacity: 0.7;
+  filter: saturate(0.65);
+  /* Keep transform + box-shadow transitions from the base rule */
+  transition: transform 0.2s cubic-bezier(0.22,1,0.36,1), box-shadow 0.2s,
+              opacity 0.3s, filter 0.3s;
 }
 .map-marker.unlocked:not(.visited):hover {
   opacity: 1;
@@ -932,11 +961,11 @@ html.dark .tts-progress-bar { background: #2e2820; }
 
 /* ---- Search highlight pulse on marker ---- */
 @keyframes searchPing {
-  0%   { transform: rotate(-45deg) scale(1); box-shadow: 0 0 0 0 rgba(212,168,67,0.8); }
-  25%  { transform: rotate(-45deg) scale(1.35); box-shadow: 0 0 0 10px rgba(212,168,67,0.3); }
-  50%  { transform: rotate(-45deg) scale(1); box-shadow: 0 0 0 16px rgba(212,168,67,0); }
-  70%  { transform: rotate(-45deg) scale(1.2); }
-  100% { transform: rotate(-45deg) scale(1); }
+  0%   { transform: translate(-50%, -50%) rotate(-45deg) scale(1); box-shadow: 0 0 0 0 rgba(212,168,67,0.8); }
+  25%  { transform: translate(-50%, -50%) rotate(-45deg) scale(1.35); box-shadow: 0 0 0 10px rgba(212,168,67,0.3); }
+  50%  { transform: translate(-50%, -50%) rotate(-45deg) scale(1); box-shadow: 0 0 0 16px rgba(212,168,67,0); }
+  70%  { transform: translate(-50%, -50%) rotate(-45deg) scale(1.2); }
+  100% { transform: translate(-50%, -50%) rotate(-45deg) scale(1); }
 }
 .map-marker.search-highlight {
   animation: searchPing 1.6s cubic-bezier(0.22,1,0.36,1);
