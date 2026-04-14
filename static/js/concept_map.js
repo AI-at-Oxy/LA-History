@@ -85,6 +85,11 @@ function initCytoscape() {
     cy = null;
   }
 
+  const isDark = document.documentElement.classList.contains('dark');
+  const edgeColor      = isDark ? '#6b5d48' : '#c4a97a';
+  const edgeLabelBg    = isDark ? '#1e1a14' : '#fdf8f0';
+  const edgeLabelColor = isDark ? '#c8b898' : '#5a4232';
+
   cy = cytoscape({
     container: document.getElementById('cm-canvas'),
     elements: [],
@@ -93,37 +98,53 @@ function initCytoscape() {
         selector: 'node',
         style: {
           'background-color': 'data(color)',
+          'background-opacity': 0.92,
           'label': 'data(shortLabel)',
           'color': '#fff',
           'text-wrap': 'wrap',
-          'text-max-width': '88px',
-          'font-size': '11px',
+          'text-max-width': '96px',
+          'font-size': '11.5px',
+          'font-weight': '600',
           'font-family': 'DM Sans, system-ui, sans-serif',
           'width': 'label',
           'height': 'label',
-          'padding': '10px',
+          'padding': '11px 14px',
           'shape': 'round-rectangle',
           'text-valign': 'center',
           'text-halign': 'center',
           'border-width': 2,
           'border-color': 'data(borderColor)',
-          'min-width': 60,
-          'min-height': 36,
+          'border-opacity': 0.6,
+          'min-width': 70,
+          'min-height': 38,
+          'shadow-blur': 12,
+          'shadow-color': 'data(color)',
+          'shadow-opacity': 0.35,
+          'shadow-offset-x': 0,
+          'shadow-offset-y': 3,
+          'text-outline-width': 0,
+          'overlay-opacity': 0,
+          'transition-property': 'border-width, border-color, shadow-opacity',
+          'transition-duration': '0.15s',
         },
       },
       {
         selector: 'node[?cross_era]',
         style: {
           'border-style': 'dashed',
-          'border-color': '#999',
-          'opacity': 0.85,
+          'border-color': '#a09070',
+          'border-opacity': 0.7,
+          'background-opacity': 0.72,
         },
       },
       {
         selector: 'node.selected-source',
         style: {
-          'border-color': '#d4a843',
+          'border-color': '#f0c040',
           'border-width': 3,
+          'border-opacity': 1,
+          'shadow-color': '#d4a843',
+          'shadow-opacity': 0.6,
         },
       },
       {
@@ -131,33 +152,50 @@ function initCytoscape() {
         style: {
           'border-color': '#b8731a',
           'border-width': 3,
+          'border-opacity': 1,
+          'shadow-color': '#b8731a',
+          'shadow-opacity': 0.55,
+        },
+      },
+      {
+        selector: 'node:active',
+        style: {
+          'overlay-opacity': 0.06,
+          'overlay-color': '#fff',
         },
       },
       {
         selector: 'edge',
         style: {
-          'width': 2,
-          'line-color': '#c4b89a',
-          'target-arrow-color': '#c4b89a',
+          'width': 2.5,
+          'line-color': edgeColor,
+          'target-arrow-color': edgeColor,
           'target-arrow-shape': 'triangle',
+          'arrow-scale': 1.1,
           'curve-style': 'bezier',
           'label': 'data(label)',
-          'font-size': '10px',
+          'font-size': '10.5px',
+          'font-weight': '500',
           'font-family': 'DM Sans, system-ui, sans-serif',
-          'color': '#5a4e3c',
-          'text-background-color': '#faf7f0',
+          'color': edgeLabelColor,
+          'text-background-color': edgeLabelBg,
           'text-background-opacity': 1,
-          'text-background-padding': '3px',
+          'text-background-padding': '4px',
+          'text-background-shape': 'round-rectangle',
           'text-border-opacity': 0,
           'edge-text-rotation': 'autorotate',
+          'overlay-opacity': 0,
+          'transition-property': 'line-color, target-arrow-color, width',
+          'transition-duration': '0.15s',
         },
       },
       {
         selector: 'edge[?cross_era]',
         style: {
           'line-style': 'dashed',
-          'line-color': '#a09080',
-          'target-arrow-color': '#a09080',
+          'line-dash-pattern': [8, 4],
+          'line-color': isDark ? '#5a4e3c' : '#b0a080',
+          'target-arrow-color': isDark ? '#5a4e3c' : '#b0a080',
         },
       },
       {
@@ -165,6 +203,13 @@ function initCytoscape() {
         style: {
           'line-color': '#b8731a',
           'target-arrow-color': '#b8731a',
+          'width': 3,
+        },
+      },
+      {
+        selector: 'edge:active',
+        style: {
+          'overlay-opacity': 0,
         },
       },
     ],
@@ -254,14 +299,16 @@ function initCytoscape() {
     evt.target.connectedEdges().style({
       'line-color': '#d4a843',
       'target-arrow-color': '#d4a843',
-      'width': 3,
+      'width': 3.5,
     });
   });
   cy.on('mouseout', 'node', function(evt) {
+    const dark = document.documentElement.classList.contains('dark');
+    const col  = dark ? '#6b5d48' : '#c4a97a';
     evt.target.connectedEdges().style({
-      'line-color': '#c4b89a',
-      'target-arrow-color': '#c4b89a',
-      'width': 2,
+      'line-color': col,
+      'target-arrow-color': col,
+      'width': 2.5,
     });
   });
 }
@@ -277,15 +324,18 @@ function renderPalette(locations) {
     return;
   }
 
-  list.innerHTML = visitedLocs.map(loc => `
+  list.innerHTML = visitedLocs.map(loc => {
+    const dotColor = typeof eraColor === 'function' ? eraColor(loc.era) : '#888';
+    return `
     <div class="cm-palette-item" id="palette-item-${loc.id}">
+      <span class="cm-palette-dot" style="background:${dotColor}"></span>
       <span class="cm-palette-item-name" id="palette-name-${loc.id}"
             title="${loc.name}">${loc.name}</span>
       <button class="cm-btn cm-btn-secondary cm-palette-add-btn"
               data-loc-id="${loc.id}"
               onclick="cmAddNode(${JSON.stringify(loc).replace(/"/g, '&quot;')})">+</button>
     </div>
-  `).join('');
+  `}).join('');
 }
 
 // ── Find a free position that doesn't overlap existing nodes ─────────────
@@ -625,9 +675,8 @@ async function saveGraph() {
 
 function flashSaveIndicator() {
   const el = document.getElementById('cm-save-indicator');
-  el.textContent = '✓ Saved';
   el.classList.add('visible');
-  setTimeout(() => el.classList.remove('visible'), 2000);
+  setTimeout(() => el.classList.remove('visible'), 2200);
 }
 
 // ── Submit ────────────────────────────────────
@@ -674,7 +723,7 @@ function displayResults(result) {
     ? result.synthesis_score
     : (feedback.synthesis_score || 0);
 
-  score.textContent = 'Synthesis score: ' + s + '/100';
+  score.textContent = s + '/100';
 
   let html = '';
 
@@ -758,6 +807,12 @@ function updateGraphStats() {
   const el = document.getElementById('cm-graph-stats');
   if (el) el.textContent =
     `${nodeCount} node${nodeCount !== 1 ? 's' : ''} · ${edgeCount} connection${edgeCount !== 1 ? 's' : ''}`;
+
+  // Toggle empty state hint
+  const emptyState = document.getElementById('cm-empty-state');
+  if (emptyState) {
+    emptyState.classList.toggle('hidden', nodeCount > 0);
+  }
 }
 
 // ── Cross-era picker ──────────────────────────

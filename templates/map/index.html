@@ -109,8 +109,9 @@
 
     <div class="cm-panel-header">
       <div class="cm-panel-title">
-        <span class="cm-era-pill" id="cm-era-pill"></span>
+        <span class="cm-panel-title-icon">🗺️</span>
         <span>Concept Map</span>
+        <span class="cm-era-pill" id="cm-era-pill"></span>
       </div>
       <div class="cm-header-actions">
         <span class="cm-status" id="cm-status"></span>
@@ -128,21 +129,29 @@
         </div>
         <div class="cm-palette-section">
           <h4 class="cm-palette-heading">Cross-Era</h4>
-          <button class="cm-btn cm-btn-secondary" id="cm-add-cross-era-btn">+ Add from another era</button>
+          <button class="cm-btn cm-btn-secondary" id="cm-add-cross-era-btn" style="width:100%;margin-bottom:6px">＋ Add from another era</button>
           <div id="cm-cross-era-list"></div>
         </div>
         <div class="cm-instructions">
-          <strong>How to connect:</strong><br>
-          1. Click "+ Add" to place a node<br>
-          2. Click a node to select it<br>
-          3. Click another node to draw an arrow<br>
-          4. Type the relationship label
+          <strong>💡 How to connect</strong>
+          <ol>
+            <li>Click <strong>+</strong> to place a node</li>
+            <li>Click a node → <em>Start connection</em></li>
+            <li>Click the target node</li>
+            <li>Type the relationship &amp; confirm</li>
+          </ol>
         </div>
       </aside>
 
       <!-- Canvas area -->
       <div class="cm-canvas-area">
         <div id="cm-canvas" tabindex="0" aria-label="Concept map canvas"></div>
+
+        <!-- Empty state -->
+        <div class="cm-empty-state" id="cm-empty-state">
+          <div class="cm-empty-state-icon">🕸️</div>
+          <div class="cm-empty-state-text">Add locations from the sidebar to start building your concept map</div>
+        </div>
 
         <!-- Zoom controls -->
         <div class="cm-zoom-controls">
@@ -152,7 +161,7 @@
 
         <!-- Edge label popup -->
         <div class="cm-edge-popup" id="cm-edge-popup" aria-hidden="true">
-          <label class="cm-edge-popup-label" for="cm-edge-label-input">Describe the relationship</label>
+          <label class="cm-edge-popup-label" for="cm-edge-label-input">Relationship label</label>
           <input type="text" id="cm-edge-label-input"
                  placeholder="e.g. both displaced by Mission system"
                  aria-label="Relationship label" maxlength="120" autocomplete="off">
@@ -183,7 +192,10 @@
     <!-- AI feedback panel (hidden until submission) -->
     <div class="cm-results-panel" id="cm-results-panel" hidden>
       <div class="cm-results-header">
-        <span>AI Feedback</span>
+        <div class="cm-results-header-title">
+          <span class="cm-results-header-icon">✨</span>
+          <span>AI Feedback</span>
+        </div>
         <span class="cm-synthesis-score" id="cm-synthesis-score"></span>
       </div>
       <div class="cm-results-body" id="cm-results-body"></div>
@@ -191,14 +203,14 @@
 
     <div class="cm-panel-footer">
       <div class="cm-footer-left">
-        <span class="cm-edge-count" id="cm-graph-stats">0 connections</span>
-        <span class="cm-save-indicator" id="cm-save-indicator"></span>
+        <span class="cm-edge-count" id="cm-graph-stats">0 nodes · 0 connections</span>
+        <span class="cm-save-indicator" id="cm-save-indicator">✓ Saved</span>
         <button class="cm-btn cm-btn-secondary" id="cm-fit-btn" title="Fit all nodes in view">⤢ Fit</button>
-        <button class="cm-btn cm-btn-secondary" id="cm-layout-btn" title="Auto-arrange nodes">⟳ Layout</button>
+        <button class="cm-btn cm-btn-secondary" id="cm-layout-btn" title="Auto-arrange nodes">⟳ Auto-arrange</button>
         <button class="cm-btn cm-btn-secondary cm-clear-all-btn" id="cm-clear-btn">Clear All</button>
       </div>
       <div class="cm-footer-right">
-        <button class="cm-btn cm-btn-secondary" id="cm-save-btn">Save</button>
+        <button class="cm-btn cm-btn-secondary" id="cm-save-btn">💾 Save</button>
         <div class="cm-submit-wrapper">
           <button class="cm-btn cm-btn-primary" id="cm-submit-btn" disabled
                   aria-describedby="cm-submit-tooltip">Submit for Feedback</button>
