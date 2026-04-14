@@ -449,6 +449,8 @@ function openDetailPanel(loc) {
       ${loc.image_caption ? `<figcaption class="detail-image-caption">${escapeHtml(loc.image_caption)}</figcaption>` : ''}
     </figure>` : ''}
 
+    ${buildVideoSection(loc)}
+
     <div class="detail-description" id="detail-full-desc">
       ${escapeHtml(loc.full_description)}
     </div>
@@ -517,6 +519,45 @@ function buildEventsHTML(events) {
     </div>`;
 }
 
+function buildVideoSection(loc) {
+  if (!loc.video_url) return '';
+  const videoId = extractYouTubeId(loc.video_url);
+  if (!videoId) return '';
+  const caption = loc.video_caption
+    ? `<figcaption class="detail-video-caption">${escapeHtml(loc.video_caption)}</figcaption>`
+    : '';
+  return `
+    <div class="detail-video-section">
+      <div class="detail-video-thumb-wrap" data-video-id="${videoId}" onclick="loadDetailVideo(this)">
+        <img src="https://img.youtube.com/vi/${videoId}/hqdefault.jpg"
+             alt="Video thumbnail" class="detail-video-thumb" loading="lazy">
+        <div class="detail-video-play-btn" aria-label="Play video">&#9654;</div>
+      </div>
+      ${caption}
+    </div>`;
+}
+
+function extractYouTubeId(url) {
+  try {
+    const u = new URL(url);
+    if (u.hostname.includes('youtube.com')) return u.searchParams.get('v');
+    if (u.hostname === 'youtu.be') return u.pathname.slice(1);
+    return null;
+  } catch { return null; }
+}
+
+function loadDetailVideo(thumbWrap) {
+  const videoId = thumbWrap.dataset.videoId;
+  thumbWrap.outerHTML = `
+    <div class="detail-video-embed-wrap">
+      <iframe class="detail-video-iframe"
+        src="https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1&rel=0&modestbranding=1"
+        title="Historical video"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowfullscreen loading="lazy"></iframe>
+    </div>`;
+}
+
 function bindTimelineTTSButtons(events) {
   const btn = document.getElementById('timeline-tts-btn');
   if (!btn) return;
@@ -559,6 +600,8 @@ function timelineTTSToggle(btn, text) {
 }
 
 function closeDetailPanel() {
+  const iframe = document.querySelector('.detail-video-iframe');
+  if (iframe) iframe.src = '';
   if (typeof SFX !== 'undefined') SFX.play('panel-close');
   document.getElementById('detail-panel').classList.remove('open');
   const desc = document.getElementById('detail-full-desc');

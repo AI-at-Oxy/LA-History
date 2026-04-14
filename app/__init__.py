@@ -52,6 +52,16 @@ def create_app(config_name=None):
             if 'image_caption' not in cols:
                 conn.execute(text('ALTER TABLE locations ADD COLUMN image_caption VARCHAR(500)'))
                 conn.commit()
+            for col, ddl in [
+                ('video_url',     'ALTER TABLE locations ADD COLUMN video_url VARCHAR(500)'),
+                ('video_caption', 'ALTER TABLE locations ADD COLUMN video_caption VARCHAR(500)'),
+            ]:
+                if col not in cols:
+                    try:
+                        conn.execute(text(ddl))
+                        conn.commit()
+                    except OperationalError:
+                        pass
             # Password reset token columns
             user_cols = [c['name'] for c in inspector.get_columns('users')]
             for col, ddl in [

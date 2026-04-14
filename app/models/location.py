@@ -18,6 +18,8 @@ class Location(db.Model):
     is_starter = db.Column(db.Boolean, default=False)
     image_url = db.Column(db.String(300), nullable=True)
     image_caption = db.Column(db.String(500), nullable=True)
+    video_url = db.Column(db.String(500), nullable=True)
+    video_caption = db.Column(db.String(500), nullable=True)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
     # Relationships
@@ -43,6 +45,8 @@ class Location(db.Model):
             'is_starter': self.is_starter,
             'image_url': self.image_url,
             'image_caption': self.image_caption,
+            'video_url': self.video_url,
+            'video_caption': self.video_caption,
             'has_quiz': self.quiz is not None,
         }
         if user_progress:

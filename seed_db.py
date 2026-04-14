@@ -124,6 +124,8 @@ def seed_locations(location_data):
         if existing:
             existing.image_url = loc.get('image_url')
             existing.image_caption = loc.get('image_caption')
+            existing.video_url = loc.get('video_url')
+            existing.video_caption = loc.get('video_caption')
             continue
 
         location = Location(
@@ -139,6 +141,8 @@ def seed_locations(location_data):
             full_description=loc['full_description'],
             image_url=loc.get('image_url'),
             image_caption=loc.get('image_caption'),
+            video_url=loc.get('video_url'),
+            video_caption=loc.get('video_caption'),
         )
         db.session.add(location)
         db.session.flush()  # get location.id before committing
