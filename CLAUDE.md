@@ -33,8 +33,8 @@ The chat feature requires a local Ollama instance running `llama3.2` at `http://
 Flask 3 with modular blueprints, SQLAlchemy ORM, Flask-Login auth, CSRF protection.
 
 - `app/__init__.py` — `create_app()` factory, registers all blueprints, redirects `/` to `/map`
-- `app/models/` — SQLAlchemy models: User, Location, HistoricalEvent, UserProgress, Badge, UserBadge, Quiz, QuizQuestion, ChatSession, ChatMessage
-- `app/routes/` — Blueprints: `auth` (login/register/logout), `map` (/api/locations), `progress` (/api/progress), `quiz` (/api/quiz), `chat` (/api/chat)
+- `app/models/` — SQLAlchemy models: User, Location (includes `video_url`/`video_caption` for YouTube embeds), HistoricalEvent, UserProgress, Badge, UserBadge, Quiz, QuizQuestion, ChatSession, ChatMessage, ConceptMap
+- `app/routes/` — Blueprints: `auth` (login/register/logout), `map` (/api/locations), `progress` (/api/progress), `quiz` (/api/quiz), `chat` (/api/chat), `concept_map` (/api/concept_map)
 - `app/services/gamification.py` — Points/badge/era-unlock logic (10 pts visit; quiz pass on first attempt = full reward, retry = half; +20 bonus for ≥90%; 100 pts era complete; era unlock gates via quiz-pass thresholds)
 - `app/services/ollama_service.py` — Socratic tutor; connects to local Ollama, keeps 6-message rolling context per session
 
@@ -46,16 +46,21 @@ Flask-rendered Jinja2 templates with vanilla JS and custom CSS.
 - `templates/dashboard/index.html` — Progress dashboard
 - `templates/auth/` — Login, register, forgot-password, reset-password forms
 - `templates/base.html` — Base layout (navbar, settings modal, flash messages)
-- `static/js/map.js` — Leaflet map init, marker rendering, location detail
+- `static/js/map.js` — Leaflet map init, marker rendering, location detail (includes YouTube embed for `video_url`)
 - `static/js/quiz.js` — Quiz modal logic
 - `static/js/chat.js` — Socratic tutor chat panel
 - `static/js/progress.js` — Era progress and badge display
+- `static/js/concept_map.js` — Cytoscape-based concept map (per-era, Ollama-evaluated)
+- `static/js/tutorial.js` — First-time user onboarding walkthrough
 - `static/js/tts.js` — Text-to-speech for location descriptions
+- `static/js/voice.js` — Voice input module (mic button in chat)
 - `static/js/sounds.js` — Sound effects
 - `static/js/settings.js` — Settings modal (theme, TTS, SFX, font/marker size, reset progress)
 - `static/js/utils.js` — Shared utilities
 - `static/css/main.css` — Global styles and theme variables
 - `static/css/map.css`, `quiz.css`, `chat.css`, `auth.css` — Component styles
+- `static/css/concept_map.css` — Concept map panel styles
+- `static/css/tutorial.css` — Tutorial overlay and spotlight styles
 - `static/css/animations.css` — Transition and animation definitions
 
 ### Data Flow
@@ -80,8 +85,9 @@ Flask-rendered Jinja2 templates with vanilla JS and custom CSS.
 | `seed_db.py` | Populate DB from `data/locations.json` and `data/quizzes.json` |
 | `app/config.py` | Dev/prod config (SQLite dev, `DATABASE_URL` env var for prod) |
 | `app/extensions.py` | Flask extensions: `db`, `login_manager`, `bcrypt`, `csrf` |
-| `data/locations.json` | Source of truth for 57 historical locations |
+| `data/locations.json` | Source of truth for 57 historical locations (includes `video_url`/`video_caption`) |
 | `data/quizzes.json` | Quiz questions per location |
+| `download_images.py` | Utility script: fetches Wikipedia images for locations, saves to `static/img/` |
 | `static/favicon.svg` | Browser tab icon (compass design) |
 
 ## Environment Variables

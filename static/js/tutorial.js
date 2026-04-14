@@ -8,6 +8,7 @@ var Tutorial = (function () {
   var STEPS = [
     {
       id: 'welcome',
+      icon: '🗺️',
       title: 'Welcome to LA History!',
       body: 'Explore 57 historical locations across 4 eras of Los Angeles — from the Tongva people to the modern city. This quick tour shows you how everything works.',
       targetSelector: null,
@@ -17,6 +18,7 @@ var Tutorial = (function () {
     },
     {
       id: 'map',
+      icon: '🏙️',
       title: 'Navigate the Map',
       body: '<b>Drag</b> to pan around LA · <b>Scroll</b> to zoom in and out · <b>Click any marker</b> to explore that historical location.',
       targetSelector: '#map',
@@ -26,6 +28,7 @@ var Tutorial = (function () {
     },
     {
       id: 'eras',
+      icon: '⏳',
       title: 'Four Eras of LA History',
       body: 'Filter locations by era using these buttons. Unlock new eras by completing quizzes in the current one — starting with <b>Tongva</b> and progressing forward in time.',
       targetSelector: '#era-filter-bar',
@@ -35,6 +38,7 @@ var Tutorial = (function () {
     },
     {
       id: 'sidebar',
+      icon: '📊',
       title: 'Your Progress',
       body: 'Track your <b>points</b>, visited locations, and overall completion here. The ring fills as you explore more of LA\'s history.',
       targetSelector: '#sidebar',
@@ -44,6 +48,7 @@ var Tutorial = (function () {
     },
     {
       id: 'badges',
+      icon: '🏆',
       title: 'Earn Badges',
       body: 'Complete quizzes and reach milestones to earn badges. Pass a quiz on your <b>first attempt</b> for full points — retries earn half. Score 90%+ for a bonus!',
       targetSelector: '#badge-grid',
@@ -53,6 +58,7 @@ var Tutorial = (function () {
     },
     {
       id: 'tutor',
+      icon: '💬',
       title: 'AI History Tutor',
       body: 'Open any location, then expand the <b>AI Tutor panel</b> in the bottom-right corner. Ask questions about the history — it guides you with thought-provoking prompts.',
       targetSelector: '#chat-panel',
@@ -62,6 +68,7 @@ var Tutorial = (function () {
     },
     {
       id: 'done',
+      icon: '🎉',
       title: "You're Ready to Explore!",
       body: 'Click any marker on the map to get started. Good luck, historian!',
       targetSelector: null,
@@ -146,7 +153,22 @@ var Tutorial = (function () {
       '<div id="tutorial-overlay" aria-hidden="true">',
         '<div id="tutorial-backdrop" aria-hidden="true"></div>',
         '<div id="tutorial-spotlight" aria-hidden="true" class="tutorial-hidden"></div>',
+        '<div id="tutorial-pulse-ring" style="display:none" aria-hidden="true"></div>',
+
+        /* Arrow SVG — drawn between tooltip and spotlight */
+        '<svg id="tutorial-arrow-svg" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">',
+          '<path id="tutorial-arrow-path"/>',
+          '<path id="tutorial-arrow-head"/>',
+          '<circle id="tutorial-arrow-dot" r="4"/>',
+        '</svg>',
+
         '<div id="tutorial-tooltip" role="dialog" aria-modal="true" aria-labelledby="tutorial-title">',
+          /* Progress bar strip */
+          '<div id="tutorial-progress-bar-wrap" aria-hidden="true">',
+            '<div id="tutorial-progress-bar"></div>',
+          '</div>',
+          /* Per-step icon */
+          '<div id="tutorial-step-icon" aria-hidden="true"></div>',
           '<div class="tutorial-tooltip-header">',
             '<span class="tutorial-step-counter" id="tutorial-step-counter"></span>',
             '<h2 id="tutorial-title"></h2>',
@@ -208,6 +230,24 @@ var Tutorial = (function () {
     title.textContent = step.title;
     body.innerHTML = step.body;
 
+    // Step icon
+    var iconEl = document.getElementById('tutorial-step-icon');
+    if (iconEl) {
+      if (step.icon) {
+        iconEl.textContent = step.icon;
+        iconEl.style.display = 'block';
+      } else {
+        iconEl.textContent = '';
+        iconEl.style.display = 'none';
+      }
+    }
+
+    // Progress bar
+    var progressBar = document.getElementById('tutorial-progress-bar');
+    if (progressBar) {
+      progressBar.style.width = (stepNum / total * 100) + '%';
+    }
+
     // Buttons
     if (isFirst) {
       prevBtn.classList.add('tutorial-hidden');
@@ -262,9 +302,32 @@ var Tutorial = (function () {
       }
     }
 
+    // Direction-aware entrance animation
+    _applyDirectionAnimation(tooltip, step.placement || 'center', isCentered);
+
+    // Pulse next button after a beat
+    if (!_reducedMotion) {
+      nextBtn.classList.remove('tutorial-btn-pulse');
+      void nextBtn.offsetWidth;
+      nextBtn.classList.add('tutorial-btn-pulse');
+    }
+
+    // Animated arrow + pulse ring (defer to next frame so tooltip is painted)
+    _updateArrow(step);
+    _updatePulseRing(step);
+
     // Focus the primary action button
-    var nextBtn2 = document.getElementById('tutorial-next-btn');
-    if (nextBtn2) nextBtn2.focus();
+    if (nextBtn) nextBtn.focus();
+  }
+
+  /* ---- Private: direction-aware tooltip animation ---- */
+
+  function _applyDirectionAnimation(tooltip, placement, isCentered) {
+    if (_reducedMotion) return;
+    var dirClass = 'dir-' + (placement || 'center');
+    tooltip.classList.remove('dir-center', 'dir-right', 'dir-left', 'dir-bottom', 'dir-top');
+    void tooltip.offsetWidth; // reflow to re-trigger animation
+    tooltip.classList.add(dirClass);
   }
 
   /* ---- Private: spotlight positioning ---- */
@@ -351,6 +414,163 @@ var Tutorial = (function () {
     tooltip.style.left = left + 'px';
     tooltip.style.top  = top  + 'px';
     tooltip.style.transform = '';
+  }
+
+  /* ---- Private: animated arrow ---- */
+
+  function _updateArrow(step) {
+    var svg    = document.getElementById('tutorial-arrow-svg');
+    var pathEl = document.getElementById('tutorial-arrow-path');
+    var headEl = document.getElementById('tutorial-arrow-head');
+    var dotEl  = document.getElementById('tutorial-arrow-dot');
+
+    if (!svg || !pathEl) return;
+
+    var isCentered = !step.targetSelector || step.placement === 'center' || window.innerWidth < 600;
+    if (isCentered || _reducedMotion) {
+      svg.style.opacity = '0';
+      return;
+    }
+
+    requestAnimationFrame(function () {
+      var tooltipEl   = document.getElementById('tutorial-tooltip');
+      var spotlightEl = document.getElementById('tutorial-spotlight');
+      if (!tooltipEl || !spotlightEl) return;
+
+      var tr = tooltipEl.getBoundingClientRect();
+      var sr = spotlightEl.getBoundingClientRect();
+      if (!sr.width) { svg.style.opacity = '0'; return; }
+
+      var sx, sy, ex, ey;
+      var edgeGap = 6; // small inset from element edges
+
+      switch (step.placement) {
+        case 'right':
+          // Tooltip is to the right of spotlight
+          sx = tr.left - edgeGap;
+          sy = tr.top + tr.height / 2;
+          ex = sr.right + edgeGap;
+          ey = sr.top + sr.height / 2;
+          break;
+        case 'left':
+          sx = tr.right + edgeGap;
+          sy = tr.top + tr.height / 2;
+          ex = sr.left - edgeGap;
+          ey = sr.top + sr.height / 2;
+          break;
+        case 'bottom':
+          // Tooltip is below spotlight
+          sx = tr.left + tr.width / 2;
+          sy = tr.top - edgeGap;
+          ex = sr.left + sr.width / 2;
+          ey = sr.bottom + edgeGap;
+          break;
+        case 'top':
+          sx = tr.left + tr.width / 2;
+          sy = tr.bottom + edgeGap;
+          ex = sr.left + sr.width / 2;
+          ey = sr.top - edgeGap;
+          break;
+        default:
+          svg.style.opacity = '0';
+          return;
+      }
+
+      // Quadratic bezier with perpendicular arc
+      var dx = ex - sx;
+      var dy = ey - sy;
+      var len = Math.sqrt(dx * dx + dy * dy) || 1;
+      var bendAmt = Math.min(len * 0.18, 40);
+      var perpX = -(dy / len) * bendAmt;
+      var perpY =  (dx / len) * bendAmt;
+      var midX = (sx + ex) / 2;
+      var midY = (sy + ey) / 2;
+      var cpx = midX + perpX;
+      var cpy = midY + perpY;
+
+      // Main curve path
+      var d = 'M ' + sx.toFixed(1) + ' ' + sy.toFixed(1) +
+              ' Q ' + cpx.toFixed(1) + ' ' + cpy.toFixed(1) +
+              ' ' + ex.toFixed(1) + ' ' + ey.toFixed(1);
+      pathEl.setAttribute('d', d);
+
+      // Arrowhead: two lines diverging from end point at the tangent angle
+      var angle = Math.atan2(ey - cpy, ex - cpx);
+      var ahSize = 11;
+      var ahSpread = 0.45; // radians
+      var ahX1 = ex - ahSize * Math.cos(angle - ahSpread);
+      var ahY1 = ey - ahSize * Math.sin(angle - ahSpread);
+      var ahX2 = ex - ahSize * Math.cos(angle + ahSpread);
+      var ahY2 = ey - ahSize * Math.sin(angle + ahSpread);
+      var headD = 'M ' + ahX1.toFixed(1) + ' ' + ahY1.toFixed(1) +
+                  ' L ' + ex.toFixed(1) + ' ' + ey.toFixed(1) +
+                  ' L ' + ahX2.toFixed(1) + ' ' + ahY2.toFixed(1);
+      if (headEl) {
+        headEl.setAttribute('d', headD);
+      }
+
+      // Dash-draw animation on the main path
+      var totalLen = pathEl.getTotalLength ? pathEl.getTotalLength() : 250;
+      pathEl.style.transition = 'none';
+      pathEl.style.strokeDasharray = totalLen + ' ' + totalLen;
+      pathEl.style.strokeDashoffset = '' + totalLen;
+      void pathEl.getBoundingClientRect(); // force reflow
+      pathEl.style.transition = 'stroke-dashoffset 0.52s cubic-bezier(0.22, 1, 0.36, 1) 0.08s';
+      pathEl.style.strokeDashoffset = '0';
+
+      // Arrowhead fades in after path is drawn
+      if (headEl) {
+        headEl.style.transition = 'none';
+        headEl.style.opacity = '0';
+        void headEl.getBoundingClientRect();
+        headEl.style.transition = 'opacity 0.18s ease 0.52s';
+        headEl.style.opacity = '1';
+      }
+
+      // Tip dot at arrowhead endpoint — restart its pulse animation
+      if (dotEl) {
+        dotEl.setAttribute('cx', ex.toFixed(1));
+        dotEl.setAttribute('cy', ey.toFixed(1));
+        dotEl.style.animationName = 'none';
+        void dotEl.getBoundingClientRect();
+        dotEl.style.animationName = '';
+      }
+
+      svg.style.opacity = '1';
+    });
+  }
+
+  /* ---- Private: pulse ring around spotlight ---- */
+
+  function _updatePulseRing(step) {
+    var ring = document.getElementById('tutorial-pulse-ring');
+    if (!ring) return;
+
+    var isCentered = !step.targetSelector || step.placement === 'center' || window.innerWidth < 600;
+    if (isCentered || _reducedMotion) {
+      ring.style.display = 'none';
+      return;
+    }
+
+    requestAnimationFrame(function () {
+      var spotlightEl = document.getElementById('tutorial-spotlight');
+      if (!spotlightEl || spotlightEl.classList.contains('tutorial-hidden')) {
+        ring.style.display = 'none';
+        return;
+      }
+
+      // Mirror the spotlight's position and size
+      ring.style.top    = spotlightEl.style.top;
+      ring.style.left   = spotlightEl.style.left;
+      ring.style.width  = spotlightEl.style.width;
+      ring.style.height = spotlightEl.style.height;
+      ring.style.display = 'block';
+
+      // Restart animation cleanly
+      ring.style.animation = 'none';
+      void ring.offsetWidth;
+      ring.style.animation = '';
+    });
   }
 
   /* ---- Private: sidebar expansion hook ---- */
