@@ -84,11 +84,6 @@ var Tutorial = (function () {
   function init() {
     _reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     _buildDOM();
-    // Register help-btn (may not exist on non-map pages)
-    var helpBtn = document.getElementById('help-btn');
-    if (helpBtn) {
-      helpBtn.addEventListener('click', function () { replay(); });
-    }
     // Show automatically only on first visit
     if (!localStorage.getItem('tutorial_completed')) {
       // Small delay so map tiles have a moment to render

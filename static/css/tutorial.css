@@ -190,25 +190,6 @@
 #tutorial-skip-link:focus-visible { outline: 2px solid var(--accent, #b8731a); outline-offset: 2px; }
 #tutorial-skip-link.tutorial-hidden { display: none; }
 
-/* ---- Help button in navbar ---- */
-#help-btn {
-  background: rgba(255,255,255,0.10);
-  border: 1px solid rgba(255,255,255,0.18);
-  cursor: pointer;
-  font-size: 0.95rem;
-  font-weight: 700;
-  padding: 6px 10px;
-  border-radius: 6px;
-  line-height: 1;
-  transition: background 0.18s, border-color 0.18s;
-  color: #e0d8cc;
-  font-family: var(--font-body, 'DM Sans', sans-serif);
-}
-#help-btn:hover {
-  background: rgba(255,255,255,0.18);
-  border-color: rgba(255,255,255,0.30);
-}
-
 /* ---- Dark mode ---- */
 html.dark #tutorial-tooltip {
   background: var(--bg-card, #252018);

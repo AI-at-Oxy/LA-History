@@ -611,6 +611,51 @@
   box-shadow: 0 0 0 2px rgba(184,115,26,0.15);
 }
 
+/* ---- Hero completion ring ---- */
+.hero-stat-completion {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+}
+
+.hero-completion-ring {
+  position: relative;
+  width: 54px;
+  height: 54px;
+  margin-bottom: 6px;
+}
+
+.hero-completion-ring svg {
+  transform: rotate(-90deg);
+}
+
+.hero-ring-bg {
+  fill: none;
+  stroke: rgba(255,255,255,0.07);
+  stroke-width: 4.5;
+}
+
+.hero-ring-fill {
+  fill: none;
+  stroke: var(--accent-gold);
+  stroke-width: 4.5;
+  stroke-linecap: round;
+}
+
+.hero-ring-label {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-size: 0.82rem;
+  font-weight: 800;
+  color: var(--accent-gold);
+  line-height: 1;
+}
+
 /* ---- Dashboard dark mode overrides ---- */
 html.dark .badge-card-icon { background: linear-gradient(135deg, #2e2820, #3a3028); }
 html.dark .location-table th { background: #1e1a14; }
@@ -633,6 +678,25 @@ html.dark .sort-select { background-color: #1e1a14; }
       <p>Your Los Angeles history journey</p>
     </div>
     <div class="hero-stats">
+      {% set completion_pct = ((summary.total_passed / summary.total_locations) * 100) | round | int if summary.total_locations > 0 else 0 %}
+      {% set ring_offset = 125.7 - (125.7 * completion_pct / 100) %}
+      <div class="hero-stat hero-stat-has-tip hero-stat-completion" tabindex="0">
+        <div class="hero-completion-ring">
+          <svg width="54" height="54" viewBox="0 0 52 52">
+            <circle class="hero-ring-bg" cx="26" cy="26" r="20"/>
+            <circle class="hero-ring-fill" cx="26" cy="26" r="20"
+              stroke-dasharray="125.7"
+              stroke-dashoffset="{{ ring_offset }}"/>
+          </svg>
+          <div class="hero-ring-label">{{ completion_pct }}%</div>
+        </div>
+        <span class="hero-stat-label">Complete</span>
+        <div class="hero-stat-tip">
+          <span>📊 {{ completion_pct }}% overall completion</span>
+          <span>✅ {{ summary.total_passed }} / {{ summary.total_locations }} quizzes passed</span>
+          <span>📍 {{ summary.total_visited }} / {{ summary.total_locations }} locations visited</span>
+        </div>
+      </div>
       <div class="hero-stat hero-stat-points" tabindex="0"
            title="{{ summary.points_breakdown.visit_pts }} from visits · {{ summary.points_breakdown.quiz_pts }} from quizzes">
         <span class="hero-stat-value">{{ summary.user.total_points }}</span>

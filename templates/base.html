@@ -40,7 +40,7 @@
   <a href="{{ url_for('map.map_page') }}" class="navbar-link {% if request.endpoint == 'map.map_page' %}active{% endif %}">Map</a>
   <a href="{{ url_for('progress.dashboard') }}" class="navbar-link {% if request.endpoint == 'progress.dashboard' %}active{% endif %}">Dashboard</a>
   <span class="navbar-points">✦ {{ current_user.total_points or 0 }} pts</span>
-  <button id="help-btn" title="Tutorial" aria-label="Open tutorial">?</button>
+  <button id="help-btn" title="Keyboard shortcuts" aria-label="Show keyboard shortcuts" onclick="document.getElementById('shortcut-overlay').classList.toggle('open')">?</button>
   <button id="settings-btn" onclick="openSettings()" title="Settings">⚙</button>
   <form action="{{ url_for('auth.logout') }}" method="post" style="margin:0">
     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
@@ -267,23 +267,88 @@ function setTheme(mode) {
       <span>Keyboard Shortcuts</span>
       <button class="settings-close" onclick="document.getElementById('shortcut-overlay').classList.remove('open')">×</button>
     </div>
-    <table class="shortcut-table">
-      <tbody>
-        <tr><td><kbd>?</kbd></td><td>Show / hide this overlay</td></tr>
-        <tr class="shortcut-section-label"><td colspan="2">Map</td></tr>
-        <tr><td><kbd>Esc</kbd></td><td>Close open panel</td></tr>
-        <tr class="shortcut-section-label"><td colspan="2">Concept Map</td></tr>
-        <tr><td><kbd>Ctrl</kbd> <kbd>Z</kbd></td><td>Undo last action</td></tr>
-        <tr><td><kbd>Ctrl</kbd> <kbd>Y</kbd></td><td>Redo last action</td></tr>
-        <tr><td><kbd>Tab</kbd></td><td>Cycle through nodes</td></tr>
-        <tr><td><kbd>Shift</kbd> <kbd>Tab</kbd></td><td>Cycle nodes (reverse)</td></tr>
-        <tr><td><kbd>↑</kbd> <kbd>↓</kbd> <kbd>←</kbd> <kbd>→</kbd></td><td>Move selected node</td></tr>
-        <tr><td><kbd>Shift</kbd> + arrows</td><td>Move node (large step)</td></tr>
-        <tr><td><kbd>Delete</kbd></td><td>Remove selected node / edge</td></tr>
-        <tr><td><kbd>Enter</kbd></td><td>Start connection from selected node</td></tr>
-        <tr><td><kbd>Esc</kbd></td><td>Cancel / close menus</td></tr>
-      </tbody>
-    </table>
+    <div class="shortcut-body">
+
+      <div class="shortcut-group">
+        <div class="shortcut-row">
+          <div class="shortcut-keys"><kbd>?</kbd></div>
+          <div class="shortcut-desc">Show / hide this overlay</div>
+        </div>
+      </div>
+
+      <div class="shortcut-group">
+        <div class="shortcut-group-label">Map</div>
+        <div class="shortcut-row">
+          <div class="shortcut-keys"><kbd>/</kbd></div>
+          <div class="shortcut-desc">Focus location search</div>
+        </div>
+        <div class="shortcut-row">
+          <div class="shortcut-keys"><kbd>S</kbd></div>
+          <div class="shortcut-desc">Toggle sidebar</div>
+        </div>
+        <div class="shortcut-row">
+          <div class="shortcut-keys"><kbd>C</kbd></div>
+          <div class="shortcut-desc">Toggle AI tutor</div>
+        </div>
+        <div class="shortcut-row">
+          <div class="shortcut-keys"><kbd>R</kbd></div>
+          <div class="shortcut-desc">Reset map view</div>
+        </div>
+        <div class="shortcut-row">
+          <div class="shortcut-keys"><kbd>Q</kbd></div>
+          <div class="shortcut-desc">Take quiz <span class="shortcut-context">(when location open)</span></div>
+        </div>
+        <div class="shortcut-row">
+          <div class="shortcut-keys"><kbd>T</kbd></div>
+          <div class="shortcut-desc">Read aloud <span class="shortcut-context">(when location open)</span></div>
+        </div>
+        <div class="shortcut-row">
+          <div class="shortcut-keys"><kbd>Esc</kbd></div>
+          <div class="shortcut-desc">Close open panel / modal</div>
+        </div>
+      </div>
+
+      <div class="shortcut-group">
+        <div class="shortcut-group-label">Concept Map</div>
+        <div class="shortcut-row">
+          <div class="shortcut-keys"><kbd>Ctrl</kbd><kbd>Z</kbd></div>
+          <div class="shortcut-desc">Undo</div>
+        </div>
+        <div class="shortcut-row">
+          <div class="shortcut-keys"><kbd>Ctrl</kbd><kbd>Y</kbd></div>
+          <div class="shortcut-desc">Redo</div>
+        </div>
+        <div class="shortcut-row">
+          <div class="shortcut-keys"><kbd>Tab</kbd></div>
+          <div class="shortcut-desc">Cycle through nodes</div>
+        </div>
+        <div class="shortcut-row">
+          <div class="shortcut-keys"><kbd>Shift</kbd><kbd>Tab</kbd></div>
+          <div class="shortcut-desc">Cycle nodes (reverse)</div>
+        </div>
+        <div class="shortcut-row">
+          <div class="shortcut-keys"><kbd>↑</kbd><kbd>↓</kbd><kbd>←</kbd><kbd>→</kbd></div>
+          <div class="shortcut-desc">Move selected node</div>
+        </div>
+        <div class="shortcut-row">
+          <div class="shortcut-keys"><kbd>Shift</kbd><span class="shortcut-plus">+</span><kbd>↑↓←→</kbd></div>
+          <div class="shortcut-desc">Move node (large step)</div>
+        </div>
+        <div class="shortcut-row">
+          <div class="shortcut-keys"><kbd>Delete</kbd></div>
+          <div class="shortcut-desc">Remove selected node / edge</div>
+        </div>
+        <div class="shortcut-row">
+          <div class="shortcut-keys"><kbd>Enter</kbd></div>
+          <div class="shortcut-desc">Start connection from node</div>
+        </div>
+        <div class="shortcut-row">
+          <div class="shortcut-keys"><kbd>Esc</kbd></div>
+          <div class="shortcut-desc">Cancel / close menus</div>
+        </div>
+      </div>
+
+    </div>
   </div>
 </div>
 

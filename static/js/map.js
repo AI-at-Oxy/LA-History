@@ -733,6 +733,70 @@ function copyLocationLink(locationId) {
 }
 window.copyLocationLink = copyLocationLink;
 
+// ---- Map page keyboard shortcuts ----
+document.addEventListener('keydown', function (e) {
+  if (['INPUT', 'TEXTAREA', 'SELECT'].includes(document.activeElement.tagName)) return;
+  if (document.activeElement.isContentEditable) return;
+
+  const quizOpen     = document.getElementById('quiz-modal-overlay')?.classList.contains('open');
+  const cmOpen       = document.getElementById('cm-overlay')?.classList.contains('open');
+  const settingsOpen = document.getElementById('settings-overlay')?.classList.contains('open');
+  const shortcutOpen = document.getElementById('shortcut-overlay')?.classList.contains('open');
+  const tutorialOpen = !!document.querySelector('.tutorial-visible');
+  const lightboxOpen = document.getElementById('image-lightbox-overlay')?.classList.contains('open');
+  const anyModalOpen = quizOpen || cmOpen || settingsOpen || shortcutOpen || tutorialOpen || lightboxOpen;
+
+  switch (e.key) {
+    case '/':
+      if (!anyModalOpen) {
+        e.preventDefault();
+        const search = document.getElementById('map-search-input');
+        if (search) { search.focus(); search.select(); }
+      }
+      break;
+
+    case 's': case 'S':
+      if (!anyModalOpen) document.getElementById('sidebar-toggle')?.click();
+      break;
+
+    case 'c': case 'C':
+      if (!anyModalOpen && typeof toggleChat === 'function') toggleChat();
+      break;
+
+    case 'r': case 'R':
+      if (!anyModalOpen && map) {
+        _suppressZoomSFX = true;
+        map.flyTo([34.05, -118.25], 11, { animate: true, duration: 1.0 });
+        map.once('moveend', () => { _suppressZoomSFX = false; });
+      }
+      break;
+
+    case 'q': case 'Q':
+      if (!anyModalOpen && activeLocationId) {
+        const loc = locationsData.find(l => l.id === activeLocationId);
+        if (loc && loc.has_quiz && !loc.quiz_passed && typeof openQuiz === 'function') {
+          openQuiz(activeLocationId);
+        }
+      }
+      break;
+
+    case 't': case 'T':
+      if (!anyModalOpen) document.getElementById('tts-btn')?.click();
+      break;
+
+    case 'Escape':
+      if (quizOpen && typeof closeQuiz === 'function') { closeQuiz(); break; }
+      if (cmOpen) { document.getElementById('cm-close-btn')?.click(); break; }
+      if (lightboxOpen) { closeImageLightbox(); break; }
+      if (!shortcutOpen && !settingsOpen && !tutorialOpen) {
+        if (document.getElementById('detail-panel')?.classList.contains('open')) {
+          closeDetailPanel(); break;
+        }
+      }
+      break;
+  }
+});
+
 document.addEventListener('DOMContentLoaded', () => {
   initMap();
   // Deep-link: open location from URL hash #loc-{id}
