@@ -154,11 +154,12 @@ const Voice = (() => {
   }
 
   // ── Text injection into chat input ───────────────────────────
+  let _targetInputId = 'chat-input';
+
   function _injectTranscript(text) {
-    const input = document.getElementById('chat-input');
+    const input = document.getElementById(_targetInputId);
     if (!input) return;
     input.value = text;
-    // Trigger the existing auto-resize handler in chat.js
     input.dispatchEvent(new Event('input', { bubbles: true }));
     input.focus();
     _transition(STATES.RESULT);
@@ -225,26 +226,31 @@ const Voice = (() => {
     if (obj.enabled !== undefined) localStorage.setItem('voice_enabled', obj.enabled ? 'on' : 'off');
   }
 
-  // ── DOM wiring (runs once on DOMContentLoaded) ───────────────
-  function _init() {
-    _micBtn = document.getElementById('chat-mic-btn');
-    if (!_micBtn) return;
+  // ── Wire a single mic button to a specific input ─────────────
+  function _wireButton(micBtnId, inputId) {
+    const btn = document.getElementById(micBtnId);
+    if (!btn) return;
 
-    if (!isSupported()) {
-      return;
-    }
+    if (!isSupported()) return;
 
-    // Add the voice-enabled class to the wrapper so textarea gets padding
-    const wrap = document.querySelector('.chat-input-wrap');
+    // Add voice-enabled class to this button's wrapper
+    const wrap = btn.closest('.chat-input-wrap');
     if (wrap) wrap.classList.add('voice-enabled');
 
-    _micBtn.classList.add('visible');
+    btn.classList.add('visible');
 
-    // Click handler — toggle recording
-    _micBtn.addEventListener('click', (e) => {
+    btn.addEventListener('click', (e) => {
       e.stopPropagation();
+      _micBtn = btn;
+      _targetInputId = inputId;
       start();
     });
+  }
+
+  // ── DOM wiring (runs once on DOMContentLoaded) ───────────────
+  function _init() {
+    // Wire concept map tutor mic
+    _wireButton('cm-chat-mic-btn', 'cm-chat-input');
   }
 
   document.addEventListener('DOMContentLoaded', _init);

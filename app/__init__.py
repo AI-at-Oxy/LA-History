@@ -75,6 +75,14 @@ def create_app(config_name=None):
                         conn.commit()
                     except OperationalError:
                         pass  # Column already exists (concurrent startup)
+            # Concept-map chat session era column
+            chat_cols = [c['name'] for c in inspector.get_columns('chat_sessions')]
+            if 'era_order' not in chat_cols:
+                try:
+                    conn.execute(text('ALTER TABLE chat_sessions ADD COLUMN era_order INTEGER'))
+                    conn.commit()
+                except OperationalError:
+                    pass
 
     @app.route('/')
     def index():

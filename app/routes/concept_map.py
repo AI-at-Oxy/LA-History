@@ -12,7 +12,8 @@ from ..services.gamification import (
     POINTS_CONCEPT_MAP_SUBMIT, POINTS_CONCEPT_MAP_BONUS,
     is_era_unlocked_for_user,
 )
-from ..services.ollama_service import evaluate_concept_map
+from ..models.progress import ChatSession, ChatMessage
+from ..services.ollama_service import evaluate_concept_map, build_concept_map_chat_prompt, chat_with_ollama
 
 concept_map_bp = Blueprint('concept_map', __name__)
 
@@ -202,3 +203,76 @@ def evaluate_map(era_order):
         'new_badges': new_badges,
         'synthesis_score': feedback.get('synthesis_score', 0),
     })
+
+
+def _get_or_create_cm_session(user_id, era_order):
+    """Get or create a ChatSession keyed to a concept-map era (no location_id)."""
+    session = ChatSession.query.filter_by(user_id=user_id, era_order=era_order).first()
+    if not session:
+        session = ChatSession(user_id=user_id, era_order=era_order)
+        db.session.add(session)
+        db.session.flush()
+    return session
+
+
+@concept_map_bp.route('/api/concept_map/<int:era_order>/chat', methods=['POST'])
+@login_required
+def concept_map_chat(era_order):
+    if not is_era_unlocked_for_user(current_user.id, era_order):
+        return jsonify({'error': 'This era is locked.'}), 403
+
+    data = request.get_json()
+    if not data or not data.get('message', '').strip():
+        return jsonify({'error': 'Message is required.'}), 400
+
+    user_message = data['message'].strip()[:1000]
+    graph_json = data.get('graph_json')
+    era_name = data.get('era_name', '')
+
+    locations, _ = _get_era_data(era_order, current_user.id)
+    if not locations:
+        return jsonify({'error': 'Era not found.'}), 404
+
+    resolved_era_name = era_name or locations[0].era.capitalize()
+    locations_summary = '\n'.join(
+        f'- {loc.name}: {loc.short_description}' for loc in locations
+    )
+
+    system_prompt = build_concept_map_chat_prompt(
+        era_name=resolved_era_name,
+        locations_summary=locations_summary,
+        graph_json=graph_json,
+    )
+
+    session = _get_or_create_cm_session(current_user.id, era_order)
+    past_messages = [
+        {'role': msg.role, 'content': msg.content}
+        for msg in session.messages
+    ]
+
+    # Detect greeting sentinel — synthetic opening, don't persist the user turn
+    is_greeting = (user_message == '__greeting__')
+    if is_greeting:
+        from ..services.ollama_service import _summarize_graph_for_chat
+        graph_summary = _summarize_graph_for_chat(graph_json)
+        ollama_user_msg = (
+            f"The student has just opened their concept map for the {resolved_era_name} era. "
+            f"Current map state: {graph_summary}. "
+            f"Produce a brief, warm Socratic opening question (≤2 sentences) to help them begin thinking."
+        )
+    else:
+        ollama_user_msg = user_message
+
+    messages_to_send = past_messages + [{'role': 'user', 'content': ollama_user_msg}]
+
+    reply, error = chat_with_ollama(messages_to_send, system_prompt)
+    if error:
+        return jsonify({'error': error}), 503
+
+    # Persist: for greeting, only store the assistant reply; for normal messages, store both
+    if not is_greeting:
+        db.session.add(ChatMessage(session_id=session.id, role='user', content=user_message))
+    db.session.add(ChatMessage(session_id=session.id, role='assistant', content=reply))
+    db.session.commit()
+
+    return jsonify({'reply': reply})

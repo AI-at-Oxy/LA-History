@@ -76,6 +76,74 @@ def chat_with_ollama(messages, system_prompt):
         return None, f'Tutor service error: {str(e)}'
 
 
+CONCEPT_MAP_CHAT_PROMPT = """You are a Socratic history tutor embedded inside a concept-map building tool. The student is constructing a visual knowledge graph about {era_name} Los Angeles history.
+
+ERA CONTEXT — use this to inform your questions, never recite it verbatim:
+{locations_summary}
+
+STUDENT'S CURRENT MAP:
+{graph_summary}
+
+YOUR ROLE — Constructionist scaffolding:
+You guide the construction process, not evaluate the finished product. Every response should move that construction forward by making the student think more carefully about which nodes belong, why two things are connected, and what the relationship label means.
+
+STRICT RULES — no exceptions:
+1. NEVER directly answer a factual question. Respond with a probing question instead.
+2. Keep every response to 3 sentences or fewer.
+3. Ask "why" or "how" at least once per response.
+4. If the map has nodes but no edges yet, nudge toward relationships: "What do you notice these locations might have in common?"
+5. If the map is empty, ask which location they'd most want to start with and why.
+6. If the map has edges, focus on one specific labeled edge and ask what evidence supports that label.
+7. If the student asks something off-topic, redirect: "How might that connect to what you've placed on your map so far?"
+8. Never suggest specific node names or edge labels the student hasn't proposed themselves.
+9. Never praise without asking a deepening follow-up question.
+"""
+
+
+def _summarize_graph_for_chat(graph_json):
+    """Convert raw cy.json() to a short human-readable summary for the system prompt."""
+    if not graph_json:
+        return "The map is currently empty."
+    try:
+        g = json.loads(graph_json) if isinstance(graph_json, str) else graph_json
+        els = g.get('elements', {})
+        if isinstance(els, dict):
+            nodes = [n['data'].get('label', '?') for n in els.get('nodes', [])]
+            edges = [
+                f"{e['data'].get('source', '?')} --[{e['data'].get('label', '')}]--> {e['data'].get('target', '?')}"
+                for e in els.get('edges', [])
+            ]
+        else:
+            nodes = [e['data'].get('label', '?') for e in els if e.get('group') == 'nodes']
+            edges = [
+                f"{e['data'].get('source', '?')} --[{e['data'].get('label', '')}]--> {e['data'].get('target', '?')}"
+                for e in els if e.get('group') == 'edges'
+            ]
+        if not nodes:
+            return "The map is currently empty."
+        summary = f"Nodes ({len(nodes)}): {', '.join(nodes)}."
+        if edges:
+            shown = edges[:10]
+            summary += f" Connections ({len(edges)}): " + " | ".join(shown)
+            if len(edges) > 10:
+                summary += f" … and {len(edges) - 10} more."
+        else:
+            summary += " No connections drawn yet."
+        return summary
+    except Exception:
+        return "Map state unavailable."
+
+
+def build_concept_map_chat_prompt(era_name, locations_summary, graph_json):
+    """Build the system prompt for concept-map-integrated Socratic chat."""
+    graph_summary = _summarize_graph_for_chat(graph_json)
+    return CONCEPT_MAP_CHAT_PROMPT.format(
+        era_name=era_name,
+        locations_summary=locations_summary,
+        graph_summary=graph_summary,
+    )
+
+
 CONCEPT_MAP_EVAL_PROMPT = """You are reviewing a student's concept map about {era_name} Los Angeles history.
 
 LOCATION CONTEXT (use to assess connections — do not recite verbatim):

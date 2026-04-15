@@ -13,7 +13,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 56px 16px 16px;
+  padding: 90px 16px 16px;
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.28s;
@@ -31,7 +31,7 @@
   box-shadow: 0 0 0 1px rgba(184, 115, 26, 0.22),
               0 8px 24px rgba(184, 115, 26, 0.08),
               0 32px 96px rgba(10, 8, 6, 0.60);
-  width: min(94vw, 1160px);
+  width: min(96vw, 1420px);
   height: min(90vh, 800px);
   display: flex;
   flex-direction: column;
@@ -865,6 +865,116 @@ html.dark .cm-cross-era-picker-header {
 
 html.dark .cm-picker-item:hover {
   background: rgba(184,115,26,0.08);
+}
+
+/* ── Concept Map Tutor Panel ── */
+.cm-chat-panel {
+  width: 260px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  border-left: 1px solid var(--border);
+  background: var(--bg-card);
+  overflow: hidden;
+}
+
+.cm-chat-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+  background: var(--bg-dark);
+  color: #e8e4dc;
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.cm-chat-title {
+  flex: 1;
+  color: #e8e4dc;
+}
+
+.cm-chat-clear-btn {
+  background: rgba(255,255,255,0.10);
+  border: 1px solid rgba(255,255,255,0.18);
+  color: #d0c8b8;
+  cursor: pointer;
+  padding: 4px 7px;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  transition: background 0.18s;
+  flex-shrink: 0;
+}
+
+.cm-chat-clear-btn:hover {
+  background: rgba(255,255,255,0.22);
+}
+
+.cm-chat-messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 10px 10px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background: var(--bg);
+}
+
+/* Narrow the chat bubbles to fit the 260px column */
+.cm-chat-messages .chat-msg { max-width: 94%; }
+.cm-chat-messages .chat-bubble { font-size: 0.80rem; padding: 7px 10px; line-height: 1.45; }
+.cm-chat-messages .chat-intro { padding: 10px; font-size: 0.80rem; }
+.cm-chat-messages .chat-intro-icon { font-size: 1.1rem; }
+
+/* Input area reuses .chat-input-area from chat.css */
+.cm-chat-panel .chat-input-area {
+  padding: 8px 8px;
+  flex-shrink: 0;
+}
+
+.cm-chat-panel #cm-chat-input {
+  font-size: 0.80rem;
+  min-height: 32px;
+  max-height: 80px;
+  resize: none;
+}
+
+/* Mic button — more prominent inside the concept map tutor */
+.cm-chat-panel #cm-chat-mic-btn {
+  opacity: 0.85;
+  color: var(--accent);
+  background: rgba(184, 115, 26, 0.10);
+  border-radius: 6px;
+}
+
+.cm-chat-panel #cm-chat-mic-btn:hover {
+  opacity: 1;
+  background: rgba(184, 115, 26, 0.20);
+  transform: scale(1.12);
+}
+
+/* Responsive: hide tutor panel on narrow screens */
+@media (max-width: 900px) {
+  .cm-chat-panel { display: none; }
+}
+
+/* Dark mode */
+html.dark .cm-chat-panel {
+  background: #1e1a14;
+  border-left-color: #3a3228;
+}
+
+html.dark .cm-chat-header {
+  background: #150e08;
+  border-bottom-color: #3a3228;
+}
+
+html.dark .cm-chat-messages {
+  background: #161210;
 }
 
 /* ── Zoom controls ── */

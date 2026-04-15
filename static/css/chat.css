@@ -296,7 +296,8 @@
 }
 
 /* When voice is active, add right padding so text doesn't overlap the button */
-.chat-input-wrap.voice-enabled #chat-input {
+.chat-input-wrap.voice-enabled #chat-input,
+.chat-input-wrap.voice-enabled #cm-chat-input {
   padding-right: 42px;
 }
 

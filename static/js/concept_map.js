@@ -19,6 +19,10 @@ let cmUndoStack = [];             // undo/redo stacks
 let cmRedoStack = [];
 let _previewSvg = null;          // ghost edge preview line
 
+// ── CM Chat state ──────────────────────────────
+let cmChatLoading = false;
+let cmChatGreetingSent = false;
+
 // ── Entry point ───────────────────────────────
 function openConceptMap(eraOrder) {
   cmEraOrder = eraOrder;
@@ -74,6 +78,7 @@ async function loadConceptMapData(eraOrder) {
 
     if (!cmSubmitted) {
       cmAutoSaveTimer = setInterval(autoSave, 30000);
+      setTimeout(cmChatGreeting, 900);
     }
   });
 }
@@ -550,12 +555,153 @@ function confirmEdge() {
   updateEdgeCount();
   updateSubmitButton();
   scheduleAutoSave();
+
+  // Contextual tutor nudge after 1st and 3rd edge (key construction milestones)
+  if (!cmEditingEdgeId) {
+    const edgeCount = cy ? cy.edges().length : 0;
+    if (edgeCount === 1 || edgeCount === 3) cmChatContextualNudge();
+  }
 }
 
 function clearSourceSelection() {
   cy && cy.nodes().removeClass('selected-source');
   cmPendingEdgeSource = null;
   removePreviewLine();
+}
+
+// ── Concept Map Tutor Chat ────────────────────
+
+function cmChatScrollToBottom() {
+  const el = document.getElementById('cm-chat-messages');
+  if (el) el.scrollTop = el.scrollHeight;
+}
+
+function cmChatAppendMessage(role, content, animate = true) {
+  const container = document.getElementById('cm-chat-messages');
+  if (!container) return;
+  const intro = container.querySelector('.chat-intro');
+  if (intro) intro.remove();
+
+  const div = document.createElement('div');
+  div.className = `chat-msg ${role}`;
+  if (!animate) div.style.animation = 'none';
+  div.innerHTML = `
+    <div class="chat-bubble">${escapeHtml(content)}</div>
+    <div class="chat-msg-time">${new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}</div>
+  `;
+  container.appendChild(div);
+  cmChatScrollToBottom();
+}
+
+function cmChatShowTyping() {
+  const container = document.getElementById('cm-chat-messages');
+  if (!container) return;
+  const div = document.createElement('div');
+  div.className = 'chat-typing';
+  div.id = 'cm-chat-typing';
+  div.innerHTML = '<div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div>';
+  container.appendChild(div);
+  cmChatScrollToBottom();
+}
+
+function cmChatRemoveTyping() {
+  const el = document.getElementById('cm-chat-typing');
+  if (el) el.remove();
+}
+
+async function cmSendChatMessage() {
+  if (cmChatLoading || !cmEraOrder) return;
+  const input = document.getElementById('cm-chat-input');
+  if (!input) return;
+  const text = input.value.trim();
+  if (!text) return;
+
+  input.value = '';
+  input.style.height = 'auto';
+  cmChatAppendMessage('user', text);
+  cmChatShowTyping();
+  cmChatLoading = true;
+  const sendBtn = document.getElementById('cm-chat-send-btn');
+  if (sendBtn) sendBtn.disabled = true;
+
+  try {
+    const data = await apiFetch(
+      '/api/concept_map/' + cmEraOrder + '/chat', 'POST', {
+        message: text,
+        graph_json: cy ? cy.json() : null,
+        era_name: cmEraData ? cmEraData.era_name : '',
+      }
+    );
+    cmChatRemoveTyping();
+    cmChatAppendMessage('assistant', data.reply);
+    if (typeof SFX !== 'undefined') SFX.play('chat-receive');
+  } catch (e) {
+    cmChatRemoveTyping();
+    const container = document.getElementById('cm-chat-messages');
+    if (container) {
+      const err = document.createElement('div');
+      err.className = 'chat-error';
+      err.textContent = (e && e.message) || 'Could not reach the tutor. Is Ollama running?';
+      container.appendChild(err);
+      cmChatScrollToBottom();
+    }
+  } finally {
+    cmChatLoading = false;
+    if (sendBtn) sendBtn.disabled = false;
+    input.focus();
+  }
+}
+
+async function cmChatGreeting() {
+  if (cmChatGreetingSent || !cmEraOrder || cmSubmitted) return;
+  cmChatGreetingSent = true;
+  cmChatShowTyping();
+  try {
+    const data = await apiFetch(
+      '/api/concept_map/' + cmEraOrder + '/chat', 'POST', {
+        message: '__greeting__',
+        graph_json: cy ? cy.json() : null,
+        era_name: cmEraData ? cmEraData.era_name : '',
+      }
+    );
+    cmChatRemoveTyping();
+    cmChatAppendMessage('assistant', data.reply, true);
+  } catch (_) {
+    cmChatRemoveTyping();
+    // Silent fail — greeting is not critical
+  }
+}
+
+async function cmChatContextualNudge() {
+  if (cmChatLoading || !cmEraOrder || cmSubmitted || !cy) return;
+  const edges = cy.edges();
+  if (edges.length === 0) return;
+
+  const lastEdge = edges[edges.length - 1];
+  const label = lastEdge.data('label') || '(unlabeled)';
+  const srcNode = cy.getElementById(lastEdge.data('source'));
+  const tgtNode = cy.getElementById(lastEdge.data('target'));
+  const src = (srcNode && srcNode.data('label')) || lastEdge.data('source');
+  const tgt = (tgtNode && tgtNode.data('label')) || lastEdge.data('target');
+  const syntheticMsg = `I just connected "${src}" to "${tgt}" with the label "${label}".`;
+
+  cmChatShowTyping();
+  cmChatLoading = true;
+  try {
+    const data = await apiFetch(
+      '/api/concept_map/' + cmEraOrder + '/chat', 'POST', {
+        message: syntheticMsg,
+        graph_json: cy.json(),
+        era_name: cmEraData ? cmEraData.era_name : '',
+      }
+    );
+    cmChatRemoveTyping();
+    cmChatAppendMessage('assistant', data.reply);
+  } catch (_) {
+    cmChatRemoveTyping();
+  } finally {
+    cmChatLoading = false;
+  }
 }
 
 // ── Edge popup event listeners ────────────────
@@ -648,6 +794,31 @@ document.addEventListener('DOMContentLoaded', () => {
     if (document.activeElement && (document.activeElement.tagName === 'INPUT' || document.activeElement.tagName === 'TEXTAREA')) return;
     if ((e.ctrlKey || e.metaKey) && e.key === 'z') { e.preventDefault(); undoLastAction(); }
     if ((e.ctrlKey || e.metaKey) && (e.key === 'y' || (e.shiftKey && e.key === 'z'))) { e.preventDefault(); redoLastAction(); }
+  });
+
+  // ── CM Tutor Chat event listeners ──
+  document.getElementById('cm-chat-send-btn').addEventListener('click', cmSendChatMessage);
+
+  document.getElementById('cm-chat-input').addEventListener('keydown', e => {
+    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); cmSendChatMessage(); }
+  });
+
+  document.getElementById('cm-chat-input').addEventListener('input', function () {
+    this.style.height = 'auto';
+    this.style.height = Math.min(this.scrollHeight, 80) + 'px';
+  });
+
+  document.getElementById('cm-chat-clear-btn').addEventListener('click', e => {
+    e.stopPropagation();
+    const container = document.getElementById('cm-chat-messages');
+    if (container) {
+      container.innerHTML = `
+        <div class="chat-intro">
+          <div class="chat-intro-icon">🎓</div>
+          <strong>Socratic Tutor</strong>
+          History cleared. Ask a question to continue.
+        </div>`;
+    }
   });
 });
 
@@ -888,6 +1059,8 @@ function closeConceptMap() {
   cmKeyboardNodeIndex = -1;
   cmUndoStack = [];
   cmRedoStack = [];
+  cmChatGreetingSent = false;
+  cmChatLoading = false;
   removePreviewLine();
 
   // Reset results panel for next open
@@ -895,6 +1068,17 @@ function closeConceptMap() {
   document.getElementById('cm-results-body').innerHTML = '';
   document.getElementById('cm-status').textContent = '';
   document.getElementById('cm-palette-list').innerHTML = '';
+
+  // Reset chat panel
+  const chatContainer = document.getElementById('cm-chat-messages');
+  if (chatContainer) {
+    chatContainer.innerHTML = `
+      <div class="chat-intro">
+        <div class="chat-intro-icon">🎓</div>
+        <strong>Socratic Tutor</strong>
+        I'll guide your thinking as you build. Add a connection and I'll ask about it.
+      </div>`;
+  }
 }
 
 // ── Keyboard accessibility ────────────────────
