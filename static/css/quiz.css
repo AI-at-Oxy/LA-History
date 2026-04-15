@@ -2,6 +2,133 @@
    LA History — Quiz Modal
    ========================================= */
 
+/* ---- Memory Challenge Confirmation Modal ---- */
+.mc-confirm-modal {
+  background: var(--bg-card);
+  border-radius: 16px;
+  box-shadow:
+    0 0 0 1px rgba(184,115,26,0.22),
+    0 24px 64px rgba(14,12,10,0.55);
+  width: 100%;
+  max-width: 420px;
+  overflow: hidden;
+  transform: scale(0.92) translateY(12px);
+  transition: transform 0.3s cubic-bezier(0.22,1,0.36,1);
+}
+
+.modal-overlay.open .mc-confirm-modal {
+  transform: scale(1) translateY(0);
+}
+
+.mc-confirm-header {
+  background: linear-gradient(135deg, #b8731a 0%, #d4a44c 100%);
+  padding: 24px 28px 20px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.mc-confirm-icon {
+  font-size: 2rem;
+  line-height: 1;
+}
+
+.mc-confirm-header h2 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  color: #fff;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+}
+
+.mc-confirm-body {
+  padding: 22px 28px 18px;
+}
+
+.mc-confirm-era {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  color: var(--accent);
+  margin: 0 0 16px;
+  font-weight: 600;
+}
+
+.mc-confirm-rules {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.mc-confirm-rules li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+.mc-confirm-rules li strong {
+  color: var(--text-primary);
+}
+
+.mc-rule-icon {
+  font-size: 1.1rem;
+  width: 24px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.mc-confirm-actions {
+  display: flex;
+  gap: 10px;
+  padding: 0 28px 24px;
+}
+
+.mc-confirm-cancel {
+  flex: 1;
+  padding: 11px 0;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  font-family: var(--font-body);
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+
+.mc-confirm-cancel:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+
+.mc-confirm-start {
+  flex: 2;
+  padding: 11px 0;
+  border-radius: 8px;
+  border: none;
+  background: linear-gradient(135deg, #b8731a, #d4a44c);
+  color: #fff;
+  font-size: 0.95rem;
+  font-family: var(--font-body);
+  font-weight: 600;
+  cursor: pointer;
+  transition: filter 0.15s, transform 0.1s;
+}
+
+.mc-confirm-start:hover {
+  filter: brightness(1.1);
+  transform: translateY(-1px);
+}
+
+.mc-confirm-start:active {
+  transform: translateY(0);
+  filter: brightness(0.97);
+}
+
 .modal-overlay {
   position: fixed;
   inset: 0;
@@ -220,9 +347,70 @@
   padding: 16px 26px;
   border-top: 1px solid var(--border);
   display: flex;
+  align-items: center;
   justify-content: flex-end;
+  gap: 12px;
   flex-shrink: 0;
   background: #f8f4ec;
+}
+
+/* Hint button */
+.quiz-hint-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 13px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--surface);
+  color: var(--text-muted);
+  font-size: 0.78rem;
+  cursor: pointer;
+  transition: border-color 0.15s, color 0.15s;
+  margin: 6px 0 4px;
+}
+.quiz-hint-btn:hover:not(:disabled) {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+.quiz-hint-btn.hint-used {
+  color: var(--success);
+  border-color: rgba(42,110,48,0.3);
+  cursor: default;
+}
+.quiz-hint-btn:disabled:not(.hint-used) {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Hint text callout */
+.quiz-hint-text {
+  background: #fdf6e3;
+  border: 1px solid rgba(212,168,67,0.35);
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 0.84rem;
+  color: #5a4232;
+  margin-top: 10px;
+  line-height: 1.5;
+}
+.quiz-hint-text strong {
+  color: var(--accent);
+}
+
+/* Hint penalty footer note */
+.quiz-hint-footer {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  flex: 1;
+}
+
+/* Challenge note in header */
+.quiz-challenge-note {
+  color: var(--accent);
+  font-weight: 600;
+  font-size: 0.8rem;
+  margin: 0;
 }
 
 /* Results screen */
@@ -289,9 +477,120 @@
   margin-bottom: 3px;
 }
 
+.results-hint-penalty {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  margin-bottom: 10px;
+}
+
+.results-challenge-note {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--accent);
+  margin-bottom: 14px;
+}
+
 .results-actions {
   display: flex;
   gap: 10px;
   justify-content: center;
   flex-wrap: wrap;
+}
+
+/* Locked options after first selection */
+#quiz-options.locked .quiz-option {
+  pointer-events: none;
+  cursor: default;
+}
+#quiz-options.locked .quiz-option:not(.selected) {
+  opacity: 0.55;
+}
+
+/* Per-question correct feedback */
+.quiz-feedback-correct {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--success);
+  font-weight: 600;
+  font-size: 0.92rem;
+  padding: 8px 0 2px;
+  animation: fadeIn 0.2s ease;
+}
+
+/* Per-question wrong-answer context */
+.quiz-feedback-wrong {
+  background: #fdf6e3;
+  border-left: 3px solid var(--danger);
+  border-radius: 0 8px 8px 0;
+  padding: 10px 14px;
+  font-size: 0.84rem;
+  color: #5a4232;
+  margin-top: 10px;
+  line-height: 1.55;
+  animation: fadeIn 0.25s ease;
+}
+.quiz-feedback-wrong strong {
+  color: var(--danger);
+  margin-right: 4px;
+}
+
+/* Results recap */
+.quiz-recap {
+  margin-top: 18px;
+  border-top: 1px solid var(--border);
+  padding-top: 12px;
+  max-height: 200px;
+  overflow-y: auto;
+  text-align: left;
+}
+
+.recap-header {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.recap-item {
+  display: flex;
+  gap: 10px;
+  padding: 7px 0;
+  border-bottom: 1px solid var(--border-light, #ede8dc);
+}
+
+.recap-item:last-child { border-bottom: none; }
+
+.recap-icon {
+  font-weight: 700;
+  font-size: 0.9rem;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+.recap-correct .recap-icon { color: var(--success); }
+.recap-wrong   .recap-icon { color: var(--danger); }
+
+.recap-content { flex: 1; min-width: 0; }
+
+.recap-question {
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: var(--text);
+  line-height: 1.4;
+  margin-bottom: 2px;
+}
+
+.recap-answer {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+
+.recap-explanation {
+  font-size: 0.78rem;
+  font-style: italic;
+  color: var(--text-secondary, var(--text-muted));
+  margin-top: 3px;
+  line-height: 1.4;
 }

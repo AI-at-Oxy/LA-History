@@ -33,12 +33,14 @@ def create_app(config_name=None):
     from .routes.quiz import quiz_bp
     from .routes.chat import chat_bp
     from .routes.concept_map import concept_map_bp
+    from .routes.memory_challenge import memory_challenge_bp
     app.register_blueprint(auth_bp)
     app.register_blueprint(map_bp)
     app.register_blueprint(progress_bp)
     app.register_blueprint(quiz_bp)
     app.register_blueprint(chat_bp)
     app.register_blueprint(concept_map_bp)
+    app.register_blueprint(memory_challenge_bp)
 
     # Create tables
     with app.app_context():
@@ -83,6 +85,22 @@ def create_app(config_name=None):
                     conn.commit()
                 except OperationalError:
                     pass
+            # Concept-map insight tokens column
+            cm_cols = [c['name'] for c in inspector.get_columns('concept_maps')]
+            if 'insight_uses' not in cm_cols:
+                try:
+                    conn.execute(text('ALTER TABLE concept_maps ADD COLUMN insight_uses INTEGER DEFAULT 3'))
+                    conn.commit()
+                except OperationalError:
+                    pass
+            # Memory challenge AI-generated questions column
+            try:
+                mc_cols = [c['name'] for c in inspector.get_columns('memory_challenge_attempts')]
+                if 'generated_questions' not in mc_cols:
+                    conn.execute(text('ALTER TABLE memory_challenge_attempts ADD COLUMN generated_questions TEXT'))
+                    conn.commit()
+            except Exception:
+                pass
 
     @app.route('/')
     def index():

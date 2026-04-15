@@ -23,6 +23,9 @@ let _previewSvg = null;          // ghost edge preview line
 let cmChatLoading = false;
 let cmChatGreetingSent = false;
 
+// ── Insight token state ────────────────────────
+let cmInsightUsesRemaining = 3;
+
 // ── Entry point ───────────────────────────────
 function openConceptMap(eraOrder) {
   cmEraOrder = eraOrder;
@@ -59,6 +62,7 @@ async function loadConceptMapData(eraOrder) {
     }
 
     cmSubmitted = !!(cmEraData.concept_map && cmEraData.concept_map.submitted);
+    cmInsightUsesRemaining = cmEraData.concept_map ? (cmEraData.concept_map.insight_uses ?? 3) : 3;
     if (cmSubmitted) {
       lockGraph();
       if (cmEraData.concept_map.ai_feedback) {
@@ -74,6 +78,7 @@ async function loadConceptMapData(eraOrder) {
 
     updateEdgeCount();
     updateSubmitButton();
+    updateInsightButton();
     setStatus('');
 
     if (!cmSubmitted) {
@@ -1034,6 +1039,52 @@ function closeCrossEraPicker() {
   picker.setAttribute('aria-hidden', 'true');
 }
 
+// ── Insight token button ──────────────────────
+function updateInsightButton() {
+  const btn = document.getElementById('cm-insight-btn');
+  const usesSpan = document.getElementById('cm-insight-uses');
+  if (!btn) return;
+  if (cmSubmitted || cmInsightUsesRemaining <= 0) {
+    btn.style.display = 'none';
+  } else {
+    btn.style.display = '';
+    if (usesSpan) usesSpan.textContent = cmInsightUsesRemaining;
+    btn.disabled = false;
+  }
+}
+
+async function requestInsight() {
+  if (cmChatLoading || !cmEraOrder || cmSubmitted) return;
+  const btn = document.getElementById('cm-insight-btn');
+  if (btn) btn.disabled = true;
+
+  cmChatAppendMessage('user', '[AI Insight requested — 15 pts]');
+  cmChatShowTyping();
+  cmChatLoading = true;
+
+  try {
+    const result = await apiFetch('/api/concept_map/' + cmEraOrder + '/insight', 'POST', {});
+    cmChatRemoveTyping();
+    cmChatAppendMessage('assistant', result.insight);
+    cmInsightUsesRemaining = result.uses_remaining;
+    updatePointsDisplay(result.total_points);
+    updateInsightButton();
+    showToast(`−15 pts — AI Insight used. ${result.uses_remaining} remaining.`, 'info');
+    if (typeof SFX !== 'undefined') SFX.play('chat-receive');
+  } catch (e) {
+    cmChatRemoveTyping();
+    if (btn) btn.disabled = false;
+    const msg = (e && e.message) || 'Could not get insight.';
+    if (msg.toLowerCase().includes('not enough') || msg.includes('402')) {
+      showToast('Not enough points for an AI Insight.', 'error');
+    } else {
+      showToast(msg, 'error');
+    }
+  } finally {
+    cmChatLoading = false;
+  }
+}
+
 // ── Close overlay ─────────────────────────────
 function closeConceptMap() {
   if (typeof SFX !== 'undefined') SFX.play('panel-close');
@@ -1061,6 +1112,7 @@ function closeConceptMap() {
   cmRedoStack = [];
   cmChatGreetingSent = false;
   cmChatLoading = false;
+  cmInsightUsesRemaining = 3;
   removePreviewLine();
 
   // Reset results panel for next open

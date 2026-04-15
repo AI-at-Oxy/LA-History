@@ -104,6 +104,30 @@
   </div>
 </div>
 
+<!-- Memory Challenge Confirmation Modal -->
+<div class="modal-overlay" id="mc-confirm-overlay" role="dialog" aria-modal="true" aria-labelledby="mc-confirm-title">
+  <div class="mc-confirm-modal">
+    <div class="mc-confirm-header">
+      <span class="mc-confirm-icon">🏆</span>
+      <h2 id="mc-confirm-title">Memory Challenge</h2>
+    </div>
+    <div class="mc-confirm-body">
+      <p class="mc-confirm-era" id="mc-confirm-era-label"></p>
+      <ul class="mc-confirm-rules">
+        <li><span class="mc-rule-icon">💰</span><span>Costs <strong>30 pts</strong> to enter</span></li>
+        <li><span class="mc-rule-icon">📋</span><span><strong>8 questions</strong> drawn from the entire era</span></li>
+        <li><span class="mc-rule-icon">🎯</span><span>Pass threshold: <strong>80%</strong></span></li>
+        <li><span class="mc-rule-icon">🌟</span><span>Reward: <strong>120 pts</strong> + badge</span></li>
+        <li><span class="mc-rule-icon">⚠️</span><span><strong>One attempt only</strong> — no retry if you fail</span></li>
+      </ul>
+    </div>
+    <div class="mc-confirm-actions">
+      <button class="mc-confirm-cancel" id="mc-confirm-cancel">Cancel</button>
+      <button class="mc-confirm-start" id="mc-confirm-start">Start Challenge</button>
+    </div>
+  </div>
+</div>
+
 <!-- Concept Map Overlay -->
 <div class="cm-overlay" id="cm-overlay" role="dialog" aria-modal="true" aria-label="Concept Map">
   <div class="cm-panel">
@@ -252,6 +276,10 @@
         <button class="cm-btn cm-btn-secondary" id="cm-fit-btn" title="Fit all nodes in view">⤢ Fit</button>
         <button class="cm-btn cm-btn-secondary" id="cm-layout-btn" title="Auto-arrange nodes">⟳ Auto-arrange</button>
         <button class="cm-btn cm-btn-secondary cm-clear-all-btn" id="cm-clear-btn">Clear All</button>
+        <button class="cm-btn cm-btn-insight" id="cm-insight-btn" style="display:none"
+                onclick="requestInsight()" title="Spend 15 pts for Socratic AI feedback on your current map">
+          💡 AI Insight (15 pts) &mdash; <span id="cm-insight-uses">3</span> left
+        </button>
       </div>
       <div class="cm-footer-right">
         <button class="cm-btn cm-btn-secondary" id="cm-save-btn">💾 Save</button>

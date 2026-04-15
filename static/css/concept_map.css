@@ -656,6 +656,18 @@
   background: rgba(184,115,26,0.05);
 }
 
+.cm-btn-insight {
+  background: rgba(212,168,67,0.08);
+  color: var(--accent);
+  border-color: rgba(212,168,67,0.4);
+  font-weight: 600;
+}
+.cm-btn-insight:not(:disabled):hover {
+  background: rgba(212,168,67,0.16);
+  border-color: var(--accent);
+  box-shadow: 0 1px 6px rgba(184,115,26,0.2);
+}
+
 /* ── Sidebar trigger button (injected by progress.js) ── */
 .cm-era-trigger-btn {
   display: flex;
@@ -696,6 +708,40 @@
   border-color: var(--success, #4caf50);
   color: var(--success, #4caf50);
   opacity: 0.85;
+}
+
+/* Memory Challenge button and result labels */
+.mc-challenge-btn {
+  border-color: rgba(101,70,140,0.4);
+  color: #65468c;
+  background: rgba(101,70,140,0.06);
+}
+.mc-challenge-btn:hover {
+  border-color: #65468c;
+  color: #65468c;
+  background: rgba(101,70,140,0.12);
+}
+
+.mc-challenge-result {
+  display: block;
+  width: 100%;
+  margin-top: 7px;
+  padding: 4px 10px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-align: center;
+  border-radius: 6px;
+  border: 1px solid;
+}
+.mc-challenge-result.pass {
+  border-color: rgba(42,110,48,0.35);
+  color: var(--success, #2a6e30);
+  background: rgba(42,110,48,0.06);
+}
+.mc-challenge-result.fail {
+  border-color: rgba(180,50,50,0.25);
+  color: var(--danger, #b43232);
+  background: rgba(180,50,50,0.05);
 }
 
 .era-item-locked {

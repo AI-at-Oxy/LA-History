@@ -109,6 +109,44 @@ def seed_badges():
             'description': 'Submitted concept maps for all 4 eras.',
             'icon': '🗺️',
         },
+        # Scaffolding currency badges
+        {
+            'slug': 'thrifty_scholar',
+            'name': 'Thrifty Scholar',
+            'description': 'Passed a quiz on the first attempt without using any hints.',
+            'icon': '💡',
+        },
+        # Memory Challenge badges
+        {
+            'slug': 'memory_champion_1',
+            'name': 'Tongva Memory Champion',
+            'description': 'Passed the Era 1 Memory Challenge.',
+            'icon': '🧠',
+        },
+        {
+            'slug': 'memory_champion_2',
+            'name': 'Colonial Memory Champion',
+            'description': 'Passed the Era 2 Memory Challenge.',
+            'icon': '🧠',
+        },
+        {
+            'slug': 'memory_champion_3',
+            'name': 'Rancho Memory Champion',
+            'description': 'Passed the Era 3 Memory Challenge.',
+            'icon': '🧠',
+        },
+        {
+            'slug': 'memory_champion_4',
+            'name': 'Modern Memory Champion',
+            'description': 'Passed the Era 4 Memory Challenge.',
+            'icon': '🧠',
+        },
+        {
+            'slug': 'grand_archivist',
+            'name': 'Grand Archivist',
+            'description': 'Passed all four era Memory Challenges.',
+            'icon': '🏛️',
+        },
     ]
     for data in badges:
         if not Badge.query.filter_by(slug=data['slug']).first():

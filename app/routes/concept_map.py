@@ -8,12 +8,16 @@ from ..models.location import Location
 from ..models.progress import UserProgress
 from ..models.user import User
 from ..services.gamification import (
-    award_points, check_and_award_badges,
+    award_points, check_and_award_badges, spend_points,
     POINTS_CONCEPT_MAP_SUBMIT, POINTS_CONCEPT_MAP_BONUS,
+    POINTS_INSIGHT, INSIGHT_MAX_USES,
     is_era_unlocked_for_user,
 )
 from ..models.progress import ChatSession, ChatMessage
-from ..services.ollama_service import evaluate_concept_map, build_concept_map_chat_prompt, chat_with_ollama
+from ..services.ollama_service import (
+    evaluate_concept_map, build_concept_map_chat_prompt, chat_with_ollama,
+    get_concept_map_insight,
+)
 
 concept_map_bp = Blueprint('concept_map', __name__)
 
@@ -134,6 +138,58 @@ def save_concept_map(era_order):
     db.session.commit()
 
     return jsonify({'success': True, 'updated_at': concept_map.updated_at.isoformat()})
+
+
+@concept_map_bp.route('/api/concept_map/<int:era_order>/insight', methods=['POST'])
+@login_required
+def get_map_insight(era_order):
+    if not is_era_unlocked_for_user(current_user.id, era_order):
+        return jsonify({'error': 'This era is locked.'}), 403
+
+    concept_map = ConceptMap.query.filter_by(
+        user_id=current_user.id, era_order=era_order
+    ).first()
+
+    if not concept_map:
+        return jsonify({'error': 'No map found. Save your map first.'}), 400
+
+    if concept_map.submitted:
+        return jsonify({'error': 'Map already submitted — insights are unavailable.'}), 403
+
+    uses = concept_map.insight_uses if concept_map.insight_uses is not None else INSIGHT_MAX_USES
+    if uses <= 0:
+        return jsonify({'error': 'No insight tokens remaining for this era.'}), 403
+
+    # Require at least one connection so the feedback is meaningful
+    if _count_edges(concept_map.graph_json) < 1:
+        return jsonify({'error': 'Add at least one connection before requesting an insight.'}), 400
+
+    user = current_user._get_current_object()
+    ok, err = spend_points(user, POINTS_INSIGHT)
+    if not ok:
+        return jsonify({'error': err}), 402
+
+    locations, _ = _get_era_data(era_order, current_user.id)
+    era_name = locations[0].era.capitalize() if locations else 'Unknown'
+    locations_summary = '\n'.join(
+        f'- {loc.name}: {loc.short_description}' for loc in locations
+    )
+
+    insight, ollama_err = get_concept_map_insight(era_name, locations_summary, concept_map.graph_json)
+    if ollama_err:
+        # Refund on failure
+        user.total_points = (user.total_points or 0) + POINTS_INSIGHT
+        db.session.commit()
+        return jsonify({'error': ollama_err}), 503
+
+    concept_map.insight_uses = uses - 1
+    db.session.commit()
+
+    return jsonify({
+        'insight': insight,
+        'uses_remaining': concept_map.insight_uses,
+        'total_points': user.total_points,
+    })
 
 
 @concept_map_bp.route('/api/concept_map/<int:era_order>/evaluate', methods=['POST'])

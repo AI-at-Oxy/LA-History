@@ -144,6 +144,224 @@ def build_concept_map_chat_prompt(era_name, locations_summary, graph_json):
     )
 
 
+QUIZ_HINT_PROMPT = """You are helping a student who is answering a history quiz about {location_name}, a historical site in Los Angeles.
+
+LOCATION CONTEXT (use to inform your hint — do not reveal this directly):
+{location_description}
+
+QUESTION:
+{question_text}
+
+OPTIONS:
+{options_text}
+
+Your task: Write a 2-3 sentence contextual clue that helps the student reason toward the answer WITHOUT naming the correct option or saying phrases like "the answer is" or "option X is correct." Reference specific historical context from the location. Guide their thinking, not their guessing.
+"""
+
+
+def get_quiz_hint(question, location):
+    """
+    Generate a Socratic hint for a quiz question using the location's description.
+    Returns (hint_text, error). One will be None.
+    """
+    base_url = current_app.config.get('OLLAMA_BASE_URL', 'http://localhost:11434')
+    model = current_app.config.get('OLLAMA_MODEL', 'llama3.2')
+
+    options_lines = []
+    for key in ('a', 'b', 'c', 'd'):
+        val = getattr(question, f'option_{key}', None)
+        if val:
+            options_lines.append(f'{key.upper()}) {val}')
+    if question.question_type == 'true_false':
+        options_lines = ['A) True', 'B) False']
+
+    prompt = QUIZ_HINT_PROMPT.format(
+        location_name=location.name,
+        location_description=location.full_description[:400],
+        question_text=question.question_text,
+        options_text='\n'.join(options_lines),
+    )
+
+    payload = {
+        'model': model,
+        'messages': [{'role': 'user', 'content': prompt}],
+        'stream': False,
+    }
+
+    try:
+        response = requests.post(f'{base_url}/api/chat', json=payload, timeout=30)
+        response.raise_for_status()
+        data = response.json()
+        hint = data.get('message', {}).get('content', '').strip()
+        if not hint:
+            return None, 'Hint service returned empty response.'
+        return hint, None
+    except requests.exceptions.ConnectionError:
+        return None, 'Could not connect to Ollama. Make sure Ollama is running on port 11434.'
+    except requests.exceptions.Timeout:
+        return None, 'Hint took too long. Please try again.'
+    except requests.exceptions.RequestException as e:
+        return None, f'Hint service error: {str(e)}'
+
+
+CONCEPT_MAP_INSIGHT_PROMPT = """You are a formative assessment tutor. A student is actively building a concept map about {era_name} Los Angeles history.
+
+ERA CONTEXT (use to inform your questions — never recite verbatim):
+{locations_summary}
+
+STUDENT'S CURRENT MAP:
+{graph_summary}
+
+Your task: Write 2-3 Socratic questions that probe the student's understanding of the SPECIFIC connections they have already drawn. Each question should:
+- Reference a node name or edge label already visible in their map
+- Ask "why" or "how" to deepen understanding of a relationship
+- Never introduce facts the student has not placed in the map
+
+Keep your response to 4 sentences maximum. Do not praise without following up with a question. Do not suggest new nodes or labels.
+"""
+
+
+def get_concept_map_insight(era_name, locations_summary, graph_json):
+    """
+    Generate formative Socratic questions about the student's in-progress concept map.
+    Returns (insight_text, error). One will be None.
+    """
+    base_url = current_app.config.get('OLLAMA_BASE_URL', 'http://localhost:11434')
+    model = current_app.config.get('OLLAMA_MODEL', 'llama3.2')
+
+    graph_summary = _summarize_graph_for_chat(graph_json)
+
+    prompt = CONCEPT_MAP_INSIGHT_PROMPT.format(
+        era_name=era_name,
+        locations_summary=locations_summary,
+        graph_summary=graph_summary,
+    )
+
+    payload = {
+        'model': model,
+        'messages': [{'role': 'user', 'content': prompt}],
+        'stream': False,
+    }
+
+    try:
+        response = requests.post(f'{base_url}/api/chat', json=payload, timeout=45)
+        response.raise_for_status()
+        data = response.json()
+        insight = data.get('message', {}).get('content', '').strip()
+        if not insight:
+            return None, 'Insight service returned empty response.'
+        return insight, None
+    except requests.exceptions.ConnectionError:
+        return None, 'Could not connect to Ollama. Make sure Ollama is running on port 11434.'
+    except requests.exceptions.Timeout:
+        return None, 'Insight took too long. Please try again.'
+    except requests.exceptions.RequestException as e:
+        return None, f'Insight service error: {str(e)}'
+
+
+MEMORY_CHALLENGE_GEN_PROMPT = """You are creating a memory challenge quiz for a student who just finished studying {era_name} Los Angeles history.
+
+LOCATION FACTS (use only these as your source — do not invent facts outside this list):
+{locations_context}
+
+TASK: Generate exactly {count} multiple-choice questions that test recall of the facts above.
+
+GUIDELINES:
+- Cover at least {spread} different locations (do not ask all questions about the same place)
+- Questions should be straightforward and accessible, not tricky or obscure
+- Each question has exactly 4 answer choices (A, B, C, D) with one clearly correct answer
+- Avoid negatively worded questions ("Which is NOT...")
+- Base every question on a specific fact stated in the location context above
+
+STRICT RULES:
+1. Return ONLY valid JSON — no prose, no markdown fences, nothing outside the JSON
+2. The "correct_answer" field must be exactly one lowercase letter: a, b, c, or d
+3. All four options must be plausible but only one correct
+4. The "explanation" field (1 sentence) must cite the specific fact that makes the answer correct
+
+REQUIRED JSON STRUCTURE (exactly these keys, no others):
+{{
+  "questions": [
+    {{
+      "question_text": "...",
+      "option_a": "...",
+      "option_b": "...",
+      "option_c": "...",
+      "option_d": "...",
+      "correct_answer": "a",
+      "explanation": "..."
+    }}
+  ]
+}}"""
+
+
+def generate_memory_challenge_questions(era_name, locations_context, count=8):
+    """
+    Ask Ollama to generate `count` fresh multiple-choice questions for a memory challenge.
+    Returns (questions_list, error). One will be None.
+    Each question dict includes: id (string), question_text, option_a/b/c/d,
+    correct_answer, explanation, question_type, order_index.
+    """
+    base_url = current_app.config.get('OLLAMA_BASE_URL', 'http://localhost:11434')
+    model = current_app.config.get('OLLAMA_MODEL', 'llama3.2')
+
+    spread = max(3, count // 2)
+
+    prompt = MEMORY_CHALLENGE_GEN_PROMPT.format(
+        era_name=era_name,
+        locations_context=locations_context,
+        count=count,
+        spread=spread,
+    )
+
+    payload = {
+        'model': model,
+        'messages': [{'role': 'user', 'content': prompt}],
+        'stream': False,
+        'format': 'json',
+    }
+
+    raw = ''
+    try:
+        response = requests.post(f'{base_url}/api/chat', json=payload, timeout=90)
+        response.raise_for_status()
+        data = response.json()
+        raw = data.get('message', {}).get('content', '').strip()
+        if not raw:
+            return None, 'Question generator returned empty response.'
+
+        parsed = json.loads(raw)
+        questions = parsed.get('questions', [])
+        if not questions:
+            return None, 'No questions generated.'
+
+        validated = []
+        required_keys = ('question_text', 'option_a', 'option_b', 'option_c', 'option_d', 'correct_answer')
+        for i, q in enumerate(questions[:count]):
+            if not all(k in q for k in required_keys):
+                continue
+            if q['correct_answer'].lower() not in ('a', 'b', 'c', 'd'):
+                continue
+            q['id'] = f'ai_{i}'
+            q['question_type'] = 'multiple_choice'
+            q['order_index'] = i
+            validated.append(q)
+
+        if not validated:
+            return None, 'Generated questions failed validation.'
+
+        return validated, None
+
+    except json.JSONDecodeError:
+        return None, f'Could not parse generated questions.'
+    except requests.exceptions.ConnectionError:
+        return None, 'Could not connect to Ollama.'
+    except requests.exceptions.Timeout:
+        return None, 'Question generation timed out.'
+    except requests.exceptions.RequestException as e:
+        return None, f'Question generation error: {str(e)}'
+
+
 CONCEPT_MAP_EVAL_PROMPT = """You are reviewing a student's concept map about {era_name} Los Angeles history.
 
 LOCATION CONTEXT (use to assess connections — do not recite verbatim):

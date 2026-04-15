@@ -3,7 +3,7 @@ from ..extensions import db
 from ..models.location import Location
 from ..models.progress import UserProgress, Badge, UserBadge
 from ..models.user import User
-from ..models.concept_map import ConceptMap
+from ..models.concept_map import ConceptMap, MemoryChallengeAttempt
 
 
 # Points awarded for each action
@@ -15,11 +15,28 @@ POINTS_ERA_COMPLETE = 100
 POINTS_CONCEPT_MAP_SUBMIT = 75
 POINTS_CONCEPT_MAP_BONUS  = 25
 
+# Scaffolding currency costs
+POINTS_HINT = 5
+POINTS_INSIGHT = 15
+INSIGHT_MAX_USES = 3
+
+# Memory challenge economy
+POINTS_MEMORY_CHALLENGE_COST = 30
+POINTS_MEMORY_CHALLENGE_REWARD = 120
+MEMORY_CHALLENGE_THRESHOLD = 80
+
 ERA_SYNTHESIZER_BADGES = {
     1: 'era_synthesizer_1',
     2: 'era_synthesizer_2',
     3: 'era_synthesizer_3',
     4: 'era_synthesizer_4',
+}
+
+MEMORY_CHAMPION_BADGES = {
+    1: 'memory_champion_1',
+    2: 'memory_champion_2',
+    3: 'memory_champion_3',
+    4: 'memory_champion_4',
 }
 
 
@@ -37,6 +54,39 @@ def get_or_create_progress(user_id, location_id):
 def award_points(user, points):
     user.total_points = (user.total_points or 0) + points
     db.session.flush()
+
+
+def spend_points(user, amount):
+    """
+    Deduct `amount` from user.total_points.
+    Returns (True, None) on success, (False, error_message) if insufficient.
+    Does NOT commit — caller is responsible.
+    """
+    current = user.total_points or 0
+    if current < amount:
+        return False, f'Not enough points (have {current}, need {amount}).'
+    user.total_points = current - amount
+    db.session.flush()
+    return True, None
+
+
+def is_era_complete_for_challenge(user_id, era_order):
+    """Return True if all quizzes in this era are passed AND its concept map is submitted."""
+    era_locs = Location.query.filter_by(era_order=era_order).all()
+    if not era_locs:
+        return False
+    user_progress = {
+        p.location_id: p
+        for p in UserProgress.query.filter_by(user_id=user_id).all()
+    }
+    all_passed = all(
+        user_progress.get(loc.id) and user_progress[loc.id].quiz_passed
+        for loc in era_locs
+    )
+    cm_submitted = ConceptMap.query.filter_by(
+        user_id=user_id, era_order=era_order, submitted=True
+    ).first() is not None
+    return all_passed and cm_submitted
 
 
 def record_visit(user_id, location_id):
@@ -57,9 +107,10 @@ def record_visit(user_id, location_id):
     return {'points_earned': POINTS_VISIT, 'new_badges': new_badges}
 
 
-def record_quiz_result(user_id, location_id, score_percent, quiz_points_reward):
+def record_quiz_result(user_id, location_id, score_percent, quiz_points_reward, hints_used=0):
     """
     Record a quiz attempt. Awards points based on first/retry pass.
+    hints_used: number of hints used during this attempt (reduces reward).
     Returns dict with points_earned and newly_unlocked location ids.
     """
     progress = get_or_create_progress(user_id, location_id)
@@ -74,12 +125,16 @@ def record_quiz_result(user_id, location_id, score_percent, quiz_points_reward):
         progress.quiz_score = score_percent
 
     points_earned = 0
+    earned_thrifty_scholar = False
     if passed and not already_passed:
         progress.quiz_passed = True
+        # Hints already cost 5 pts each in real time; also reduce the quiz reward
+        hint_penalty = min(hints_used * POINTS_HINT, quiz_points_reward)
+        effective_reward = max(0, quiz_points_reward - hint_penalty)
         if is_first_attempt:
-            points_earned += quiz_points_reward
+            points_earned += effective_reward
         else:
-            points_earned += quiz_points_reward // 2
+            points_earned += effective_reward // 2
 
         if score_percent >= 90:
             points_earned += POINTS_QUIZ_BONUS_90
@@ -87,10 +142,14 @@ def record_quiz_result(user_id, location_id, score_percent, quiz_points_reward):
         progress.points_earned = (progress.points_earned or 0) + points_earned
         award_points(user, points_earned)
 
+        # Thrifty Scholar: first-attempt pass with no hints
+        if is_first_attempt and hints_used == 0:
+            earned_thrifty_scholar = True
+
     db.session.commit()
 
     newly_unlocked = check_era_unlocks(user_id)
-    new_badges = check_and_award_badges(user)
+    new_badges = check_and_award_badges(user, thrifty_scholar=earned_thrifty_scholar)
 
     return {
         'passed': passed,
@@ -207,7 +266,7 @@ def is_era_unlocked_for_user(user_id, era_order):
     return prev_passed == len(prev_era_locs) and prev_concept_map_submitted
 
 
-def check_and_award_badges(user):
+def check_and_award_badges(user, thrifty_scholar=False):
     """Check all badge conditions and award any newly earned badges."""
     user_id = user.id
     earned_slugs = {
@@ -267,6 +326,21 @@ def check_and_award_badges(user):
     if len(submitted_era_orders) >= 4:
         candidates.append('master_cartographer')
 
+    # Memory challenge badges
+    passed_challenges = {
+        a.era_order
+        for a in MemoryChallengeAttempt.query.filter_by(user_id=user_id, passed=True).all()
+    }
+    for era_num, slug in MEMORY_CHAMPION_BADGES.items():
+        if era_num in passed_challenges:
+            candidates.append(slug)
+    if len(passed_challenges) >= 4:
+        candidates.append('grand_archivist')
+
+    # Thrifty Scholar: first-attempt no-hint pass (passed in from caller)
+    if thrifty_scholar:
+        candidates.append('thrifty_scholar')
+
     new_badges = []
     for slug in candidates:
         if slug not in earned_slugs:
@@ -320,11 +394,20 @@ def get_progress_summary(user_id):
         if prog and prog.quiz_passed:
             eras[key]['passed'] += 1
 
-    # Annotate each era with unlock state and concept map submission status
+    # Annotate each era with unlock state, concept map status, memory challenge status
     sorted_era_orders = sorted(eras.keys())
+    mc_attempts = {
+        a.era_order: a
+        for a in MemoryChallengeAttempt.query.filter_by(user_id=user_id).all()
+    }
+    cm_insight_map = {
+        cm.era_order: cm.insight_uses if cm.insight_uses is not None else 3
+        for cm in ConceptMap.query.filter_by(user_id=user_id).all()
+    }
     for era_order in sorted_era_orders:
         era_data = eras[era_order]
         era_data['concept_map_submitted'] = era_order in submitted_concept_maps
+        era_data['concept_map_insight_uses'] = cm_insight_map.get(era_order, 3)
         if era_order == 1:
             era_data['era_unlocked'] = True
         else:
@@ -332,6 +415,19 @@ def get_progress_summary(user_id):
             prev_all_passed = prev.get('passed', 0) == prev.get('total', 1)
             prev_cm_submitted = (era_order - 1) in submitted_concept_maps
             era_data['era_unlocked'] = prev_all_passed and prev_cm_submitted
+
+        # Memory challenge eligibility: era complete = all quizzes passed + concept map submitted
+        era_complete = (
+            era_data.get('passed', 0) == era_data.get('total', 1) and
+            era_order in submitted_concept_maps
+        )
+        mc = mc_attempts.get(era_order)
+        era_data['memory_challenge'] = {
+            'eligible': era_complete,
+            'attempted': mc is not None and mc.attempted,
+            'passed': mc.passed if mc else None,
+            'score_pct': mc.score_pct if mc else None,
+        }
 
     earned_map = {
         ub.badge_id: ub.earned_at
