@@ -28,7 +28,7 @@
 #tutorial-spotlight {
   position: fixed;
   z-index: 2;
-  box-shadow: 0 0 0 9999px rgba(10, 8, 5, 0.6);
+  box-shadow: 0 0 0 9999px rgba(10, 8, 5, 0.82);
   border-radius: 10px;
   pointer-events: none;
   transition: top 0.32s cubic-bezier(0.4,0,0.2,1),
@@ -36,7 +36,7 @@
               width 0.32s cubic-bezier(0.4,0,0.2,1),
               height 0.32s cubic-bezier(0.4,0,0.2,1),
               opacity 0.2s ease;
-  outline: 2px solid rgba(212, 168, 67, 0.55);
+  outline: 2px solid rgba(212, 168, 67, 0.9);
   outline-offset: 0;
 }
 
@@ -361,7 +361,7 @@ html.dark #tutorial-backdrop {
 }
 
 html.dark #tutorial-spotlight {
-  box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.7);
+  box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.88);
 }
 
 html.dark #tutorial-arrow-path {

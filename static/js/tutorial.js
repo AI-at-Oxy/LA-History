@@ -78,6 +78,70 @@ var Tutorial = (function () {
     },
   ];
 
+  /* ---- Concept Map tutorial steps ---- */
+  var CM_STEPS = [
+    {
+      id: 'cm-welcome',
+      icon: '🕸️',
+      title: 'Build Your Concept Map',
+      body: 'A concept map shows <b>how historical locations connect</b>. Place nodes, draw labeled links between them, and let the AI score your historical thinking.',
+      targetSelector: null,
+      placement: 'center',
+      spotlightPadding: 0,
+      beforeRender: null,
+    },
+    {
+      id: 'cm-palette',
+      icon: '📍',
+      title: 'Add Locations',
+      body: 'Click <b>+</b> next to any location you\'ve visited to place it on the canvas. Use <b>Cross-Era</b> to add locations from other eras.',
+      targetSelector: '#cm-palette',
+      placement: 'right',
+      spotlightPadding: 8,
+      beforeRender: null,
+    },
+    {
+      id: 'cm-canvas',
+      icon: '🔗',
+      title: 'Connect the Dots',
+      body: '<b>Click a node</b> to open its menu \u2192 choose <em>Start connection</em> \u2192 click a second node. Label the relationship (e.g. <em>\u201cboth displaced by Mission system\u201d</em>). Richer labels earn higher scores.',
+      targetSelector: '#cm-canvas',
+      placement: 'center',
+      spotlightPadding: 6,
+      beforeRender: null,
+    },
+    {
+      id: 'cm-footer',
+      icon: '💾',
+      title: 'Save, Arrange & Submit',
+      body: '<b>Save</b> your work any time (auto-saves every 30 s). <b>Fit</b> re-centers the canvas. <b>Auto-arrange</b> tidies nodes. Once you have \u2265 3 connections and have passed all era quizzes, <b>Submit for Feedback</b> unlocks.',
+      targetSelector: '.cm-panel-footer',
+      placement: 'top',
+      spotlightPadding: 6,
+      beforeRender: null,
+    },
+    {
+      id: 'cm-tutor',
+      icon: '🎓',
+      title: 'Your Socratic Tutor',
+      body: 'After each connection the tutor asks a probing question to deepen your thinking \u2014 not to quiz you. Type your own questions any time. Use <b>AI Insight (15 pts)</b> for targeted guidance.',
+      targetSelector: '#cm-chat-panel',
+      placement: 'left',
+      spotlightPadding: 6,
+      beforeRender: null,
+    },
+    {
+      id: 'cm-done',
+      icon: '🎉',
+      title: "You're Ready to Map History!",
+      body: 'Start with a few locations, connect them with meaningful labels, and listen to the tutor. The richer your reasoning, the higher your synthesis score. Good luck! <br><br>Missed something? Click the <b>?</b> button in the header to replay this tour any time.',
+      targetSelector: '#cm-tour-btn',
+      placement: 'left',
+      spotlightPadding: 6,
+      beforeRender: null,
+    },
+  ];
+
   /* ---- Internal state ---- */
   var _currentIndex = -1;
   var _active = false;
@@ -85,6 +149,21 @@ var Tutorial = (function () {
   var _reducedMotion = false;
   var _previousFocus = null;
   var _sidebarWasCollapsed = false;
+  var _activeSteps = null;          // null → use STEPS (main tutorial)
+  var _activeStorageKey = 'tutorial_completed';
+
+  /* ---- Active-steps helpers ---- */
+
+  function _getSteps() { return _activeSteps || STEPS; }
+
+  function _updateDots() {
+    var container = document.querySelector('.tutorial-dots');
+    if (!container) return;
+    var steps = _getSteps();
+    container.innerHTML = steps.map(function (_, i) {
+      return '<span class="tutorial-dot" data-dot="' + i + '" aria-hidden="true"></span>';
+    }).join('');
+  }
 
   /* ---- Public API ---- */
 
@@ -100,6 +179,9 @@ var Tutorial = (function () {
 
   function start() {
     _buildDOM();
+    _activeSteps = null;
+    _activeStorageKey = 'tutorial_completed';
+    _updateDots();
     _sidebarWasCollapsed = false;
     _currentIndex = 0;
     _active = true;
@@ -117,9 +199,37 @@ var Tutorial = (function () {
     start();
   }
 
+  function startFor(steps, storageKey) {
+    if (_active) return;
+    _buildDOM();
+    _activeSteps = steps;
+    _activeStorageKey = storageKey || 'tutorial_completed';
+    _updateDots();
+    _sidebarWasCollapsed = false;
+    _currentIndex = 0;
+    _active = true;
+    var overlay = document.getElementById('tutorial-overlay');
+    if (overlay) {
+      overlay.classList.add('tutorial-visible');
+      overlay.setAttribute('aria-hidden', 'false');
+    }
+    _previousFocus = document.activeElement;
+    _attachKeyHandler();
+    _renderStep(0);
+  }
+
+  function startConceptMap() {
+    if (localStorage.getItem('cm_tutorial_completed')) return;
+    startFor(CM_STEPS, 'cm_tutorial_completed');
+  }
+
+  function replayConceptMap() {
+    startFor(CM_STEPS, 'cm_tutorial_completed');
+  }
+
   function next() {
     if (!_active) return;
-    if (_currentIndex >= STEPS.length - 1) {
+    if (_currentIndex >= _getSteps().length - 1) {
       _complete();
     } else {
       _currentIndex++;
@@ -136,7 +246,7 @@ var Tutorial = (function () {
   }
 
   function skip() {
-    localStorage.setItem('tutorial_completed', 'true');
+    localStorage.setItem(_activeStorageKey, 'true');
     _destroy();
   }
 
@@ -144,10 +254,6 @@ var Tutorial = (function () {
 
   function _buildDOM() {
     if (document.getElementById('tutorial-overlay')) return;
-
-    var dotsHTML = STEPS.map(function (_, i) {
-      return '<span class="tutorial-dot" data-dot="' + i + '" aria-hidden="true"></span>';
-    }).join('');
 
     var html = [
       '<div id="tutorial-overlay" aria-hidden="true">',
@@ -176,7 +282,7 @@ var Tutorial = (function () {
           '<div class="tutorial-tooltip-body" id="tutorial-body"></div>',
           '<div class="tutorial-tooltip-footer">',
             '<button id="tutorial-prev-btn" class="tutorial-hidden" aria-label="Previous step">&#8592; Back</button>',
-            '<div class="tutorial-dots" aria-hidden="true">' + dotsHTML + '</div>',
+            '<div class="tutorial-dots" aria-hidden="true"></div>',
             '<button id="tutorial-next-btn" aria-label="Next step">Next &#8594;</button>',
             '<button id="tutorial-skip-link" aria-label="Skip the tutorial">Skip</button>',
           '</div>',
@@ -198,12 +304,12 @@ var Tutorial = (function () {
   /* ---- Private: render a step ---- */
 
   function _renderStep(index) {
-    var step = STEPS[index];
+    var step = _getSteps()[index];
     if (!step) return;
 
     var isFirst = index === 0;
-    var isLast = index === STEPS.length - 1;
-    var total = STEPS.length;
+    var isLast = index === _getSteps().length - 1;
+    var total = _getSteps().length;
 
     // Run beforeRender hook — may need to wait for sidebar transition
     if (typeof step.beforeRender === 'function') {
@@ -255,7 +361,7 @@ var Tutorial = (function () {
       nextBtn.setAttribute('aria-label', 'Start tutorial');
     } else if (isLast) {
       prevBtn.classList.remove('tutorial-hidden');
-      nextBtn.textContent = 'Start Exploring \u2192';
+      nextBtn.textContent = 'Start Exploring!';
       nextBtn.setAttribute('aria-label', 'Complete tutorial and start exploring');
       skipLnk.classList.add('tutorial-hidden');
     } else {
@@ -660,10 +766,12 @@ var Tutorial = (function () {
   /* ---- Private: complete & destroy ---- */
 
   function _complete() {
-    localStorage.setItem('tutorial_completed', 'true');
+    localStorage.setItem(_activeStorageKey, 'true');
     _destroy();
-    if (typeof showToast === 'function') {
-      showToast('Tutorial complete \u2014 replay it anytime via Settings \u2699', 'info', 4000);
+    if (_activeStorageKey === 'tutorial_completed') {
+      if (typeof showToast === 'function') {
+        showToast('Tutorial complete \u2014 replay it anytime via Settings \u2699', 'info', 4000);
+      }
     }
   }
 
@@ -686,12 +794,15 @@ var Tutorial = (function () {
 
   /* ---- Expose public API ---- */
   return {
-    init:   init,
-    start:  start,
-    replay: replay,
-    next:   next,
-    prev:   prev,
-    skip:   skip,
+    init:             init,
+    start:            start,
+    replay:           replay,
+    next:             next,
+    prev:             prev,
+    skip:             skip,
+    startFor:          startFor,
+    startConceptMap:   startConceptMap,
+    replayConceptMap:  replayConceptMap,
   };
 
 })();

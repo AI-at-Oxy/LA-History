@@ -84,6 +84,10 @@ async function loadConceptMapData(eraOrder) {
     if (!cmSubmitted) {
       cmAutoSaveTimer = setInterval(autoSave, 30000);
       setTimeout(cmChatGreeting, 900);
+      // Show concept map tutorial on first open
+      if (typeof Tutorial !== 'undefined') {
+        setTimeout(function () { Tutorial.startConceptMap(); }, 800);
+      }
     }
   });
 }
@@ -727,6 +731,9 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   document.getElementById('cm-close-btn').addEventListener('click', closeConceptMap);
+  document.getElementById('cm-tour-btn').addEventListener('click', function () {
+    if (typeof Tutorial !== 'undefined') Tutorial.replayConceptMap();
+  });
 
   // Save button
   document.getElementById('cm-save-btn').addEventListener('click', async () => {
