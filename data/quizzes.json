@@ -14,6 +14,9 @@
         "option_d": "Sacred ground of the elders",
         "correct_answer": "b",
         "explanation": "Kuruvungna means 'a place where we are in the sun.' Names like this reveal how the Tongva embedded their relationship with the landscape into language itself.",
+        "wrong_explanation_a": "The name Kuruvungna doesn't reference water proximity — the springs were significant, but the name itself describes a quality of light, not a geographical feature near water.",
+        "wrong_explanation_c": "Kuruvungna was not located at a river confluence, and the name doesn't describe a geographical meeting of waterways.",
+        "wrong_explanation_d": "While Kuruvungna was a sacred site, the Tongva name encodes a sensory quality of the place — not a reference to elders or leadership.",
         "order_index": 0
       },
       {
@@ -25,6 +28,9 @@
         "option_d": "Stone longhouses",
         "correct_answer": "c",
         "explanation": "The Tongva built dome-shaped homes called 'ap' using willow poles and tule reeds — materials abundant near wetlands and springs.",
+        "wrong_explanation_a": "Adobe construction was a Spanish colonial technique introduced after European contact — the Tongva built with organic materials long before that.",
+        "wrong_explanation_b": "Log cabins were a building style of Northern European settlers, not California Indigenous peoples. The LA Basin had limited timber suitable for log construction.",
+        "wrong_explanation_d": "Stone longhouses were associated with Indigenous peoples of the Northeast and Pacific Northwest, not Southern California. The LA region's ecology called for different materials.",
         "order_index": 1
       },
       {
@@ -34,6 +40,7 @@
         "option_b": "False",
         "correct_answer": "b",
         "explanation": "The Tongva had lived in the Los Angeles Basin for thousands of years before any European contact. Archaeological evidence dates their presence to at least 3,000 BCE.",
+        "wrong_explanation_a": "Archaeological evidence at sites across the Los Angeles Basin dates Tongva occupation to thousands of years before any European explorer reached the Pacific Coast.",
         "order_index": 2
       },
       {
@@ -45,6 +52,9 @@
         "option_d": "Portuguese sailors",
         "correct_answer": "c",
         "explanation": "The founding of Mission San Gabriel in 1771 brought Spanish Franciscan missionaries who began drawing Tongva people into the mission system, disrupting village life.",
+        "wrong_explanation_a": "British fur traders did not establish a significant presence in the Los Angeles Basin during this period — their activity was concentrated further north along the Pacific coast.",
+        "wrong_explanation_b": "French exploration in California was minimal compared to the Spanish, and the French did not establish missionary or colonial institutions in the LA region.",
+        "wrong_explanation_d": "While Portuguese sailors were early Pacific explorers, they did not establish colonial settlements or missions in the Los Angeles area that would have disrupted Tongva village life.",
         "order_index": 3
       }
     ]
@@ -64,6 +74,9 @@
         "option_d": "Pirogue",
         "correct_answer": "b",
         "explanation": "The Tongva built plank canoes called 'tomol' from redwood or pine planks sewn together with plant fiber and sealed with tar. They used them to trade with people as far away as the Channel Islands.",
+        "wrong_explanation_a": "Kayak is an Inuit/Arctic word for a different type of watercraft — it comes from an entirely different Indigenous culture thousands of miles from Southern California.",
+        "wrong_explanation_c": "Dugout canoes are carved from a single log, but the Tongva's ocean-going vessels were made from planks sewn together — a distinct and more complex construction technique.",
+        "wrong_explanation_d": "Pirogue is a term associated with flat-bottomed boats used in Louisiana bayou regions — it has no connection to Tongva maritime culture.",
         "order_index": 0
       },
       {
@@ -75,6 +88,9 @@
         "option_d": "Kelp",
         "correct_answer": "c",
         "explanation": "Tule reeds were one of the most versatile plants the Tongva used — for baskets, mats, and the covering of their 'ap' homes.",
+        "wrong_explanation_a": "Bamboo is not native to Southern California — it was not available to the Tongva as a material for traditional basket weaving.",
+        "wrong_explanation_b": "While cattails grew in wetland areas, they were not the primary basket weaving material — the Tongva relied on different wetland plants better suited for the woven structures they made.",
+        "wrong_explanation_d": "Kelp was a marine resource used for food and other purposes, but its physical properties don't lend themselves to the kind of fine basket weaving the Tongva were known for.",
         "order_index": 1
       },
       {
@@ -86,6 +102,9 @@
         "option_d": "None — it was completely destroyed",
         "correct_answer": "c",
         "explanation": "More than 90% of the original wetlands were drained or developed during the 20th century. The remaining ~577 acres were purchased by California in 2003 for restoration.",
+        "wrong_explanation_a": "The wetlands suffered extensive destruction throughout the 20th century from development and drainage projects — the proportion that survived is far smaller than 90%.",
+        "wrong_explanation_b": "The scale of industrial development, oil drilling, and urbanization along the Ballona Creek corridor was far more severe than a 50% loss would suggest.",
+        "wrong_explanation_d": "A protected remnant parcel does still exist — the California government purchased hundreds of acres for restoration in 2003, so the wetlands were not entirely eliminated.",
         "order_index": 2
       },
       {
@@ -95,6 +114,7 @@
         "option_b": "False",
         "correct_answer": "a",
         "explanation": "Shell beads — particularly from Olivella shells — functioned as a regional currency across Tongva and neighboring Indigenous trading networks.",
+        "wrong_explanation_b": "Shell beads, particularly from Olivella and other species, are well documented through archaeological evidence across Southern California as exchange items with economic value in trade networks.",
         "order_index": 3
       }
     ]
@@ -114,6 +134,9 @@
         "option_d": "Salmon",
         "correct_answer": "c",
         "explanation": "Acorns from the abundant oak trees of the foothills were the dietary staple of the Tongva. Women ground them into flour using stone mortars and leached out the bitter tannins with water.",
+        "wrong_explanation_a": "Corn cultivation was central to Mesoamerican and Southwestern agricultural peoples, but the Tongva were hunter-gatherers who relied on the abundant natural resources of the foothills, not cultivated crops.",
+        "wrong_explanation_b": "Buffalo herds lived on the Great Plains, far from California. The Tongva hunted local game like deer and rabbits, but buffalo were not part of their ecosystem.",
+        "wrong_explanation_d": "Salmon runs occur in Northern California rivers — the streams of the LA Basin and San Gabriel foothills didn't support the salmon populations that formed dietary staples for Pacific Northwest peoples.",
         "order_index": 0
       },
       {
@@ -125,6 +148,9 @@
         "option_d": "The Serra Expedition",
         "correct_answer": "b",
         "explanation": "The Portolá Expedition of 1769 was the first overland European crossing of California. Led by Gaspar de Portolá, it noted large Tongva settlements in the San Gabriel Valley.",
+        "wrong_explanation_a": "Juan Bautista de Anza led his expedition through California in 1775–1776, several years after the Portolá Expedition had already made the first overland crossing.",
+        "wrong_explanation_c": "Francisco Vásquez de Coronado's expedition in the 1540s explored the American Southwest — it never reached the California coast or the Los Angeles Basin.",
+        "wrong_explanation_d": "Father Junípero Serra was a key figure in the California mission system, but the expedition named for him refers to a sea voyage, not the first overland passage through the LA area.",
         "order_index": 1
       },
       {
@@ -134,6 +160,7 @@
         "option_b": "False",
         "correct_answer": "b",
         "explanation": "The Tongva practiced seasonal movement — moving between the coast in summer and foothill acorn groves in fall, following food sources throughout the year.",
+        "wrong_explanation_a": "The Tongva followed seasonal food sources throughout the year — the coast in summer, the foothill acorn groves in fall — making a single permanent year-round settlement inconsistent with their way of life.",
         "order_index": 2
       },
       {
@@ -145,6 +172,9 @@
         "option_d": "Alcalde",
         "correct_answer": "b",
         "explanation": "Each Tongva village was led by a hereditary chief called a 'tomyaar,' who managed relations with neighboring villages and oversaw community decisions.",
+        "wrong_explanation_a": "'Chief' is a generic English term imposed by European observers, not a specific Tongva word — the Tongva had their own term for this role in their own language.",
+        "wrong_explanation_c": "Sachem is a term from Algonquian-speaking peoples of the Eastern Woodlands — it comes from an entirely different linguistic and cultural tradition, far removed from the Tongva of Southern California.",
+        "wrong_explanation_d": "Alcalde was a Spanish colonial title for a municipal administrator — it was imposed on Indigenous peoples as part of the mission system, not a traditional Tongva leadership term.",
         "order_index": 3
       }
     ]
@@ -164,6 +194,9 @@
         "option_d": "1821",
         "correct_answer": "c",
         "explanation": "El Pueblo de la Reina de Los Ángeles was founded on September 4, 1781, by Governor Felipe de Neve and 44 settlers.",
+        "wrong_explanation_a": "1769 was the year of the Portolá Expedition's first overland crossing through the LA area — the formal pueblo was not established until over a decade later.",
+        "wrong_explanation_b": "1776 is associated with American independence on the other side of the continent — California was firmly under Spanish colonial rule, and the pueblo's founding came five years later.",
+        "wrong_explanation_d": "1821 was the year Mexico gained independence from Spain — by then, the pueblo had already been in existence for forty years.",
         "order_index": 0
       },
       {
@@ -175,6 +208,9 @@
         "option_d": "Only converted Indigenous people",
         "correct_answer": "c",
         "explanation": "The 44 founding pobladores came primarily from Sonora and Sinaloa and were of mixed Indigenous, African, and Spanish heritage — reflecting the demographics of New Spain's frontier.",
+        "wrong_explanation_a": "The founding settlers were civilian colonists recruited from frontier provinces of New Spain, not Spanish-born soldiers — most were born in Mexico and of mixed heritage.",
+        "wrong_explanation_b": "No French or British settlers were among the original founding pobladores — they were recruited from Sonora and Sinaloa in New Spain.",
+        "wrong_explanation_d": "The settlers were not exclusively Indigenous — records show a mix of backgrounds including African, mestizo, and mulato heritage typical of New Spain's northern frontier.",
         "order_index": 1
       },
       {
@@ -184,6 +220,7 @@
         "option_b": "False",
         "correct_answer": "a",
         "explanation": "Los Angeles was founded in 1781 as part of New Spain (Spanish colonial Mexico). It did not become part of Mexico until 1821 when Mexico gained independence from Spain.",
+        "wrong_explanation_b": "Mexico did not gain independence from Spain until 1821 — at the time of LA's founding in 1781, all of California was firmly part of the Spanish colonial empire of New Spain.",
         "order_index": 2
       },
       {
@@ -195,6 +232,9 @@
         "option_d": "The Bradbury Building",
         "correct_answer": "b",
         "explanation": "Olvera Street, near the original Plaza, was converted into a Mexican marketplace in 1930 and preserves some of the oldest structures in Los Angeles.",
+        "wrong_explanation_a": "The Getty Center is located in Brentwood, far from the historic downtown plaza, and was built in the 1990s — it has no connection to the original pueblo site.",
+        "wrong_explanation_c": "Union Station is nearby but was built in 1939 on the site of the demolished original Chinatown — it is not a preservation of the original plaza or pueblo structures.",
+        "wrong_explanation_d": "The Bradbury Building is a commercial office building from 1893 in downtown LA — it is not located at the original plaza site and was not created to preserve the pueblo's history.",
         "order_index": 3
       }
     ]
@@ -214,6 +254,9 @@
         "option_d": "1800",
         "correct_answer": "b",
         "explanation": "Mission San Gabriel was founded on September 8, 1771, by Franciscan priests Ángel Fernández de Somera and Pedro Benito Cambón.",
+        "wrong_explanation_a": "1769 was the year of the Portolá Expedition and the founding of the first California mission (Mission San Diego) — San Gabriel came two years later.",
+        "wrong_explanation_c": "1781 was the year the civilian pueblo of Los Angeles was founded — Mission San Gabriel had already been established a decade earlier.",
+        "wrong_explanation_d": "By 1800, Mission San Gabriel had been operating for nearly three decades and was already the most productive mission in California.",
         "order_index": 0
       },
       {
@@ -225,6 +268,9 @@
         "option_d": "It was relocated to reservations in Northern California",
         "correct_answer": "c",
         "explanation": "Epidemic diseases and the brutal conditions of the mission system devastated the Tongva. Estimates suggest the Indigenous population of the LA Basin fell by 75% or more within a century of Spanish contact.",
+        "wrong_explanation_a": "Disease, forced labor, and disruption of traditional food systems caused catastrophic population decline, not growth — the mission system was deeply destructive to Indigenous health and communities.",
+        "wrong_explanation_b": "The combination of epidemic disease, harsh mission conditions, and cultural disruption produced one of the most dramatic population collapses in California history — stability was impossible under these conditions.",
+        "wrong_explanation_d": "The creation of formal reservations came later under U.S. governance — under Spanish and Mexican rule, the Tongva were held within the mission system or left landless after secularization.",
         "order_index": 1
       },
       {
@@ -236,6 +282,9 @@
         "option_d": "Handed them back to Indigenous peoples",
         "correct_answer": "c",
         "explanation": "In 1833, the Mexican government secularized the missions, transferring their land to private ranchers. The Tongva neophytes were technically freed but left landless and impoverished.",
+        "wrong_explanation_a": "Mexico's relationship with the Franciscan missions was adversarial — secularization was meant to dismantle church control, not expand the mission system.",
+        "wrong_explanation_b": "California wasn't transferred to the U.S. until 1848, fifteen years after secularization — the missions were the subject of a Mexican domestic policy decision.",
+        "wrong_explanation_d": "Despite promises that neophytes would receive land under secularization, the land went overwhelmingly to wealthy ranching families — Indigenous peoples received almost nothing.",
         "order_index": 2
       },
       {
@@ -245,6 +294,7 @@
         "option_b": "False",
         "correct_answer": "b",
         "explanation": "Mission San Gabriel was actually the MOST productive mission in California, known for its wine, tallow, hides, and grain production — all built on forced Indigenous labor.",
+        "wrong_explanation_a": "Mission San Gabriel was historically documented as the most productive mission in the California chain, not the least — it generated significant output in wine, tallow, hides, and grain.",
         "order_index": 3
       }
     ]
@@ -264,6 +314,9 @@
         "option_d": "The Adams-Onís Treaty",
         "correct_answer": "c",
         "explanation": "The Treaty of Guadalupe Hidalgo, signed February 2, 1848, ended the Mexican-American War and transferred California (and other territories) to the United States.",
+        "wrong_explanation_a": "The Treaty of Paris (1783) ended the American Revolutionary War and had no connection to California or the Mexican-American War, which occurred over 60 years later.",
+        "wrong_explanation_b": "The Gadsden Purchase of 1853 acquired a strip of land in southern Arizona and New Mexico — it came after and was separate from the main Mexican-American War settlement.",
+        "wrong_explanation_d": "The Adams-Onís Treaty of 1819 was between the U.S. and Spain and dealt with Florida and the western boundary of Louisiana — it predated Mexican independence and the Mexican-American War.",
         "order_index": 0
       },
       {
@@ -275,6 +328,9 @@
         "option_d": "January 1, 1850",
         "correct_answer": "c",
         "explanation": "The American flag was raised over Los Angeles on July 4, 1847 — Independence Day — at Fort Moore, in a symbolic act of American possession.",
+        "wrong_explanation_a": "The Declaration of Independence was signed in 1776, when California was still under Spanish colonial rule — the U.S. had no presence in California until the Mexican-American War seven decades later.",
+        "wrong_explanation_b": "September 4, 1781, was the date El Pueblo de Los Angeles was founded — under Spanish colonial authority, with no American involvement.",
+        "wrong_explanation_d": "California wasn't admitted to the Union as a state until September 1850 — but the military raising of the flag over Los Angeles happened three years earlier, during the war itself.",
         "order_index": 1
       },
       {
@@ -284,6 +340,7 @@
         "option_b": "False",
         "correct_answer": "b",
         "explanation": "Fort Moore was short-lived. It was constructed in 1847 and quickly abandoned as military control was no longer necessary. Its hilltop site is now near the Los Angeles Civic Center.",
+        "wrong_explanation_a": "Fort Moore was constructed hastily in 1847 and abandoned within a short time as active military control became unnecessary — it operated for only a brief period, not for decades.",
         "order_index": 2
       },
       {
@@ -295,6 +352,9 @@
         "option_d": "The War of 1812",
         "correct_answer": "b",
         "explanation": "The Mexican-American War (1846–1848) resulted in the U.S. acquiring California, Arizona, New Mexico, and other territories from Mexico.",
+        "wrong_explanation_a": "The Civil War (1861–1865) was fought over slavery and secession — California had already been part of the United States for over a decade by the time it began.",
+        "wrong_explanation_c": "The Spanish-American War of 1898 was fought over Cuba, Puerto Rico, and the Philippines — Spain had no claim to California by then, as it had already been Mexican and then American territory for decades.",
+        "wrong_explanation_d": "The War of 1812 was fought between the U.S. and Britain over maritime rights and frontier disputes — California was still Spanish colonial territory at the time and entirely outside the conflict.",
         "order_index": 3
       }
     ]
@@ -314,6 +374,9 @@
         "option_d": "The Chinatown Fire of 1871",
         "correct_answer": "b",
         "explanation": "On October 24, 1871, a white mob attacked LA's Chinese neighborhood, killing approximately 19 Chinese residents. It remains one of the largest mass lynchings in American history.",
+        "wrong_explanation_a": "The Chinese Exclusion Act was passed in 1882 — more than a decade after the 1871 violence — and refers to legislation, not a specific violent incident in Los Angeles.",
+        "wrong_explanation_c": "No major railroad strike in 1871 matches the description of deadly anti-Chinese violence in Los Angeles — the 1871 event was a racially motivated mob assault, not a labor dispute.",
+        "wrong_explanation_d": "The 1871 event was a violent mob attack on the Chinese community, not a fire — describing it as an accidental disaster misrepresents the deliberate nature of the assault.",
         "order_index": 0
       },
       {
@@ -325,6 +388,9 @@
         "option_d": "A fire burned it down",
         "correct_answer": "b",
         "explanation": "The city condemned the original Chinatown to build Union Station, displacing hundreds of Chinese residents and businesses who were forced to rebuild several blocks north.",
+        "wrong_explanation_a": "No earthquake destroyed the original Chinatown in 1933 — its demolition was a deliberate city action, not a natural disaster.",
+        "wrong_explanation_c": "The displacement was involuntary — residents and businesses had no choice as the city exercised eminent domain over their properties to make way for the new train station.",
+        "wrong_explanation_d": "The original Chinatown was demolished by city order, not destroyed by fire — the decision was a deliberate act of urban redevelopment that displaced an entire community.",
         "order_index": 1
       },
       {
@@ -336,6 +402,9 @@
         "option_d": "Fleeing a famine in China",
         "correct_answer": "c",
         "explanation": "Many Chinese immigrants arrived in California to work on the transcontinental railroad. After its completion, some made their way to Los Angeles.",
+        "wrong_explanation_a": "The major California Gold Rush was centered in the Sierra Nevada foothills of Northern California in 1848–1849, not the San Gabriel Mountains — and it had largely waned before the 1860s wave of arrivals in Los Angeles.",
+        "wrong_explanation_b": "The Chinese government did not sponsor immigration to California — workers came independently seeking economic opportunities, often through labor recruiters.",
+        "wrong_explanation_d": "While economic hardship in China was a factor for some immigrants, the specific large-scale wave of Chinese arrivals in California in the 1860s was closely tied to the massive labor demand of railroad construction.",
         "order_index": 2
       },
       {
@@ -345,6 +414,7 @@
         "option_b": "False",
         "correct_answer": "b",
         "explanation": "The current Chinatown was built several blocks north of the original location after the original was demolished. It opened in 1938 as 'New Chinatown.'",
+        "wrong_explanation_a": "The original Chinatown was demolished in 1933 and the community rebuilt several blocks to the north — the current Chinatown occupies a different site from where the original stood.",
         "order_index": 3
       }
     ]
@@ -364,6 +434,9 @@
         "option_d": "A federal homesteading program",
         "correct_answer": "b",
         "explanation": "When the Santa Fe Railroad arrived in 1885, a fare war with the Southern Pacific drove prices from Kansas City to Los Angeles as low as $1. This triggered a massive real estate boom.",
+        "wrong_explanation_a": "While oil would later become significant, the major oil discoveries in the LA area came in the 1890s and after — the 1880s population boom was driven by a different cause entirely.",
+        "wrong_explanation_c": "The California Gold Rush occurred in 1848–1849 and centered on Northern California — it did not trigger the later LA population boom of the 1880s, which had entirely different causes.",
+        "wrong_explanation_d": "The Homestead Act primarily benefited settlement in the Midwest and Great Plains — it was not the mechanism that drove tens of thousands of new residents to Los Angeles in the 1880s.",
         "order_index": 0
       },
       {
@@ -375,6 +448,9 @@
         "option_d": "1910",
         "correct_answer": "c",
         "explanation": "The Bradbury Building was completed in 1893, during a period of rapid commercial development in downtown Los Angeles.",
+        "wrong_explanation_a": "1875 predates the land boom that transformed downtown Los Angeles — the commercial development that made the Bradbury Building possible hadn't yet occurred.",
+        "wrong_explanation_b": "1885 was the year the Santa Fe Railroad arrived in LA and the boom was just beginning — the Bradbury Building wasn't commissioned until after the boom had already reshaped the city.",
+        "wrong_explanation_d": "By 1910, the Bradbury Building had been standing for nearly two decades and was already a well-established part of downtown LA's commercial landscape.",
         "order_index": 1
       },
       {
@@ -384,6 +460,7 @@
         "option_b": "False",
         "correct_answer": "b",
         "explanation": "The building was commissioned as a commercial office building, not as a monument. Its remarkable interior was largely the work of draftsman George Wyman, not a famous architect.",
+        "wrong_explanation_a": "The Bradbury Building was commissioned as a commercial office building — it became famous largely by accident through its extraordinary interior and later film appearances, not by original design intent.",
         "order_index": 2
       },
       {
@@ -395,6 +472,9 @@
         "option_d": "It stayed roughly the same",
         "correct_answer": "b",
         "explanation": "Los Angeles's population exploded from roughly 11,000 in 1880 to over 50,000 by 1890 — a more than fourfold increase driven by the railroad and land promotion.",
+        "wrong_explanation_a": "Los Angeles already had a population of several thousand before the railroad boom — 500 people would describe a very small frontier outpost, not the established town LA had already become by 1880.",
+        "wrong_explanation_c": "The city did not reach 50,000 residents until the end of the 1880s boom — that figure was the destination of growth, not its starting point.",
+        "wrong_explanation_d": "The arrival of the Santa Fe Railroad and the resulting fare war triggered one of the most dramatic urban population booms in American history — stagnation is the opposite of what occurred.",
         "order_index": 3
       }
     ]
@@ -414,6 +494,9 @@
         "option_d": "Henry Huntington",
         "correct_answer": "b",
         "explanation": "Elizabeth Hollenbeck donated the land to Los Angeles in 1892 in memory of her husband, John Edward Hollenbeck. It became the city's first public park.",
+        "wrong_explanation_a": "Griffith donated the land that became Griffith Park — a separate park in a different part of the city, established several years after Hollenbeck Park.",
+        "wrong_explanation_c": "Mulholland was the city engineer most associated with the Los Angeles Aqueduct — he was not involved in the donation of parkland in Boyle Heights.",
+        "wrong_explanation_d": "Henry Huntington was a railroad and streetcar magnate who shaped suburban development in the region — parkland donation in Boyle Heights was not among his activities.",
         "order_index": 0
       },
       {
@@ -425,6 +508,9 @@
         "option_d": "It was closest to the port of entry",
         "correct_answer": "b",
         "explanation": "Restrictive racial covenants barred non-white and many immigrant families from buying property in most of Los Angeles. Boyle Heights, lacking these covenants, became a rare haven for diverse communities.",
+        "wrong_explanation_a": "School quality was not the reason diverse immigrant communities clustered in Boyle Heights — it was legal barriers in most other neighborhoods that made Boyle Heights a rare accessible option.",
+        "wrong_explanation_c": "No such city program existed — immigrant families settled in Boyle Heights because racial covenants blocked them from purchasing property in most other parts of Los Angeles.",
+        "wrong_explanation_d": "Los Angeles's main port was in San Pedro, far from Boyle Heights — proximity to a port of entry did not explain settlement patterns in this inland neighborhood.",
         "order_index": 1
       },
       {
@@ -434,6 +520,7 @@
         "option_b": "False",
         "correct_answer": "b",
         "explanation": "Many Japanese Americans returned after the war to find their homes sold, businesses gone, and communities scattered. The forced incarceration resulted in enormous economic losses.",
+        "wrong_explanation_a": "The forced incarceration resulted in the loss of homes, businesses, and savings for most Japanese American families — they returned to find their property sold or seized, with no restitution provided at the time.",
         "order_index": 2
       },
       {
@@ -445,6 +532,9 @@
         "option_d": "1920",
         "correct_answer": "b",
         "explanation": "Hollenbeck Park was donated in 1892, becoming the first public park in Los Angeles.",
+        "wrong_explanation_a": "1876 predates Elizabeth Hollenbeck's donation by sixteen years — at that time, the land was still privately held.",
+        "wrong_explanation_c": "By 1905, Hollenbeck Park had already been a public park for over a decade and was a well-established part of the Boyle Heights community.",
+        "wrong_explanation_d": "The park's donation occurred nearly three decades before 1920 — by 1920, LA already had multiple public parks following Hollenbeck's example.",
         "order_index": 3
       }
     ]
@@ -464,6 +554,9 @@
         "option_d": "1822",
         "correct_answer": "c",
         "explanation": "The first chapel near the Plaza was established in 1784, just three years after the founding of the pueblo, to serve the colonial settlement.",
+        "wrong_explanation_a": "1769 was the year of the Portolá Expedition — the first overland European exploration of the LA area. A permanent chapel near the pueblo came years after the settlement's founding.",
+        "wrong_explanation_b": "1781 was the year the pueblo was founded — the chapel followed a few years later as the settlement became established enough to support a dedicated place of worship.",
+        "wrong_explanation_d": "1822 was the year the present adobe church structure was completed — the first chapel had already been serving the community for nearly four decades by that point.",
         "order_index": 0
       },
       {
@@ -475,6 +568,9 @@
         "option_d": "A protest movement against freeway construction",
         "correct_answer": "b",
         "explanation": "Father Luis Olivares declared La Placita a sanctuary for undocumented Salvadoran and Guatemalan refugees fleeing civil wars, drawing FBI scrutiny and national attention.",
+        "wrong_explanation_a": "The Sanctuary Movement was a response to a contemporary humanitarian crisis, not a historical preservation effort — it provided shelter to people fleeing active violence, not to church buildings.",
+        "wrong_explanation_c": "The Sanctuary Movement was about offering protection to refugees facing deportation, not about church construction or expansion within the archdiocese.",
+        "wrong_explanation_d": "The freeway displacement of communities was a separate issue — Father Olivares's declaration of sanctuary was specifically a response to U.S. immigration enforcement against Central American refugees.",
         "order_index": 1
       },
       {
@@ -484,6 +580,7 @@
         "option_b": "False",
         "correct_answer": "b",
         "explanation": "The present adobe church structure was completed in 1822, during the Mexican period, making it the oldest surviving church building in Los Angeles.",
+        "wrong_explanation_a": "The present adobe structure at La Placita was completed in 1822 — during the Mexican period, making it the oldest surviving church in Los Angeles, well before the 20th century began.",
         "order_index": 2
       },
       {
@@ -495,6 +592,9 @@
         "option_d": "Augustinians",
         "correct_answer": "c",
         "explanation": "La Placita was originally staffed by Franciscan priests from Mission San Gabriel, the same order that ran the California mission system.",
+        "wrong_explanation_a": "The Jesuits were expelled from New Spain in 1767 — before the California mission chain was established. The missions and their associated churches were operated by a different order.",
+        "wrong_explanation_b": "The Dominicans operated missions in Baja California, not Alta California — the missions of the LA area were staffed by a different order with its own separate chain of authority.",
+        "wrong_explanation_d": "The Augustinians had a presence in other parts of New Spain but were not the order assigned to the California mission chain and its associated chapels.",
         "order_index": 3
       }
     ]
@@ -514,6 +614,9 @@
         "option_d": "He never finished them",
         "correct_answer": "c",
         "explanation": "Simon Rodia worked alone from 1921 to 1954 — 33 years — to build the towers, working nights and weekends while employed as a tile setter.",
+        "wrong_explanation_a": "The sheer scale and intricacy of the towers — with hundreds of thousands of embedded objects across multiple tall structures — would be physically impossible to complete in five years working alone.",
+        "wrong_explanation_b": "Rodia began work in 1921 and signed over the property in 1954 — the documented timeline of construction spans more than twice the length of twelve years.",
+        "wrong_explanation_d": "Rodia did complete his work before leaving — he signed the property over to a neighbor in 1954, indicating he considered the project finished.",
         "order_index": 0
       },
       {
@@ -525,6 +628,9 @@
         "option_d": "Painted steel panels",
         "correct_answer": "b",
         "explanation": "Rodia adorned the tower surfaces with tens of thousands of pieces of broken tile, glass, pottery, and shells he gathered from around the neighborhood.",
+        "wrong_explanation_a": "Rodia was a working-class tile setter with no resources for imported luxury materials — his entire aesthetic was based on found objects gathered from the neighborhood around him.",
+        "wrong_explanation_c": "The decorative materials were everyday found objects, not precious metals — Rodia's artistic approach was specifically about transforming humble discarded materials into something extraordinary.",
+        "wrong_explanation_d": "The towers' surfaces are not flat painted panels — they are encrusted with a mosaic of individually embedded found objects, which is the opposite of smooth painted steel.",
         "order_index": 1
       },
       {
@@ -536,6 +642,9 @@
         "option_d": "A riot at a Watts high school",
         "correct_answer": "b",
         "explanation": "The Watts Uprising was triggered on August 11, 1965, by a traffic stop of Marquette Frye, a young Black motorist. The incident sparked six days of uprising amid deep frustrations over poverty, police brutality, and racism.",
+        "wrong_explanation_a": "Dr. King was assassinated in 1968, three years after the Watts Uprising — the events are separate, and King's assassination triggered uprisings in other cities, not Watts in 1965.",
+        "wrong_explanation_c": "While unemployment was a deep grievance in Watts, the immediate trigger was a specific confrontational incident between police and a resident, not an economic event like a factory closure.",
+        "wrong_explanation_d": "The uprising did not begin at a school — it started on a residential street following a confrontation between police and a motorist that drew a crowd whose frustrations ignited the broader uprising.",
         "order_index": 2
       },
       {
@@ -545,6 +654,7 @@
         "option_b": "False",
         "correct_answer": "b",
         "explanation": "Rodia was a tile setter with no formal training. He built the entire structure himself, without machinery or assistants, making the towers a remarkable example of self-taught folk art.",
+        "wrong_explanation_a": "Rodia had no architectural or engineering training and built the entire structure by himself without machinery or assistants — his methods were entirely self-invented.",
         "order_index": 3
       }
     ]
@@ -564,6 +674,9 @@
         "option_d": "Harry Chandler",
         "correct_answer": "b",
         "explanation": "Colonel Griffith J. Griffith donated over 3,000 acres of his Rancho Los Feliz to Los Angeles in 1896, intending the land as a gift for the common people.",
+        "wrong_explanation_a": "Mulholland was the city water engineer behind the Los Angeles Aqueduct — his contributions were to the city's water infrastructure, not to the parkland in the hills above Hollywood.",
+        "wrong_explanation_c": "Huntington was a railroad baron who shaped suburban Los Angeles through his streetcar network — he did not donate the land that became Griffith Park.",
+        "wrong_explanation_d": "Harry Chandler was the Los Angeles Times publisher who funded the Hollywood Sign — he was not the benefactor behind Griffith Park.",
         "order_index": 0
       },
       {
@@ -575,6 +688,9 @@
         "option_d": "1955",
         "correct_answer": "c",
         "explanation": "The Griffith Observatory opened on May 14, 1935. Over 10,000 people visited on opening day, drawn by free telescope access and planetarium shows.",
+        "wrong_explanation_a": "1896 was the year Colonel Griffith donated his land to the city — the observatory was planned and built decades later and was not part of the original donation.",
+        "wrong_explanation_b": "Construction of the observatory didn't begin until the early 1930s — the necessary funding, architectural planning, and construction timeline all place the opening well after 1920.",
+        "wrong_explanation_d": "By 1955, the observatory had already been open for two decades and had appeared in the film Rebel Without a Cause — it was not newly opened in 1955.",
         "order_index": 1
       },
       {
@@ -584,6 +700,7 @@
         "option_b": "False",
         "correct_answer": "b",
         "explanation": "From its opening in 1935, the Griffith Observatory has offered free public telescope viewing — fulfilling Griffith's vision of a democratic public space accessible to everyone.",
+        "wrong_explanation_a": "The Griffith Observatory was specifically designed to offer free public telescope access — charging admission would have contradicted the entire philosophy behind Griffith's gift to the city.",
         "order_index": 2
       },
       {
@@ -595,6 +712,9 @@
         "option_d": "La La Land (2016)",
         "correct_answer": "b",
         "explanation": "James Dean's 'Rebel Without a Cause' (1955) features a pivotal scene at the observatory, cementing its place in Hollywood mythology — though La La Land (2016) also featured it prominently.",
+        "wrong_explanation_a": "Sunset Boulevard, while a classic Hollywood film, was set in the decaying mansions of the movie industry — the observatory was not among its filming locations.",
+        "wrong_explanation_c": "Chinatown's iconic LA settings centered on water department offices and private estates — the Griffith Observatory was not among its notable filming locations.",
+        "wrong_explanation_d": "While La La Land did feature the observatory prominently, Rebel Without a Cause predates it by over 60 years and is the film most historically associated with cementing the observatory's place in Hollywood mythology.",
         "order_index": 3
       }
     ]
@@ -614,6 +734,9 @@
         "option_d": "Expanding the freeway system",
         "correct_answer": "b",
         "explanation": "In the late 1940s, the city told Chavez Ravine residents it was acquiring their land for a public housing project, asking them to sell with promises of priority placement in the new units.",
+        "wrong_explanation_a": "City Hall had already been built in 1928 and there were no documented plans to replace it with a new facility at Chavez Ravine in the late 1940s.",
+        "wrong_explanation_c": "The Los Angeles Dodgers didn't arrive until 1958 — nearly a decade after the city originally acquired the land under a different stated justification entirely.",
+        "wrong_explanation_d": "The freeway system expanded through other corridors — the displacement of Chavez Ravine residents was justified to residents on the basis of a different kind of public project.",
         "order_index": 0
       },
       {
@@ -625,6 +748,9 @@
         "option_d": "Residents successfully fought it in court",
         "correct_answer": "b",
         "explanation": "Red Scare politics framed public housing as 'socialist.' The LA City Council voted in 1952 to cancel the project, leaving residents displaced and the cleared land sitting vacant.",
+        "wrong_explanation_a": "Geological instability was not the reason cited for cancellation — the project was killed by a political campaign that framed public housing as socialist government overreach.",
+        "wrong_explanation_c": "Federal housing funds were available for the project — it was cancelled due to political opposition, not financial shortfall.",
+        "wrong_explanation_d": "Residents fought to stay but ultimately lost — it was not a resident victory that cancelled the project, but a political decision by the city council driven by Red Scare ideology.",
         "order_index": 1
       },
       {
@@ -636,6 +762,9 @@
         "option_d": "1965",
         "correct_answer": "c",
         "explanation": "Dodger Stadium opened on April 10, 1962. The last holdout family, the Arechigas, had been forcibly evicted by sheriff's deputies in 1959 in scenes broadcast on local television.",
+        "wrong_explanation_a": "1958 was the year the Dodgers moved to Los Angeles from Brooklyn and played at the Memorial Coliseum — they did not have their own stadium until several years later.",
+        "wrong_explanation_b": "Construction on Dodger Stadium began in 1959 and took several years to complete — the stadium was not ready by 1960.",
+        "wrong_explanation_d": "By 1965, Dodger Stadium had already hosted three seasons of baseball — and the Watts Uprising that year occurred in a different part of the city entirely.",
         "order_index": 2
       },
       {
@@ -645,6 +774,7 @@
         "option_b": "False",
         "correct_answer": "b",
         "explanation": "The public housing project was cancelled for political reasons, and the displaced families received nothing. Many who had already sold their homes had nowhere to go.",
+        "wrong_explanation_a": "The public housing project was cancelled for political reasons after residents had already sold their homes — the displaced families received no replacement housing and were left with no recourse.",
         "order_index": 3
       }
     ]
@@ -664,6 +794,9 @@
         "option_d": "Roosevelt Park",
         "correct_answer": "b",
         "explanation": "The park was called Westlake Park until 1942, when it was renamed to honor General Douglas MacArthur during World War II.",
+        "wrong_explanation_a": "Pershing Park is in Washington, D.C. — no Los Angeles park by that name was renamed to MacArthur Park in 1942.",
+        "wrong_explanation_c": "Echo Park is a separate neighborhood and park in Los Angeles — it was never the previous name for the park now known as MacArthur Park.",
+        "wrong_explanation_d": "The park was not named after a president before its wartime renaming — its original name referred to the Westlake district of the city in which it was located.",
         "order_index": 0
       },
       {
@@ -675,6 +808,9 @@
         "option_d": "Cheap rents advertised in Central American newspapers",
         "correct_answer": "b",
         "explanation": "U.S.-backed civil wars in El Salvador, Guatemala, and Nicaragua drove hundreds of thousands of refugees to flee north. The MacArthur Park area became the heart of Central American Los Angeles.",
+        "wrong_explanation_a": "The MacArthur Park area was not a tech hub — it was a dense, working-class urban neighborhood, and the refugees who arrived were fleeing violence, not drawn by professional opportunity.",
+        "wrong_explanation_c": "The U.S. government largely denied refugee status to people fleeing Central American civil wars, since those wars were backed by U.S. policy — formal federal resettlement was not the mechanism of arrival.",
+        "wrong_explanation_d": "While affordable housing was a factor in where refugees settled, the primary driver of migration was the violence of civil war — people were fleeing for their lives, not responding to rental advertisements.",
         "order_index": 1
       },
       {
@@ -686,6 +822,9 @@
         "option_d": "A Central American cultural festival was held",
         "correct_answer": "b",
         "explanation": "LAPD officers fired rubber bullets and used batons against journalists and protesters at a peaceful immigration rights rally, leading to the firing of the police chief and a national debate.",
+        "wrong_explanation_a": "No earthquake struck MacArthur Park on May 1, 2007 — the event of that day was a human rights incident, not a natural disaster.",
+        "wrong_explanation_c": "The May 1, 2007 event was a moment of controversy and upheaval, not civic celebration — LAPD's actions resulted in firings and national condemnation.",
+        "wrong_explanation_d": "A peaceful immigration rights rally was underway before police moved in — the day became infamous for the violence of the police response, not cultural festivity.",
         "order_index": 2
       },
       {
@@ -695,6 +834,7 @@
         "option_b": "False",
         "correct_answer": "b",
         "explanation": "MacArthur Park was originally one of the most fashionable destinations in Los Angeles, ringed by luxury hotels and frequented by the city's elite. It only shifted to a working-class area as suburban flight transformed the city.",
+        "wrong_explanation_a": "MacArthur Park's history began as one of Los Angeles's most upscale destinations, surrounded by luxury hotels and elite clientele — its working-class identity emerged only after decades of suburban flight and demographic change.",
         "order_index": 3
       }
     ]
@@ -714,6 +854,9 @@
         "option_d": "HOLLYWOODPARK",
         "correct_answer": "b",
         "explanation": "The sign originally read 'HOLLYWOODLAND,' advertising a real estate development. The 'LAND' portion was removed in 1949.",
+        "wrong_explanation_a": "The sign wasn't simplified to just 'HOLLYWOOD' until 1949, when the final four letters were removed — the original 1923 construction included additional letters beyond the familiar name.",
+        "wrong_explanation_c": "The sign never read 'HOLLYWOODHILL' — the real estate development being advertised had a specific name that was reflected in the original signage.",
+        "wrong_explanation_d": "No real estate development called 'Hollywoodpark' was being advertised — the suffix used in the original sign referred to the specific subdivision name.",
         "order_index": 0
       },
       {
@@ -725,6 +868,9 @@
         "option_d": "The Hollywood Chamber of Commerce",
         "correct_answer": "c",
         "explanation": "LA Times publisher Harry Chandler spent $21,000 to build the sign to advertise his Hollywoodland real estate development in the hills above Hollywood.",
+        "wrong_explanation_a": "The sign was built as a private commercial advertisement, not a civic project — the city had no involvement in its original construction.",
+        "wrong_explanation_b": "MGM was not behind the sign — it was a real estate advertisement, not a film studio promotion, funded by a media mogul invested in a hillside subdivision.",
+        "wrong_explanation_d": "The Chamber of Commerce later became involved in maintaining the sign, but it did not fund the original construction in 1923 — that was the work of a private real estate investor.",
         "order_index": 1
       },
       {
@@ -734,6 +880,7 @@
         "option_b": "False",
         "correct_answer": "b",
         "explanation": "The sign was built as a temporary real estate advertisement with a planned lifespan of about 18 months. It was never meant to be permanent.",
+        "wrong_explanation_a": "The sign was constructed as a temporary billboard for a real estate subdivision, with a planned lifespan of roughly 18 months — its permanence was an accident of history, not the original intention.",
         "order_index": 2
       },
       {
@@ -745,6 +892,9 @@
         "option_d": "The Hollywood Foreign Press Association",
         "correct_answer": "c",
         "explanation": "A celebrity fundraising campaign raised $250,000 to restore the sign. Alice Cooper famously paid for one letter 'O' as a tribute to Groucho Marx.",
+        "wrong_explanation_a": "The Walt Disney Company was not involved in the 1978 sign restoration — the campaign relied on individual celebrity donors who each paid to restore one letter.",
+        "wrong_explanation_b": "The restoration was funded through a private celebrity fundraising campaign, not state government money — each letter was sponsored by a different celebrity donor.",
+        "wrong_explanation_d": "The Hollywood Foreign Press Association (which runs the Golden Globes) was not the organization behind the 1978 restoration — the campaign was run as a private fundraising effort.",
         "order_index": 3
       }
     ]

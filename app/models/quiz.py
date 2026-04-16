@@ -43,6 +43,10 @@ class QuizQuestion(db.Model):
     option_d = db.Column(db.Text, nullable=True)
     correct_answer = db.Column(db.String(1), nullable=False)  # a/b/c/d or t/f
     explanation = db.Column(db.Text, nullable=True)
+    wrong_explanation_a = db.Column(db.Text, nullable=True)
+    wrong_explanation_b = db.Column(db.Text, nullable=True)
+    wrong_explanation_c = db.Column(db.Text, nullable=True)
+    wrong_explanation_d = db.Column(db.Text, nullable=True)
     order_index = db.Column(db.Integer, nullable=False, default=0)
 
     def __repr__(self):

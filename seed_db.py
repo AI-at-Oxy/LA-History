@@ -216,7 +216,21 @@ def seed_quizzes(quiz_data, location_data):
             print(f'  WARNING: No location found for slug "{quiz["location_slug"]}"')
             continue
 
-        if Quiz.query.filter_by(location_id=location_id).first():
+        existing_quiz = Quiz.query.filter_by(location_id=location_id).first()
+        if existing_quiz:
+            # Update wrong_explanation fields on existing questions in case they were added later
+            for question in quiz['questions']:
+                qq = QuizQuestion.query.filter_by(
+                    quiz_id=existing_quiz.id,
+                    order_index=question['order_index']
+                ).first()
+                if qq:
+                    qq.wrong_explanation_a = question.get('wrong_explanation_a')
+                    qq.wrong_explanation_b = question.get('wrong_explanation_b')
+                    qq.wrong_explanation_c = question.get('wrong_explanation_c')
+                    qq.wrong_explanation_d = question.get('wrong_explanation_d')
+                    qq.explanation = question.get('explanation', qq.explanation)
+            db.session.commit()
             continue
 
         q = Quiz(
@@ -239,6 +253,10 @@ def seed_quizzes(quiz_data, location_data):
                 option_d=question.get('option_d'),
                 correct_answer=question['correct_answer'],
                 explanation=question.get('explanation'),
+                wrong_explanation_a=question.get('wrong_explanation_a'),
+                wrong_explanation_b=question.get('wrong_explanation_b'),
+                wrong_explanation_c=question.get('wrong_explanation_c'),
+                wrong_explanation_d=question.get('wrong_explanation_d'),
                 order_index=question['order_index'],
             )
             db.session.add(qq)

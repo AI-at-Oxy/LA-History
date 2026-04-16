@@ -76,7 +76,20 @@ def check_answer():
     q = QuizQuestion.query.get_or_404(int(data['question_id']))
     chosen = str(data['chosen_answer']).strip().lower()
     is_correct = (chosen == q.correct_answer.lower())
-    return jsonify({'is_correct': is_correct, 'explanation': q.explanation or ''})
+
+    if is_correct:
+        return jsonify({'is_correct': True, 'explanation': q.explanation or ''})
+
+    # Wrong answer: look up the per-option explanation authored for this choice.
+    # Do NOT return q.explanation here — it's written from the correct-answer perspective.
+    wrong_explanation = getattr(q, f'wrong_explanation_{chosen}', None)
+    if not wrong_explanation:
+        wrong_explanation = (
+            "That's not quite right. "
+            "This answer doesn't accurately reflect the historical record — "
+            "try reviewing what you know about this topic."
+        )
+    return jsonify({'is_correct': False, 'explanation': wrong_explanation})
 
 
 @quiz_bp.route('/api/quiz/<int:location_id>/submit', methods=['POST'])
