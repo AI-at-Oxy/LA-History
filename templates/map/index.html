@@ -149,23 +149,39 @@
 
       <!-- Palette -->
       <aside class="cm-palette" id="cm-palette" aria-label="Location palette">
-        <div class="cm-palette-section">
-          <h4 class="cm-palette-heading">Era Locations</h4>
+        <div class="cm-palette-section cm-section--era">
+          <h4 class="cm-palette-heading">
+            <span class="cm-section-icon">📍</span>Era Locations
+          </h4>
           <div id="cm-palette-list"></div>
         </div>
-        <div class="cm-palette-section">
-          <h4 class="cm-palette-heading">Cross-Era</h4>
-          <button class="cm-btn cm-btn-secondary" id="cm-add-cross-era-btn" style="width:100%;margin-bottom:6px">＋ Add from another era</button>
+        <div class="cm-palette-section cm-section--cross">
+          <h4 class="cm-palette-heading">
+            <span class="cm-section-icon">🔗</span>Cross-Era
+          </h4>
+          <button class="cm-palette-action-btn cm-palette-action-btn--cross" id="cm-add-cross-era-btn">
+            <span class="cm-action-plus">＋</span>Add from another era
+          </button>
           <div id="cm-cross-era-list"></div>
         </div>
+        <div class="cm-palette-section cm-section--custom">
+          <h4 class="cm-palette-heading">
+            <span class="cm-section-icon">✦</span>Custom Nodes
+          </h4>
+          <button class="cm-palette-action-btn cm-palette-action-btn--custom" id="cm-add-custom-node-btn">
+            <span class="cm-action-plus">＋</span>Create custom node
+          </button>
+          <div id="cm-custom-node-list"></div>
+        </div>
         <div class="cm-instructions">
-          <strong>💡 How to connect</strong>
-          <ol>
-            <li>Click <strong>+</strong> to place a node</li>
-            <li>Click a node → <em>Start connection</em></li>
-            <li>Click the target node</li>
-            <li>Type the relationship &amp; confirm</li>
-          </ol>
+          <strong>💡Quick Start</strong>
+          <div class="cm-steps">
+            <div class="cm-step"><span class="cm-step-n">1</span><span>Click <strong>+</strong> beside a location to add it to the canvas</span></div>
+            <div class="cm-step"><span class="cm-step-n">2</span><span>Click a node, then choose <strong>Start Connection</strong></span></div>
+            <div class="cm-step"><span class="cm-step-n">3</span><span>Click the destination node</span></div>
+            <div class="cm-step"><span class="cm-step-n">4</span><span>Describe the relationship, then click <strong>Add Connection</strong></span></div>
+          </div>
+          <div class="cm-instructions-tip">Click any edge to edit its label or delete it</div>
         </div>
       </aside>
 
@@ -194,6 +210,27 @@
           <div class="cm-edge-popup-actions">
             <button class="cm-btn cm-btn-secondary" id="cm-edge-cancel-btn">Cancel</button>
             <button class="cm-btn cm-btn-primary" id="cm-edge-add-btn">Add Connection</button>
+          </div>
+        </div>
+
+        <!-- Custom node dialog -->
+        <div class="cm-custom-node-dialog" id="cm-custom-node-dialog" aria-hidden="true">
+          <div class="cm-custom-node-dialog-inner">
+            <div class="cm-cross-era-picker-header">
+              <span>Add custom node</span>
+              <button class="cm-close-btn" id="cm-custom-node-close" aria-label="Close">×</button>
+            </div>
+            <div style="padding:14px 16px 16px">
+              <label class="cm-edge-popup-label" for="cm-custom-node-input">Node label</label>
+              <input type="text" id="cm-custom-node-input"
+                     placeholder="e.g. Trade Routes, Disease, Religion…"
+                     aria-label="Custom node label" maxlength="60" autocomplete="off"
+                     style="width:100%;box-sizing:border-box;padding:8px 11px;border:1.5px solid var(--border);border-radius:8px;font-size:0.85rem;background:var(--bg);color:var(--text);outline:none;">
+              <div class="cm-edge-popup-actions" style="margin-top:10px">
+                <button class="cm-btn cm-btn-secondary" id="cm-custom-node-cancel">Cancel</button>
+                <button class="cm-btn cm-btn-primary" id="cm-custom-node-confirm">Add Node</button>
+              </div>
+            </div>
           </div>
         </div>
 

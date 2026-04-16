@@ -17,6 +17,7 @@ let cmKeyboardNodeIndex = -1;     // for Tab-to-cycle-nodes keyboard nav
 let cmContextTarget = null;       // { type: 'node'|'edge', id } for right-click menu
 let cmUndoStack = [];             // undo/redo stacks
 let cmRedoStack = [];
+let cmCustomNodes = [];           // user-created custom nodes [{ id, label }]
 let _previewSvg = null;          // ghost edge preview line
 
 // ── CM Chat state ──────────────────────────────
@@ -58,6 +59,17 @@ async function loadConceptMapData(eraOrder) {
       try {
         cy.json(JSON.parse(cmEraData.concept_map.graph_json));
         cy.fit(undefined, 40);
+        // Restore custom nodes sidebar from saved graph
+        cmCustomNodes = [];
+        cy.nodes().forEach(n => {
+          if (n.data('custom')) {
+            cmCustomNodes.push({ id: n.id(), label: n.data('label') });
+          }
+        });
+        renderCustomNodeList();
+        // Sync palette dim state so nodes already on the canvas are marked
+        // correctly (cy.json restore doesn't reliably fire 'add' events)
+        syncPaletteDimState();
       } catch (_) { /* stale/corrupt data — start fresh */ }
     }
 
@@ -149,6 +161,17 @@ function initCytoscape() {
           'border-color': '#a09070',
           'border-opacity': 0.7,
           'background-opacity': 0.72,
+        },
+      },
+      {
+        selector: 'node[?custom]',
+        style: {
+          'border-style': 'dotted',
+          'border-width': 2.5,
+          'border-color': '#a070d0',
+          'border-opacity': 0.9,
+          'background-color': '#7c4daf',
+          'shadow-color': '#7c4daf',
         },
       },
       {
@@ -307,6 +330,9 @@ function initCytoscape() {
       },
     ], evt.renderedPosition);
   });
+
+  // ── Sidebar auto-sync on every node add/remove ───────────────────────────
+  cy.on('add remove', 'node', syncPaletteDimState);
 
   // ── Edge highlight on node hover
   cy.on('mouseover', 'node', function(evt) {
@@ -755,6 +781,16 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('cm-add-cross-era-btn').addEventListener('click', openCrossEraPicker);
   document.getElementById('cm-picker-close').addEventListener('click', closeCrossEraPicker);
 
+  // Custom node dialog
+  document.getElementById('cm-add-custom-node-btn').addEventListener('click', openCustomNodeDialog);
+  document.getElementById('cm-custom-node-close').addEventListener('click', closeCustomNodeDialog);
+  document.getElementById('cm-custom-node-cancel').addEventListener('click', closeCustomNodeDialog);
+  document.getElementById('cm-custom-node-confirm').addEventListener('click', confirmCustomNode);
+  document.getElementById('cm-custom-node-input').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') confirmCustomNode();
+    if (e.key === 'Escape') closeCustomNodeDialog();
+  });
+
   // Canvas keyboard nav
   const canvas = document.getElementById('cm-canvas');
   canvas.addEventListener('keydown', handleCanvasKeydown);
@@ -949,6 +985,10 @@ function lockGraph() {
   cy.off('dblclick', 'edge');
   const submitBtn = document.getElementById('cm-submit-btn');
   if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = 'Submitted ✓'; }
+  const addCustomBtn = document.getElementById('cm-add-custom-node-btn');
+  if (addCustomBtn) addCustomBtn.disabled = true;
+  const addCrossEraBtn = document.getElementById('cm-add-cross-era-btn');
+  if (addCrossEraBtn) addCrossEraBtn.disabled = true;
   document.getElementById('cm-status').textContent = 'Submitted';
 }
 
@@ -1021,8 +1061,7 @@ async function openCrossEraPicker() {
       <div class="cm-picker-item">
         <span class="cm-picker-era-badge ${loc.era || ''}">${loc.era || ''}</span>
         <span class="cm-picker-name" title="${loc.name}">${loc.name}</span>
-        <button class="cm-btn cm-btn-secondary"
-                style="font-size:0.72rem;padding:2px 8px;flex-shrink:0"
+        <button class="cm-btn cm-btn-secondary cm-picker-add-btn"
                 onclick="cmPickCrossEraNode(${loc.id}, ${JSON.stringify(loc.name).replace(/"/g, '&quot;')}, '${loc.era}', ${loc.era_order || 0})">
           Add
         </button>
@@ -1045,6 +1084,126 @@ function closeCrossEraPicker() {
   picker.classList.remove('visible');
   picker.setAttribute('aria-hidden', 'true');
 }
+
+// ── Custom node dialog ────────────────────────
+function openCustomNodeDialog() {
+  if (cmSubmitted) return;
+  const dialog = document.getElementById('cm-custom-node-dialog');
+  dialog.classList.add('visible');
+  dialog.setAttribute('aria-hidden', 'false');
+  const input = document.getElementById('cm-custom-node-input');
+  input.value = '';
+  input.focus();
+}
+
+function closeCustomNodeDialog() {
+  const dialog = document.getElementById('cm-custom-node-dialog');
+  dialog.classList.remove('visible');
+  dialog.setAttribute('aria-hidden', 'true');
+  document.getElementById('cm-custom-node-input').value = '';
+}
+
+function confirmCustomNode() {
+  const label = document.getElementById('cm-custom-node-input').value.trim();
+  if (!label) {
+    document.getElementById('cm-custom-node-input').focus();
+    return;
+  }
+  closeCustomNodeDialog();
+  cmAddCustomNode(label);
+}
+
+function cmAddCustomNode(label) {
+  const nodeId = 'custom-' + Date.now();
+  const shortLabel = label.length > 22 ? label.slice(0, 21) + '…' : label;
+  const pos = cmFindFreePosition();
+
+  cy.add({
+    group: 'nodes',
+    data: {
+      id: nodeId,
+      label,
+      shortLabel,
+      color: '#7c4daf',
+      borderColor: '#a070d0',
+      custom: true,
+    },
+    position: pos,
+  });
+
+  const newNode = cy.getElementById(nodeId);
+  newNode.style({ 'width': 4, 'height': 4, 'opacity': 0 });
+  newNode.animate(
+    { style: { 'width': 64, 'height': 32, 'opacity': 1 } },
+    {
+      duration: 280,
+      easing: 'spring(400, 20)',
+      complete: function() {
+        newNode.style({ 'width': 'label', 'height': 'label' });
+        cy.animate({ fit: { padding: 40 }, duration: 350, easing: 'ease-out' });
+      },
+    },
+  );
+
+  if (typeof SFX !== 'undefined') SFX.play('node-add');
+
+  cmUndoStack.push({ type: 'add-node', nodeId, nodeData: { data: { ...newNode.data() }, position: { ...pos } } });
+  cmRedoStack = [];
+
+  // Track in cmCustomNodes and update the sidebar list
+  cmCustomNodes.push({ id: nodeId, label });
+  renderCustomNodeList();
+
+  updateEdgeCount();
+  updateSubmitButton();
+  scheduleAutoSave();
+}
+
+function renderCustomNodeList() {
+  const list = document.getElementById('cm-custom-node-list');
+  if (!list) return;
+  if (cmCustomNodes.length === 0) {
+    list.innerHTML = '';
+    return;
+  }
+  list.innerHTML = cmCustomNodes.map(n => {
+    const onMap = cy && cy.getElementById(n.id).length > 0;
+    return `<div class="cm-custom-palette-item">
+      <span class="cm-custom-palette-dot"></span>
+      <span class="cm-custom-palette-name ${onMap ? 'on-map' : ''}" title="${n.label}">${n.label}</span>
+      <button class="cm-btn cm-btn-secondary cm-palette-add-btn"
+              onclick="cmReAddCustomNode(${JSON.stringify(n.id)}, ${JSON.stringify(n.label)})">+</button>
+    </div>`;
+  }).join('');
+}
+
+function cmReAddCustomNode(nodeId, label) {
+  if (cy.getElementById(nodeId).length > 0) {
+    cy.getElementById(nodeId).flashClass('selected-source', 600);
+    return;
+  }
+  // Node was removed — re-add it with the same id so undo etc. still work
+  const shortLabel = label.length > 22 ? label.slice(0, 21) + '…' : label;
+  const pos = cmFindFreePosition();
+  cy.add({
+    group: 'nodes',
+    data: { id: nodeId, label, shortLabel, color: '#7c4daf', borderColor: '#a070d0', custom: true },
+    position: pos,
+  });
+  const n = cy.getElementById(nodeId);
+  n.style({ 'width': 4, 'height': 4, 'opacity': 0 });
+  n.animate({ style: { 'width': 64, 'height': 32, 'opacity': 1 } }, {
+    duration: 280,
+    easing: 'spring(400, 20)',
+    complete() { n.style({ 'width': 'label', 'height': 'label' }); },
+  });
+  if (typeof SFX !== 'undefined') SFX.play('node-add');
+  renderCustomNodeList();
+  updateEdgeCount();
+  updateSubmitButton();
+  scheduleAutoSave();
+}
+window.cmReAddCustomNode = cmReAddCustomNode;
 
 // ── Insight token button ──────────────────────
 function updateInsightButton() {
@@ -1117,6 +1276,7 @@ function closeConceptMap() {
   cmKeyboardNodeIndex = -1;
   cmUndoStack = [];
   cmRedoStack = [];
+  cmCustomNodes = [];
   cmChatGreetingSent = false;
   cmChatLoading = false;
   cmInsightUsesRemaining = 3;
@@ -1127,6 +1287,8 @@ function closeConceptMap() {
   document.getElementById('cm-results-body').innerHTML = '';
   document.getElementById('cm-status').textContent = '';
   document.getElementById('cm-palette-list').innerHTML = '';
+  const customNodeList = document.getElementById('cm-custom-node-list');
+  if (customNodeList) customNodeList.innerHTML = '';
 
   // Reset chat panel
   const chatContainer = document.getElementById('cm-chat-messages');
@@ -1409,6 +1571,23 @@ function removePreviewLine() {
   if (_previewSvg) { _previewSvg.remove(); _previewSvg = null; }
   const canvas = document.getElementById('cm-canvas');
   if (canvas) canvas.removeEventListener('mousemove', _updatePreviewLine);
+}
+
+// ── Sidebar sync ──────────────────────────────
+// Re-derive which nodes are actually on the canvas and update all sidebar
+// indicators so they always reflect truth regardless of how nodes changed.
+function syncPaletteDimState() {
+  if (!cy) return;
+
+  // Location palette: toggle .on-map on the name span
+  const paletteItems = document.querySelectorAll('[id^="palette-name-"]');
+  paletteItems.forEach(el => {
+    const locId = el.id.replace('palette-name-', '');
+    el.classList.toggle('on-map', cy.getElementById('loc-' + locId).length > 0);
+  });
+
+  // Custom node list: rebuild so the .on-map class and re-add button are correct
+  renderCustomNodeList();
 }
 
 // ── Helpers ───────────────────────────────────
