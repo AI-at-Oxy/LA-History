@@ -18,7 +18,7 @@ python run.py             # dev server on port 5000
 ```
 
 **Ollama (AI chat):**
-Requires a local Ollama instance running `llama3.2` at `http://localhost:11434`. Set `OLLAMA_BASE_URL` and `OLLAMA_MODEL` in `.env` to override.
+Requires a local Ollama instance running `gemma4:latest` at `http://localhost:11434`. Set `OLLAMA_BASE_URL` and `OLLAMA_MODEL` in `.env` to override.
 
 **Password reset in dev:** With no mail server configured, reset links print to the terminal when `FLASK_DEBUG=1`.
 
@@ -109,7 +109,7 @@ SECRET_KEY=...
 FLASK_ENV=development
 FLASK_DEBUG=1
 OLLAMA_BASE_URL=http://localhost:11434
-OLLAMA_MODEL=llama3.2
+OLLAMA_MODEL=gemma4:latest
 DATABASE_URL=...              # production only; dev uses SQLite instance/la_history.db
 MAIL_SERVER=...               # optional; required for password reset emails in prod
 MAIL_PORT=587

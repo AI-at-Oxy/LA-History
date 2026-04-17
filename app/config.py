@@ -9,7 +9,7 @@ class Config:
     SECRET_KEY = os.environ.get('SECRET_KEY', 'dev-fallback-key')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     OLLAMA_BASE_URL = os.environ.get('OLLAMA_BASE_URL', 'http://localhost:11434')
-    OLLAMA_MODEL = os.environ.get('OLLAMA_MODEL', 'llama3.2')
+    OLLAMA_MODEL = os.environ.get('OLLAMA_MODEL', 'gemma4:latest')
     WTF_CSRF_ENABLED = True
     PERMANENT_SESSION_LIFETIME = timedelta(days=1)
     REMEMBER_COOKIE_DURATION = timedelta(days=30)

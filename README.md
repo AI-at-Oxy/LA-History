@@ -7,7 +7,7 @@ LA-History is an educational web game that guides players through ~57 historical
 ## Prerequisites
 
 - Python 3.10+
-- [Ollama](https://ollama.com) with the `llama3.2` model pulled (`ollama pull llama3.2`)
+- [Ollama](https://ollama.com) with the `gemma4:latest` model pulled (`ollama pull gemma4:latest`)
 
 No Node.js or build step required — the frontend is vanilla JavaScript served directly by Flask.
 
@@ -42,15 +42,15 @@ Open `http://localhost:5000` in your browser.
 The chat, quiz hints, concept map insights, and Memory Challenge features require Ollama running locally:
 
 ```bash
-ollama serve              # starts the Ollama server on port 11434
-ollama pull llama3.2      # download the model (first time only)
+ollama serve                   # starts the Ollama server on port 11434
+ollama pull gemma4:latest      # download the model (first time only)
 ```
 
 Override defaults in `.env`:
 
 ```env
 OLLAMA_BASE_URL=http://localhost:11434
-OLLAMA_MODEL=llama3.2
+OLLAMA_MODEL=gemma4:latest
 ```
 
 **Password reset in dev:** With no mail server configured, reset links print to the terminal when `FLASK_DEBUG=1`.
@@ -65,7 +65,7 @@ OLLAMA_MODEL=llama3.2
 | `FLASK_ENV` | `development` or `production` |
 | `FLASK_DEBUG` | `1` to enable debug mode |
 | `OLLAMA_BASE_URL` | Ollama server URL (default: `http://localhost:11434`) |
-| `OLLAMA_MODEL` | Model name (default: `llama3.2`) |
+| `OLLAMA_MODEL` | Model name (default: `gemma4:latest`) |
 | `DATABASE_URL` | Production DB URL; dev uses SQLite at `instance/la_history.db` |
 | `MAIL_SERVER` | SMTP server for password reset emails (optional in dev) |
 | `MAIL_PORT` | SMTP port (default: `587`) |
