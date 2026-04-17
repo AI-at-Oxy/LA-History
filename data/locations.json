@@ -10,7 +10,7 @@
     "is_starter": true,
     "unlock_threshold": 0,
     "image_url": "/static/img/Kuruvungna.png",
-    "image_caption": "The Kuruvungna Springs sacred site on the UCLA campus, maintained by the Gabrielino-Tongva Tribe.",
+    "image_caption": "The Kuruvungna freshwater spring shaded by willow trees and lush native vegetation on the UCLA campus.",
     "short_description": "A sacred freshwater spring on the UCLA campus, once the heart of the Tongva village of Kuruvungna.",
     "full_description": "Long before the arrival of Europeans, the Tongva people — also called the Gabrielino — thrived in the Los Angeles Basin for thousands of years. At what is now the UCLA campus, a freshwater spring known as Kuruvungna (meaning 'a place where we are in the sun') was the center of a thriving village. The Tongva built dome-shaped homes called 'ap' from willow poles and tule reeds nearby, and relied on the spring for drinking water, bathing, and ceremony. This site is one of the few remaining places in Los Angeles where the land itself retains memory of Indigenous occupation. Today, a small garden and plaque mark the spring on the UCLA campus, maintained in partnership with the Gabrielino-Tongva Tribe.",
     "events": [
@@ -48,6 +48,7 @@
     "is_starter": true,
     "unlock_threshold": 0,
     "image_url": "/static/img/ballona-wetlands.jpg",
+    "image_caption": "The Ballona Wetlands State Ecological Reserve entrance sign, with open coastal marsh grasses and the Marina del Rey skyline in the background.",
     "short_description": "One of the last remaining wetlands in Los Angeles County, once a vital resource for the Tongva and later a hub of trade.",
     "full_description": "The Ballona Wetlands stretch across 577 acres near present-day Marina del Rey and Playa del Rey. For the Tongva, wetlands like Ballona were essential — providing tule reeds for basket weaving, waterfowl for food, and access to the ocean for fishing and trade with other coastal peoples. The Tongva used tomol (plank canoes) to navigate the coast and trade with communities as far away as Catalina Island and the Channel Islands. Over the 20th century, more than 90% of the original wetlands were drained or developed. The remaining parcel was purchased by the state of California in 2003 and is being restored.",
     "events": [
@@ -85,6 +86,7 @@
     "is_starter": true,
     "unlock_threshold": 0,
     "image_url": "/static/img/san-gabriel-foothills.jpg",
+    "image_caption": "A snow-capped panorama of the San Gabriel Mountains, which formed the northern horizon of Tongva territory for thousands of years.",
     "short_description": "The foothills of the San Gabriel Mountains sheltered dozens of Tongva villages and served as the cultural heartland of the region.",
     "full_description": "The San Gabriel Valley foothills form a dramatic backdrop to the Los Angeles Basin, and for the Tongva people, they were home. Over two dozen Tongva villages dotted the valley, each near streams flowing from the mountains. The Tongva maintained sophisticated trading networks, exchanging goods like obsidian, shell beads (used as currency), dried fish, and plant medicines. The acorn — gathered from the many oak trees of the foothills — was the dietary staple, ground into flour using stone mortars. Seasonal movements followed the food: coastal areas in summer, foothill acorn groves in fall. The Tongva's intimate knowledge of this landscape took thousands of years to develop and was nearly erased within a generation of Spanish colonization.",
     "events": [
@@ -122,6 +124,7 @@
     "is_starter": false,
     "unlock_threshold": 0,
     "image_url": "/static/img/el-pueblo.jpg",
+    "image_caption": "Our Lady Queen of Angels Church (La Placita) near the original Los Angeles Plaza, at the heart of the historic El Pueblo district.",
     "short_description": "The original Spanish colonial settlement founded in 1781, now preserved as Olvera Street in downtown LA.",
     "full_description": "On September 4, 1781, Governor Felipe de Neve led a group of 44 settlers — pobladores — from the mission at San Gabriel to found El Pueblo de la Reina de Los Ángeles. The founding population was racially diverse: the settlers were a mix of Indigenous, African, and Spanish ancestry, reflecting the complex demographics of New Spain's northern frontier. The pueblo was laid out around a central plaza, which survives today as the Plaza near Olvera Street. For decades it remained a small agricultural town, growing crops and cattle for the nearby missions and the presidio at Santa Barbara. By 1800, the pueblo had grown to around 315 residents. Olvera Street, now a tourist corridor celebrating Mexican heritage, preserves the oldest surviving structures in Los Angeles.",
     "events": [
@@ -159,6 +162,7 @@
     "is_starter": false,
     "unlock_threshold": 0,
     "image_url": "/static/img/mission-san-gabriel.jpg",
+    "image_caption": "Mission San Gabriel Arcángel's long adobe nave and bell wall, flanked by palm trees on the grounds in the city of San Gabriel.",
     "short_description": "Founded in 1771, Mission San Gabriel was the economic and spiritual center of Spanish California in the Los Angeles region.",
     "full_description": "Mission San Gabriel Arcángel was founded on September 8, 1771, by Franciscan priests Ángel Fernández de Somera and Pedro Benito Cambón. It became the wealthiest and most productive mission in Alta California, producing wine, tallow, hides, and grain on a massive scale. This prosperity was built on the coerced labor of thousands of Tongva people, who were baptized, renamed, and forced to live and work within the mission walls. Epidemic diseases — measles, smallpox, and typhoid — devastated the Tongva population. Estimates suggest the Indigenous population of the Los Angeles Basin fell by 75% or more within a century of Spanish contact. The mission church, rebuilt in the 1790s after earthquake damage, still stands today in the city of San Gabriel.",
     "events": [
@@ -196,6 +200,7 @@
     "is_starter": false,
     "unlock_threshold": 0,
     "image_url": "/static/img/fort-moore-hill.jpg",
+    "image_caption": "The Fort Moore Pioneer Memorial bas-relief panel, depicting U.S. troops raising the American flag over Los Angeles on July 4, 1847.",
     "short_description": "A hilltop fortification built by U.S. forces in 1847, marking the transition from Mexican to American rule in Los Angeles.",
     "full_description": "Fort Moore Hill overlooks the original Plaza of Los Angeles. In July 1847, U.S. Army soldiers under Colonel Jonathan Stevenson constructed a fort here to secure American control following the Mexican-American War. The American flag was raised over Los Angeles on July 4, 1847, in a ceremony at the fort. Though the fort itself was short-lived, Fort Moore Hill represents a pivotal transition — Los Angeles shifting from a Mexican pueblo to an American city. A monument and relief panel now stand on the hill, near what is today the Los Angeles Civic Center, commemorating the event. The hill itself was partly excavated in the 1950s during freeway construction.",
     "events": [
@@ -233,6 +238,7 @@
     "is_starter": false,
     "unlock_threshold": 0,
     "image_url": "/static/img/old-chinatown.jpg",
+    "image_caption": "The golden twin-dragon gate at the entrance to Chinatown during a Lunar New Year celebration, a landmark of the community rebuilt after the 1933 demolition.",
     "short_description": "The original Chinese settlement near the Plaza, demolished in 1933 to build Union Station — a story of displacement and resilience.",
     "full_description": "Chinese immigrants began arriving in Los Angeles in the 1860s, initially brought to work on the transcontinental railroad. By the 1870s, a small Chinese community had formed near the Plaza, just blocks from where the town was founded. This neighborhood became known as Chinatown — a tight-knit community of laundries, restaurants, herb shops, and temples. In 1871, anti-Chinese violence erupted in what became known as the Chinese Massacre of 1871, one of the largest mass lynchings in American history, in which a white mob killed approximately 19 Chinese residents. Despite this, the community endured and grew. In 1933, however, the entire neighborhood was demolished to build Union Station. Residents were displaced and forced to rebuild their community several blocks north — the current Chinatown.",
     "events": [
@@ -270,6 +276,7 @@
     "is_starter": false,
     "unlock_threshold": 0,
     "image_url": "/static/img/bradbury-building.jpg",
+    "image_caption": "The ornate red-brick exterior of the Bradbury Building at the corner of 3rd and Broadway in downtown Los Angeles, completed in 1893.",
     "short_description": "Built in 1893, the Bradbury Building is LA's oldest commercial landmark — an ornate symbol of the city's late 19th-century boom.",
     "full_description": "The Bradbury Building at 304 South Broadway was completed in 1893, commissioned by mining millionaire Lewis Bradbury and designed largely by draftsman George Wyman, who legend says was convinced to take the job via a Ouija board message from his deceased brother. The result is one of the most remarkable interiors in American architecture: a soaring five-story atrium filled with ornate ironwork, glazed yellow brick, and natural light pouring through a massive glass roof. It was built during Los Angeles's first great real estate boom of the 1880s, when the population of LA exploded from 11,000 to over 50,000 in a single decade, driven by the completion of the transcontinental railroad and aggressive land promotion. The Bradbury Building survived the boom-and-bust cycle and became a National Historic Landmark in 1977.",
     "events": [
@@ -307,6 +314,7 @@
     "is_starter": false,
     "unlock_threshold": 0,
     "image_url": "/static/img/hollenbeck-park.jpg",
+    "image_caption": "A historic early-1900s view of Hollenbeck Park's lake, ornamental footbridge, and flower beds, shortly after the park was gifted to the city.",
     "short_description": "Donated to the city in 1892, Hollenbeck Park was Los Angeles's first public park and anchor of the Boyle Heights neighborhood.",
     "full_description": "Hollenbeck Park in the Boyle Heights neighborhood was donated to the City of Los Angeles in 1892 by Elizabeth Hollenbeck in memory of her husband, John Edward Hollenbeck. It became the first public park in Los Angeles and was a symbol of the city's growing civic ambitions. Boyle Heights, the neighborhood surrounding the park, became one of the most ethnically diverse communities in 20th-century America — home at various times to large communities of Jewish, Japanese, Mexican, Russian Molokans, and African American residents. The park's lake and green spaces were a gathering place for all of them. Today, Boyle Heights is predominantly Latino, and Hollenbeck Park remains a cherished community anchor, though the neighborhood has faced intense gentrification pressure in recent decades.",
     "events": [
@@ -344,6 +352,7 @@
     "is_starter": false,
     "unlock_threshold": 0,
     "image_url": "/static/img/la-placita-church.jpg",
+    "image_caption": "The white stucco facade of Our Lady Queen of Angels Church (La Placita), with its cross-topped bell towers and red doorway on Main Street.",
     "short_description": "The oldest Catholic church in Los Angeles, founded in 1784 and a spiritual center for the city's Latino community for centuries.",
     "full_description": "La Placita — Our Lady Queen of Angels Church — sits beside the original Plaza of Los Angeles and has been at the heart of the city's Catholic and Latino community since it was founded in 1784. The current building, completed in 1822, is the oldest surviving church structure in Los Angeles. For generations of Mexican and Central American immigrants, La Placita has been a sanctuary — literally and figuratively. In the 1970s and 1980s, Father Luis Olivares made La Placita a prominent center of the Sanctuary Movement, openly harboring undocumented refugees from El Salvador and Guatemala who were fleeing civil wars. The church's history mirrors the broader story of Latino Los Angeles: resilience, faith, and advocacy across centuries.",
     "events": [
@@ -381,6 +390,7 @@
     "is_starter": false,
     "unlock_threshold": 0,
     "image_url": "/static/img/watts-towers.jpg",
+    "image_caption": "Simon Rodia's Watts Towers — 17 interlocking steel-and-mosaic structures rising up to 99 feet — seen from the surrounding fence in the Watts neighborhood.",
     "video_url": "https://www.youtube.com/watch?v=9L3hlXe3-Uc",
     "video_caption": "Watts Towers Documentary",
     "short_description": "Built solo by Italian immigrant Simon Rodia over 33 years, the Watts Towers are one of America's greatest works of folk art.",
@@ -420,6 +430,7 @@
     "is_starter": false,
     "unlock_threshold": 0,
     "image_url": "/static/img/griffith-observatory.jpg",
+    "image_caption": "The Griffith Observatory's three copper domes and white Art Deco facade overlooking the sprawling Los Angeles Basin from Griffith Park.",
     "short_description": "Gifted to the city by Colonel Griffith J. Griffith in 1896, the park and observatory became one of LA's greatest public spaces.",
     "full_description": "Griffith Park — the largest municipal urban park in the United States — began as a gift from Colonel Griffith J. Griffith, who donated over 3,000 acres of his Rancho Los Feliz to the City of Los Angeles in 1896, intended as a gift to the common people. The Griffith Observatory, built on the park's southern slope, opened in 1935 and offered free public telescope viewing from the start. It sits on land that was once part of Rancho Los Feliz, granted to the Feliz family during the Mexican period, and later the site of a famous contested inheritance case. From the observatory, one can see the entire Los Angeles Basin — a view that collapses the city's entire history into a single panorama. The Griffith Observatory was famously featured in the 1955 film 'Rebel Without a Cause' with James Dean.",
     "events": [
@@ -457,6 +468,7 @@
     "is_starter": false,
     "unlock_threshold": 0,
     "image_url": "/static/img/chavez-ravine.jpg",
+    "image_caption": "A wooded walking path in Elysian Park near Chavez Ravine, the hillside area where the Palo Verde, La Loma, and Bishop communities stood before their demolition.",
     "video_url": "https://www.youtube.com/watch?v=SZuoFTcTGco",
     "video_caption": "Chavez Ravine Oral History Documentary",
     "short_description": "A Mexican American community bulldozed for public housing, then given to the Dodgers — one of LA's most painful displacement stories.",
@@ -496,6 +508,7 @@
     "is_starter": false,
     "unlock_threshold": 0,
     "image_url": "/static/img/macarthur-park.jpg",
+    "image_caption": "MacArthur Park's lake framed by palm trees, with the historic Westlake Theatre sign and the downtown Los Angeles skyline visible in the background.",
     "short_description": "Once LA's premier park, MacArthur Park reflects the waves of immigration that reshaped the city throughout the 20th century.",
     "full_description": "Westlake Park — renamed MacArthur Park in 1942 to honor General Douglas MacArthur — opened in 1890 and was for decades one of the most fashionable destinations in Los Angeles, ringed by luxury hotels and frequented by the city's elite. By the mid-20th century, the neighborhoods around it shifted as middle-class white residents left for the suburbs. The park became a hub for successive waves of Central American immigrants: Guatemalans, Salvadorans, and Nicaraguans fleeing civil wars in the 1980s. Today, the area around MacArthur Park is one of the most densely populated neighborhoods in Los Angeles and a center of Latino immigrant life. The park gained national notoriety on May 1, 2007, when LAPD officers violently dispersed an immigration rights rally there, injuring journalists and protesters.",
     "events": [
@@ -533,6 +546,7 @@
     "is_starter": false,
     "unlock_threshold": 0,
     "image_url": "/static/img/hollywood-sign.jpg",
+    "image_caption": "The Hollywood Sign on the dry chaparral slopes of Mount Lee, the restored 45-foot-tall icon against a clear blue sky.",
     "short_description": "Originally a 1923 real estate advertisement reading 'HOLLYWOODLAND,' the sign became the global icon of American entertainment.",
     "full_description": "The Hollywood Sign on Mount Lee in the Santa Monica Mountains began as a temporary real estate advertisement. In 1923, Los Angeles Times publisher Harry Chandler spent $21,000 to erect a giant sign reading 'HOLLYWOODLAND' to advertise a new housing development in the hills above Hollywood. The sign was built of telephone poles, pipes, wire, and 4,000 lightbulbs. It was never meant to be permanent. But as Hollywood became the center of the global film industry in the 1920s and 1930s, the sign took on a life of its own. The 'LAND' portion was removed in 1949. The sign fell into disrepair by the 1970s — one 'O' collapsed, and a letter 'H' toppled — before a celebrity fundraising campaign led by Alice Cooper and others restored it in 1978. The sign is now one of the most photographed landmarks in the world.",
     "events": [
