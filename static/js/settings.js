@@ -262,6 +262,8 @@ function initSettingsModal() {
       if (!confirmed) return;
       try {
         await apiFetch('/api/progress/reset', 'POST');
+        localStorage.removeItem('tutorial_completed');
+        localStorage.removeItem('cm_tutorial_completed');
         showToast('All progress has been reset.', 'info');
         setTimeout(() => window.location.reload(), 1000);
       } catch (e) {

@@ -173,9 +173,12 @@ var Tutorial = (function () {
   function init() {
     _reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     _buildDOM();
-    // Show automatically only on first visit
-    if (!localStorage.getItem('tutorial_completed')) {
-      // Small delay so map tiles have a moment to render
+    var forced = typeof FORCE_TUTORIAL !== 'undefined' && FORCE_TUTORIAL;
+    if (forced) {
+      localStorage.removeItem('tutorial_completed');
+      localStorage.removeItem('cm_tutorial_completed');
+    }
+    if (forced || !localStorage.getItem('tutorial_completed')) {
       setTimeout(function () { start(); }, 600);
     }
   }

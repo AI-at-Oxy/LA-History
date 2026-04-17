@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, jsonify, abort
+from flask import Blueprint, render_template, jsonify, abort, session
 from flask_login import login_required, current_user
 from ..models.location import Location
 from ..models.progress import UserProgress
@@ -10,7 +10,8 @@ map_bp = Blueprint('map', __name__)
 @map_bp.route('/map')
 @login_required
 def map_page():
-    return render_template('map/index.html')
+    show_tutorial = session.pop('show_tutorial', False)
+    return render_template('map/index.html', show_tutorial=show_tutorial)
 
 
 @map_bp.route('/api/locations')

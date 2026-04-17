@@ -344,6 +344,7 @@
     totalPoints: {{ current_user.total_points or 0 }},
   };
   const CSRF_TOKEN = "{{ csrf_token() }}";
+  const FORCE_TUTORIAL = {{ 'true' if show_tutorial else 'false' }};
 </script>
 <script src="{{ url_for('static', filename='js/utils.js') }}"></script>
 <script src="{{ url_for('static', filename='js/sounds.js') }}"></script>

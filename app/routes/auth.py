@@ -1,7 +1,7 @@
 import re
 import hashlib
 import secrets
-from flask import Blueprint, render_template, redirect, url_for, flash, request, current_app
+from flask import Blueprint, render_template, redirect, url_for, flash, request, current_app, session
 from flask_login import login_user, logout_user, login_required, current_user
 from flask_mail import Message
 from ..extensions import db, bcrypt, mail, limiter
@@ -104,6 +104,7 @@ def register():
             db.session.add(user)
             db.session.commit()
             login_user(user, remember=True)
+            session['show_tutorial'] = True
             flash(f'Welcome to LA History, {username}!', 'success')
             return redirect(url_for('map.map_page'))
 
