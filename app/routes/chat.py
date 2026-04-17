@@ -1,9 +1,8 @@
 from flask import Blueprint, jsonify, request
 from flask_login import login_required, current_user
 from ..extensions import db
-from ..models.location import Location
 from ..models.progress import ChatSession, ChatMessage
-from ..services.ollama_service import build_system_prompt, chat_with_ollama
+from ..services.ollama_service import chat_with_ollama
 
 chat_bp = Blueprint('chat', __name__)
 
@@ -29,10 +28,6 @@ def chat():
     user_message = data['message'].strip()[:1000]  # cap input length
     location_id = data.get('location_id')
 
-    location = None
-    if location_id:
-        location = Location.query.get(location_id)
-
     # Get or create chat session
     session = get_or_create_session(current_user.id, location_id)
 
@@ -43,15 +38,11 @@ def chat():
     ]
     past_messages.append({'role': 'user', 'content': user_message})
 
-    # Build system prompt
-    if location:
-        system_prompt = build_system_prompt(location, current_user)
-    else:
-        system_prompt = (
-            "You are a Socratic history tutor for Los Angeles history. "
-            "Guide the student with questions rather than answers. "
-            "Keep responses under 4 sentences."
-        )
+    system_prompt = (
+        "You are a Socratic history tutor for Los Angeles history. "
+        "Guide the student with questions rather than answers. "
+        "Keep responses under 4 sentences."
+    )
 
     # Call Ollama
     reply, error = chat_with_ollama(past_messages, system_prompt)
