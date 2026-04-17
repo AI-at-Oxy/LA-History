@@ -40,7 +40,7 @@
   <a href="{{ url_for('map.map_page') }}" class="navbar-link {% if request.endpoint == 'map.map_page' %}active{% endif %}">Map</a>
   <a href="{{ url_for('progress.dashboard') }}" class="navbar-link {% if request.endpoint == 'progress.dashboard' %}active{% endif %}">Dashboard</a>
   <span class="navbar-points">✦ {{ current_user.total_points or 0 }} pts</span>
-  <button id="help-btn" title="Keyboard shortcuts" aria-label="Show keyboard shortcuts" onclick="document.getElementById('shortcut-overlay').classList.toggle('open')">?</button>
+  <button id="help-btn" title="Keyboard shortcuts" aria-label="Show keyboard shortcuts" onclick="if(typeof SFX!=='undefined')SFX.play('settings-open');document.getElementById('shortcut-overlay').classList.toggle('open')">?</button>
   <button id="settings-btn" onclick="openSettings()" title="Settings">⚙</button>
   <form action="{{ url_for('auth.logout') }}" method="post" style="margin:0">
     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
@@ -261,11 +261,11 @@ function setTheme(mode) {
   </div>
 </div>
 <!-- Keyboard Shortcuts Overlay -->
-<div class="shortcut-overlay" id="shortcut-overlay" onclick="if(event.target===this)this.classList.remove('open')" role="dialog" aria-label="Keyboard shortcuts" aria-modal="true">
+<div class="shortcut-overlay" id="shortcut-overlay" onclick="if(event.target===this){if(typeof SFX!=='undefined')SFX.play('panel-close');this.classList.remove('open')}" role="dialog" aria-label="Keyboard shortcuts" aria-modal="true">
   <div class="shortcut-modal">
     <div class="shortcut-modal-header">
       <span>Keyboard Shortcuts</span>
-      <button class="settings-close" onclick="document.getElementById('shortcut-overlay').classList.remove('open')">×</button>
+      <button class="settings-close" onclick="if(typeof SFX!=='undefined')SFX.play('panel-close');document.getElementById('shortcut-overlay').classList.remove('open')">×</button>
     </div>
     <div class="shortcut-body">
 
@@ -355,11 +355,13 @@ function setTheme(mode) {
 <script>
   document.addEventListener('keydown', function(e) {
     if (e.key === '?' && !['INPUT','TEXTAREA','SELECT'].includes(document.activeElement.tagName)) {
-      document.getElementById('shortcut-overlay').classList.toggle('open');
+      var so = document.getElementById('shortcut-overlay');
+      if (typeof SFX !== 'undefined') SFX.play(so && so.classList.contains('open') ? 'panel-close' : 'settings-open');
+      so.classList.toggle('open');
     }
     if (e.key === 'Escape') {
       var so = document.getElementById('shortcut-overlay');
-      if (so && so.classList.contains('open')) so.classList.remove('open');
+      if (so && so.classList.contains('open')) { if (typeof SFX !== 'undefined') SFX.play('panel-close'); so.classList.remove('open'); }
     }
   });
 </script>

@@ -93,9 +93,23 @@ async function loadConceptMapData(eraOrder) {
     updateInsightButton();
     setStatus('');
 
+    // Restore previous chat history for this era
+    const history = cmEraData.chat_history || [];
+    if (history.length > 0) {
+      const chatContainer = document.getElementById('cm-chat-messages');
+      if (chatContainer) {
+        chatContainer.innerHTML = '';
+        history.forEach(msg => {
+          cmChatAppendMessage(msg.role, msg.content, false, null, msg.timestamp);
+        });
+      }
+    }
+
     if (!cmSubmitted) {
       cmAutoSaveTimer = setInterval(autoSave, 30000);
-      setTimeout(cmChatGreeting, 900);
+      if (history.length === 0) {
+        setTimeout(cmChatGreeting, 900);
+      }
       // Show concept map tutorial on first open
       if (typeof Tutorial !== 'undefined') {
         setTimeout(function () { Tutorial.startConceptMap(); }, 800);
@@ -611,18 +625,24 @@ function cmChatScrollToBottom() {
   if (el) el.scrollTop = el.scrollHeight;
 }
 
-function cmChatAppendMessage(role, content, animate = true) {
+function cmChatAppendMessage(role, content, animate = true, type = null, timestamp = null) {
   const container = document.getElementById('cm-chat-messages');
   if (!container) return;
   const intro = container.querySelector('.chat-intro');
   if (intro) intro.remove();
 
   const div = document.createElement('div');
-  div.className = `chat-msg ${role}`;
+  div.className = `chat-msg ${role}${type ? ' chat-msg-' + type : ''}`;
   if (!animate) div.style.animation = 'none';
+
+  const labelHtml = type === 'hint'
+    ? `<div class="chat-hint-label"><span class="chat-hint-icon">💡</span> AI Hint</div>`
+    : '';
+
   div.innerHTML = `
+    ${labelHtml}
     <div class="chat-bubble">${escapeHtml(content)}</div>
-    <div class="chat-msg-time">${new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}</div>
+    <div class="chat-msg-time">${(timestamp ? new Date(timestamp) : new Date()).toLocaleTimeString('en-US', {hour:'2-digit', minute:'2-digit', timeZone:'America/Los_Angeles'})}</div>
   `;
   container.appendChild(div);
   cmChatScrollToBottom();
@@ -653,6 +673,7 @@ async function cmSendChatMessage() {
 
   input.value = '';
   input.style.height = 'auto';
+  if (typeof SFX !== 'undefined') SFX.play('chat-send');
   cmChatAppendMessage('user', text);
   cmChatShowTyping();
   cmChatLoading = true;
@@ -758,6 +779,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   document.getElementById('cm-close-btn').addEventListener('click', closeConceptMap);
   document.getElementById('cm-tour-btn').addEventListener('click', function () {
+    if (typeof SFX !== 'undefined') SFX.play('settings-open');
     if (typeof Tutorial !== 'undefined') Tutorial.replayConceptMap();
   });
 
@@ -856,8 +878,14 @@ document.addEventListener('DOMContentLoaded', () => {
     this.style.height = Math.min(this.scrollHeight, 80) + 'px';
   });
 
-  document.getElementById('cm-chat-clear-btn').addEventListener('click', e => {
+  document.getElementById('cm-chat-clear-btn').addEventListener('click', async e => {
     e.stopPropagation();
+    if (!cmEraOrder) return;
+    if (typeof SFX !== 'undefined') SFX.play('clear-chat');
+    try {
+      await apiFetch('/api/concept_map/' + cmEraOrder + '/chat/history', 'DELETE');
+    } catch (_) { /* non-critical — still clear UI */ }
+    cmChatGreetingSent = false;
     const container = document.getElementById('cm-chat-messages');
     if (container) {
       container.innerHTML = `
@@ -1224,25 +1252,26 @@ async function requestInsight() {
   const btn = document.getElementById('cm-insight-btn');
   if (btn) btn.disabled = true;
 
-  cmChatAppendMessage('user', '[AI Insight requested — 15 pts]');
   cmChatShowTyping();
   cmChatLoading = true;
 
   try {
     const result = await apiFetch('/api/concept_map/' + cmEraOrder + '/insight', 'POST', {});
     cmChatRemoveTyping();
-    cmChatAppendMessage('assistant', result.insight);
+    cmChatAppendMessage('user', '💡 AI Hint requested (−15 pts)');
+    cmChatAppendMessage('assistant', result.insight, true, 'hint');
     cmInsightUsesRemaining = result.uses_remaining;
     updatePointsDisplay(result.total_points);
     updateInsightButton();
-    showToast(`−15 pts — AI Insight used. ${result.uses_remaining} remaining.`, 'info');
-    if (typeof SFX !== 'undefined') SFX.play('chat-receive');
+    showToast(`−15 pts — AI Hint used. ${result.uses_remaining} remaining.`, 'info');
+    if (typeof SFX !== 'undefined') SFX.play('hint-reveal');
   } catch (e) {
     cmChatRemoveTyping();
     if (btn) btn.disabled = false;
-    const msg = (e && e.message) || 'Could not get insight.';
+    const msg = (e && e.message) || 'Could not get hint.';
     if (msg.toLowerCase().includes('not enough') || msg.includes('402')) {
-      showToast('Not enough points for an AI Insight.', 'error');
+      if (typeof SFX !== 'undefined') SFX.play('locked');
+      showToast('Not enough points for an AI Hint.', 'error');
     } else {
       showToast(msg, 'error');
     }
@@ -1415,6 +1444,7 @@ function cmRemoveNode(nodeId) {
   }
 
   node.remove(); // cytoscape also removes connected edges
+  if (typeof SFX !== 'undefined') SFX.play('node-delete');
   cmUndoStack.push({ type: 'remove-node', nodeId, nodeData, removedEdges });
   cmRedoStack = [];
 

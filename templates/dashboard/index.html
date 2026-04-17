@@ -974,7 +974,7 @@ html.dark .cm-mini-preview {
           <td style="font-weight:500">
             {{ loc.name }}
             {% if loc.unlocked %}
-            <a href="{{ url_for('map.map_page') }}#loc-{{ loc.id }}" class="loc-map-btn" title="View on map">↗ Map</a>
+            <a href="{{ url_for('map.map_page') }}#loc-{{ loc.id }}" class="loc-map-btn" title="View on map" onclick="if(typeof SFX!=='undefined')SFX.play('marker-click')">↗ Map</a>
             {% endif %}
           </td>
           <td><span class="era-badge {{ era.era }}">{{ era.era }}</span></td>

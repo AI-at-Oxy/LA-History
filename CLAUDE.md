@@ -34,9 +34,9 @@ Flask 3 with modular blueprints, SQLAlchemy ORM, Flask-Login auth, CSRF protecti
 
 - `app/__init__.py` — `create_app()` factory, registers all blueprints, redirects `/` to `/map`
 - `app/models/` — SQLAlchemy models: User, Location (includes `video_url`/`video_caption` for YouTube embeds), HistoricalEvent, UserProgress, Badge, UserBadge, Quiz, QuizQuestion, ChatSession, ChatMessage, ConceptMap
-- `app/routes/` — Blueprints: `auth` (login/register/logout), `map` (/api/locations), `progress` (/api/progress), `quiz` (/api/quiz), `chat` (/api/chat), `concept_map` (/api/concept_map)
-- `app/services/gamification.py` — Points/badge/era-unlock logic (10 pts visit; quiz pass on first attempt = full reward, retry = half; +20 bonus for ≥90%; 100 pts era complete; era unlock gates via quiz-pass thresholds)
-- `app/services/ollama_service.py` — Socratic tutor; connects to local Ollama, keeps 6-message rolling context per session
+- `app/routes/` — Blueprints: `auth` (login/register/logout), `map` (/api/locations), `progress` (/api/progress), `quiz` (/api/quiz), `chat` (/api/chat), `concept_map` (/api/concept_map), `memory_challenge` (/api/memory_challenge)
+- `app/services/gamification.py` — Points/badge/era-unlock logic; visit=10 pts; quiz pass first=50, retry=25, +20 bonus ≥90%; concept map submit=75 (+25 bonus); era complete=100; scaffolding currency: hints=5 pts, insights=15 pts (max 3/quiz); Memory Challenge costs 30 pts, rewards 120 pts (80% threshold); era unlock gates via quiz-pass thresholds
+- `app/services/ollama_service.py` — Socratic tutor + concept map evaluation + Memory Challenge question generation; connects to local Ollama, keeps 6-message rolling context per session
 
 ### Frontend (`templates/` + `static/`)
 
@@ -68,8 +68,10 @@ Flask-rendered Jinja2 templates with vanilla JS and custom CSS.
 1. Flask authenticates via session cookie (username-based login, Flask-Login)
 2. `map.js` fetches `/api/locations` on load → renders markers with era-based unlock status
 3. Clicking a marker calls `/api/locations/<id>` → populates detail panel
-4. `/api/locations/<id>/visit` awards 10 pts; `/api/quiz/<id>/submit` grades and awards points
+4. `/api/locations/<id>/visit` awards 10 pts; `/api/quiz/<id>/submit` grades and awards points; `/api/quiz/<id>/hint` costs 5 pts; `/api/quiz/<id>/insight` costs 15 pts (max 3/quiz)
 5. `/api/chat` sends message to Ollama with location context + last 6 messages as history
+6. `/api/concept_map/<era>/submit` evaluates concept map via Ollama, awards 75 pts (+25 bonus)
+7. `/api/memory_challenge/<era>/start` + `/submit` — unlocked after era complete + concept map submitted; costs 30 pts to start, rewards 120 pts at ≥80%
 
 ### Era Unlock Rules
 
@@ -86,7 +88,7 @@ Flask-rendered Jinja2 templates with vanilla JS and custom CSS.
 | `app/config.py` | Dev/prod config (SQLite dev, `DATABASE_URL` env var for prod) |
 | `app/extensions.py` | Flask extensions: `db`, `login_manager`, `bcrypt`, `csrf` |
 | `data/locations.json` | Source of truth for 57 historical locations (includes `video_url`/`video_caption`) |
-| `data/quizzes.json` | Quiz questions per location |
+| `data/quizzes.json` | Quiz questions per location (includes wrong-answer explanations) |
 | `download_images.py` | Utility script: fetches Wikipedia images for locations, saves to `static/img/` |
 | `static/favicon.svg` | Browser tab icon (compass design) |
 

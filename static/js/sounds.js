@@ -330,6 +330,83 @@ const SFX = (() => {
       osc.start(); osc.stop(ctx.currentTime + 0.10);
       return new Promise(r => setTimeout(r, 100));
     },
+
+    // Soft ascending open — panels sliding in
+    'panel-open': (ctx) => {
+      const osc = ctx.createOscillator();
+      const vol = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(300, ctx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(600, ctx.currentTime + 0.12);
+      vol.gain.setValueAtTime(0.10, ctx.currentTime);
+      vol.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.14);
+      osc.connect(vol).connect(getMasterGain());
+      osc.start(); osc.stop(ctx.currentTime + 0.14);
+      return new Promise(r => setTimeout(r, 140));
+    },
+
+    // Gentle tick — tutorial step advance/back
+    'tutorial-step': (ctx) => {
+      const osc = ctx.createOscillator();
+      const vol = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(900, ctx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(1100, ctx.currentTime + 0.06);
+      vol.gain.setValueAtTime(0.08, ctx.currentTime);
+      vol.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.08);
+      osc.connect(vol).connect(getMasterGain());
+      osc.start(); osc.stop(ctx.currentTime + 0.08);
+      return new Promise(r => setTimeout(r, 80));
+    },
+
+    // Bright three-note chime — tutorial finished
+    'tutorial-complete': (ctx) => {
+      note(ctx, 659.25, 'sine', 0.12, 0,    0.10);  // E5
+      note(ctx, 783.99, 'sine', 0.13, 0.08, 0.10);  // G5
+      note(ctx, 1046.5, 'sine', 0.15, 0.16, 0.20);  // C6
+      return new Promise(r => setTimeout(r, 360));
+    },
+
+    // Soft "reveal" shimmer — hint text shown
+    'hint-reveal': (ctx) => {
+      note(ctx, 740,  'triangle', 0.08, 0,    0.09);
+      note(ctx, 988,  'triangle', 0.09, 0.07, 0.10);
+      note(ctx, 1174, 'sine',     0.07, 0.14, 0.12);
+      return new Promise(r => setTimeout(r, 260));
+    },
+
+    // Coin-like ascending pop — visit location, earn points
+    'visit-earn': (ctx) => {
+      note(ctx, 880,  'sine', 0.11, 0,    0.08);  // A5
+      note(ctx, 1174, 'sine', 0.12, 0.07, 0.10);  // D6
+      return new Promise(r => setTimeout(r, 170));
+    },
+
+    // Triumphant unlock fanfare — new era unlocked
+    'era-unlock': (ctx) => {
+      note(ctx, 392.0, 'sine', 0.14, 0,    0.14);  // G4
+      note(ctx, 523.25,'sine', 0.14, 0.10, 0.14);  // C5
+      note(ctx, 659.25,'sine', 0.15, 0.20, 0.14);  // E5
+      note(ctx, 783.99,'sine', 0.17, 0.30, 0.22);  // G5
+      note(ctx, 1046.5,'sine', 0.18, 0.42, 0.30);  // C6
+      note(ctx, 1568.0,'triangle', 0.07, 0.48, 0.14);
+      note(ctx, 2093.0,'triangle', 0.06, 0.56, 0.14);
+      return new Promise(r => setTimeout(r, 700));
+    },
+
+    // Short descending pop — concept map node removed
+    'node-delete': (ctx) => {
+      const osc = ctx.createOscillator();
+      const vol = ctx.createGain();
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(600, ctx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(250, ctx.currentTime + 0.10);
+      vol.gain.setValueAtTime(0.10, ctx.currentTime);
+      vol.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.12);
+      osc.connect(vol).connect(getMasterGain());
+      osc.start(); osc.stop(ctx.currentTime + 0.12);
+      return new Promise(r => setTimeout(r, 120));
+    },
   };
 
   return { isEnabled, setEnabled, play, setVolume, getVolume };

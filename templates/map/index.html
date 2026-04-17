@@ -252,13 +252,13 @@
       </div>
 
       <!-- Concept Map Tutor Panel -->
-      <aside class="cm-chat-panel" id="cm-chat-panel" aria-label="Socratic Tutor">
+      <aside class="cm-chat-panel" id="cm-chat-panel" aria-label="AI Tutor">
         <div class="cm-chat-header">
           <svg width="14" height="14" viewBox="0 0 16 16" fill="none" style="flex-shrink:0;opacity:0.8">
             <path d="M14 1H2C1.45 1 1 1.45 1 2v8c0 .55.45 1 1 1h2v3l3.5-3H14c.55 0 1-.45 1-1V2c0-.55-.45-1-1-1z"
                   stroke="currentColor" stroke-width="1.2" stroke-linejoin="round" fill="none"/>
           </svg>
-          <span class="cm-chat-title">Ask the Tutor</span>
+          <span class="cm-chat-title">AI Tutor</span>
           <button class="cm-chat-clear-btn" id="cm-chat-clear-btn" title="Clear conversation">
             <svg width="12" height="12" viewBox="0 0 13 13" fill="none">
               <path d="M2 3h9M5 3V2h3v1M4 3l.5 7h4L9 3" stroke="currentColor" stroke-width="1.2"
@@ -269,8 +269,8 @@
         <div class="cm-chat-messages" id="cm-chat-messages">
           <div class="chat-intro">
             <div class="chat-intro-icon">🎓</div>
-            <strong>Socratic Tutor</strong>
-            I'll guide your thinking as you build. Add a connection and I'll ask about it.
+            <strong>AI Tutor</strong>
+            I guide your thinking with questions — I won't give answers directly. Use the <strong>💡 AI Hint</strong> button below for direct suggestions.
           </div>
         </div>
         <div class="chat-input-area">
@@ -315,8 +315,8 @@
         <button class="cm-btn cm-btn-secondary" id="cm-layout-btn" title="Auto-arrange nodes">⟳ Auto-arrange</button>
         <button class="cm-btn cm-btn-secondary cm-clear-all-btn" id="cm-clear-btn">Clear All</button>
         <button class="cm-btn cm-btn-insight" id="cm-insight-btn" style="display:none"
-                onclick="requestInsight()" title="Spend 15 pts for Socratic AI feedback on your current map">
-          💡 AI Insight (15 pts) &mdash; <span id="cm-insight-uses">3</span> left
+                onclick="requestInsight()" title="Spend 15 pts for a direct hint about connections you might be missing">
+          💡 AI Hint (15 pts) &mdash; <span id="cm-insight-uses">3</span> left
         </button>
       </div>
       <div class="cm-footer-right">

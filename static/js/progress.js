@@ -92,12 +92,30 @@ function renderSidebar(data) {
       const lockedHeader = eraLocked
         ? `<span class="era-locked-badge">🔒 Locked</span>` : '';
 
+      let unlockHint = '';
+      if (eraLocked) {
+        const prevEraInfo = data.eras.find(e => e.era_order === era.era_order - 1);
+        if (prevEraInfo) {
+          const prevName = prevEraInfo.era.charAt(0).toUpperCase() + prevEraInfo.era.slice(1);
+          const quizDone = prevEraInfo.passed >= prevEraInfo.total;
+          const cmDone = !!prevEraInfo.concept_map_submitted;
+          if (quizDone && !cmDone) {
+            unlockHint = `Submit the ${prevName} concept map to unlock.`;
+          } else if (!quizDone && cmDone) {
+            unlockHint = `Pass all ${prevName} quizzes (${prevEraInfo.passed}/${prevEraInfo.total}) to unlock.`;
+          } else {
+            unlockHint = `Pass all ${prevName} quizzes (${prevEraInfo.passed}/${prevEraInfo.total}) and submit the ${prevName} concept map to unlock.`;
+          }
+        }
+      }
+
       return `
         <div class="era-progress-item${eraLocked ? ' era-item-locked' : ''}">
           <div class="era-progress-header">
             <span class="era-progress-name">${eraEmoji(era.era)} ${era.era.charAt(0).toUpperCase() + era.era.slice(1)}</span>
             <span class="era-progress-stat">${eraLocked ? lockedHeader : `${era.passed}/${era.total} passed`}</span>
           </div>
+          ${eraLocked && unlockHint ? `<div class="era-unlock-hint">${unlockHint}</div>` : ''}
           ${eraLocked ? '' : `<div class="era-bar-bg"><div class="era-bar-fill ${era.era}" style="width:${pct}%;background:${color}"></div></div>`}
           ${cmBtn}
           ${mcBtn}
@@ -113,7 +131,7 @@ function renderSidebar(data) {
   if (grid) {
     const earned = data.badges.filter(b => b.earned);
     if (earned.length === 0) {
-      grid.innerHTML = '<span class="badge-empty">Complete quizzes to earn badges.</span>';
+      grid.innerHTML = '<span class="badge-empty">No badges earned yet — keep exploring!</span>';
     } else {
       grid.innerHTML = earned.map(b => `
         <div class="badge-item" title="${b.name}: ${b.description}">

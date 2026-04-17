@@ -121,14 +121,14 @@ var Tutorial = (function () {
       beforeRender: null,
     },
     {
-      id: 'cm-tutor',
-      icon: '🎓',
-      title: 'Your Socratic Tutor',
-      body: 'After each connection the tutor asks a probing question to deepen your thinking \u2014 not to quiz you. Type your own questions any time. Use <b>AI Insight (15 pts)</b> for targeted guidance.',
+      id: 'cm-ai-tools',
+      icon: '🤖',
+      title: 'Two AI Tools, Two Different Roles',
+      body: '<b>🎓 AI Tutor</b> (right panel) guides your thinking with Socratic questions — it will never just hand you an answer.<br><br><b>💡 AI Hint</b> (footer, 15 pts) gives a direct, concrete suggestion about a connection you might be missing.<br><br>Use the Tutor to think things through; use Hints when you\'re genuinely stuck.',
       targetSelector: '#cm-chat-panel',
       placement: 'left',
       spotlightPadding: 6,
-      beforeRender: null,
+      beforeRender: _cmShowHintBtn,
     },
     {
       id: 'cm-done',
@@ -138,7 +138,7 @@ var Tutorial = (function () {
       targetSelector: '#cm-tour-btn',
       placement: 'left',
       spotlightPadding: 6,
-      beforeRender: null,
+      beforeRender: _cmHideHintBtn,
     },
   ];
 
@@ -233,6 +233,7 @@ var Tutorial = (function () {
       _complete();
     } else {
       _currentIndex++;
+      if (typeof SFX !== 'undefined') SFX.play('tutorial-step');
       _renderStep(_currentIndex);
     }
   }
@@ -241,11 +242,13 @@ var Tutorial = (function () {
     if (!_active) return;
     if (_currentIndex > 0) {
       _currentIndex--;
+      if (typeof SFX !== 'undefined') SFX.play('tutorial-step');
       _renderStep(_currentIndex);
     }
   }
 
   function skip() {
+    if (typeof SFX !== 'undefined') SFX.play('panel-close');
     localStorage.setItem(_activeStorageKey, 'true');
     _destroy();
   }
@@ -714,6 +717,28 @@ var Tutorial = (function () {
     setTimeout(proceed, 380); // fallback
   }
 
+  function _cmShowHintBtn(done) {
+    var btn = document.getElementById('cm-insight-btn');
+    if (btn) {
+      btn.dataset.tutorialForced = '1';
+      btn.style.display = '';
+      btn.classList.add('tutorial-hint-highlight');
+    }
+    done();
+  }
+
+  function _cmHideHintBtn(done) {
+    var btn = document.getElementById('cm-insight-btn');
+    if (btn && btn.dataset.tutorialForced) {
+      btn.classList.remove('tutorial-hint-highlight');
+      delete btn.dataset.tutorialForced;
+      if (typeof updateInsightButton === 'function') {
+        updateInsightButton();
+      }
+    }
+    done();
+  }
+
   /* ---- Private: keyboard handler ---- */
 
   function _attachKeyHandler() {
@@ -766,6 +791,7 @@ var Tutorial = (function () {
   /* ---- Private: complete & destroy ---- */
 
   function _complete() {
+    if (typeof SFX !== 'undefined') SFX.play('tutorial-complete');
     localStorage.setItem(_activeStorageKey, 'true');
     _destroy();
     if (_activeStorageKey === 'tutorial_completed') {

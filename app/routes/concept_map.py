@@ -99,12 +99,18 @@ def get_concept_map(era_order):
         user_id=current_user.id, era_order=era_order
     ).first()
 
+    cm_session = ChatSession.query.filter_by(
+        user_id=current_user.id, era_order=era_order, location_id=None
+    ).first()
+    chat_history = [msg.to_dict() for msg in cm_session.messages] if cm_session else []
+
     return jsonify({
         'era_order': era_order,
         'era_name': locations[0].era,
         'locations': location_data,
         'era_quizzes_all_passed': era_quizzes_all_passed,
         'concept_map': concept_map.to_dict() if concept_map else None,
+        'chat_history': chat_history,
     })
 
 
@@ -263,12 +269,24 @@ def evaluate_map(era_order):
 
 def _get_or_create_cm_session(user_id, era_order):
     """Get or create a ChatSession keyed to a concept-map era (no location_id)."""
-    session = ChatSession.query.filter_by(user_id=user_id, era_order=era_order).first()
+    session = ChatSession.query.filter_by(user_id=user_id, era_order=era_order, location_id=None).first()
     if not session:
         session = ChatSession(user_id=user_id, era_order=era_order)
         db.session.add(session)
         db.session.flush()
     return session
+
+
+@concept_map_bp.route('/api/concept_map/<int:era_order>/chat/history', methods=['DELETE'])
+@login_required
+def clear_concept_map_chat(era_order):
+    session = ChatSession.query.filter_by(
+        user_id=current_user.id, era_order=era_order, location_id=None
+    ).first()
+    if session:
+        ChatMessage.query.filter_by(session_id=session.id).delete()
+        db.session.commit()
+    return jsonify({'ok': True})
 
 
 @concept_map_bp.route('/api/concept_map/<int:era_order>/chat', methods=['POST'])

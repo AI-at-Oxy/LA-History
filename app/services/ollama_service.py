@@ -204,26 +204,26 @@ def get_quiz_hint(question, location):
         return None, f'Hint service error: {str(e)}'
 
 
-CONCEPT_MAP_INSIGHT_PROMPT = """You are a formative assessment tutor. A student is actively building a concept map about {era_name} Los Angeles history.
+CONCEPT_MAP_INSIGHT_PROMPT = """You are a helpful history hint assistant. A student is building a concept map about {era_name} Los Angeles history and has spent points to get a targeted hint.
 
-ERA CONTEXT (use to inform your questions — never recite verbatim):
+ERA CONTEXT (draw from this to suggest connections — do not quote it verbatim):
 {locations_summary}
 
 STUDENT'S CURRENT MAP:
 {graph_summary}
 
-Your task: Write 2-3 Socratic questions that probe the student's understanding of the SPECIFIC connections they have already drawn. Each question should:
-- Reference a node name or edge label already visible in their map
-- Ask "why" or "how" to deepen understanding of a relationship
-- Never introduce facts the student has not placed in the map
+Your task: Give 1-2 direct, concrete hints about connections the student could add or strengthen. You MAY:
+- Name two specific nodes and explain how they are related (e.g., "Consider how Mission San Gabriel relates to agriculture in the Rancho era — missions trained the labor force that later worked the ranchos.")
+- Point out a missing link between nodes already on the map
+- Suggest a more precise label for an existing connection
 
-Keep your response to 4 sentences maximum. Do not praise without following up with a question. Do not suggest new nodes or labels.
+Keep your response to 3 sentences maximum. Be direct and informative — this is a hint, not a question. Do not ask questions. Start with "Consider…" or "You might notice…" to signal this is a suggestion.
 """
 
 
 def get_concept_map_insight(era_name, locations_summary, graph_json):
     """
-    Generate formative Socratic questions about the student's in-progress concept map.
+    Generate direct hints about connections in the student's in-progress concept map.
     Returns (insight_text, error). One will be None.
     """
     base_url = current_app.config.get('OLLAMA_BASE_URL', 'http://localhost:11434')

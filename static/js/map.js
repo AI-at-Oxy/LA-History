@@ -343,22 +343,34 @@ function buildLockedPopup(loc) {
 
 function getUnlockHint(eraOrder) {
   if (eraOrder <= 1 || !locationsData.length) {
-    return 'Complete earlier quizzes to unlock this era.';
+    return 'Complete earlier quizzes and submit the concept map to unlock this era.';
   }
   const prevEraLocs = locationsData.filter(l => l.era_order === eraOrder - 1 && l.has_quiz);
   const prevPassed  = prevEraLocs.filter(l => l.quiz_passed).length;
   const prevTotal   = prevEraLocs.length;
+  const quizzesDone = prevPassed >= prevTotal;
 
-  if (eraOrder === 2) {
-    const needed = Math.ceil(prevTotal * 0.5) - prevPassed;
-    if (needed <= 0) return 'Almost there — keep exploring!';
-    return `Pass ${needed} more quiz${needed === 1 ? '' : 'zes'} in Era 1 to unlock the Spanish era.`;
-  } else {
-    const needed = prevTotal - prevPassed;
-    const prevEraName = eraOrder === 3 ? 'Spanish' : 'Rancho';
-    if (needed <= 0) return 'Almost there — keep exploring!';
+  const prevEraName = eraOrder === 2 ? 'Native' : eraOrder === 3 ? 'Spanish' : 'Rancho';
+
+  // Check concept map status from progressData (loaded by progress.js)
+  let cmSubmitted = false;
+  if (typeof progressData !== 'undefined' && progressData && progressData.eras) {
+    const prevEraInfo = progressData.eras.find(e => e.era_order === eraOrder - 1);
+    cmSubmitted = prevEraInfo ? !!prevEraInfo.concept_map_submitted : false;
+  }
+
+  if (quizzesDone && cmSubmitted) {
+    return 'Almost there — keep exploring!';
+  }
+  if (quizzesDone && !cmSubmitted) {
+    return `Submit the ${prevEraName} era concept map to unlock this era.`;
+  }
+
+  const needed = prevTotal - prevPassed;
+  if (cmSubmitted) {
     return `Pass ${needed} more quiz${needed === 1 ? '' : 'zes'} in the ${prevEraName} era to unlock this.`;
   }
+  return `To unlock this era: pass all ${prevEraName} era quizzes (${prevPassed}/${prevTotal} done) and submit the ${prevEraName} concept map.`;
 }
 
 async function onMarkerClick(locationId) {
@@ -394,6 +406,7 @@ async function onMarkerClick(locationId) {
       apiFetch(`/api/locations/${locationId}/visit`, 'POST')
         .then(res => {
           if (res.points_earned > 0) {
+            setTimeout(() => { if (typeof SFX !== 'undefined') SFX.play('visit-earn'); }, 200);
             showToast(`+${res.points_earned} pts — ${loc.name} visited!`, 'points');
             updatePointsDisplay(res.total_points);
           }

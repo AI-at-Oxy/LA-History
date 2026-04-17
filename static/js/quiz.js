@@ -254,6 +254,7 @@ async function requestHint(questionId) {
     );
     hintsUsed[questionId] = true;
     updatePointsDisplay(result.total_points);
+    if (typeof SFX !== 'undefined') SFX.play('hint-reveal');
     showToast('−5 pts — Hint revealed.', 'info');
 
     // Inject hint text into explanation area before re-render
@@ -400,6 +401,7 @@ async function submitQuiz() {
 
     if (result.newly_unlocked && result.newly_unlocked.length > 0) {
       setTimeout(() => {
+        if (typeof SFX !== 'undefined') SFX.play('era-unlock');
         showToast(`🔓 New locations unlocked! Explore the map.`, 'unlock', 5000);
         if (window.refreshMapMarkers) window.refreshMapMarkers();
       }, 1500);

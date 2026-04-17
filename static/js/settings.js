@@ -24,6 +24,7 @@ function toggleAccordion(id) {
   const body    = section.querySelector('.accordion-body');
   header.classList.toggle('open');
   body.style.display = header.classList.contains('open') ? '' : 'none';
+  if (typeof SFX !== 'undefined') SFX.play('filter-toggle');
 }
 
 // ---- Language filter ----
@@ -109,21 +110,21 @@ function initSettingsModal() {
   if (themeSel) {
     const current = localStorage.getItem('darkMode') || 'light';
     themeSel.value = (current === 'true') ? 'semi-dark' : (current === 'false' ? 'light' : current);
-    themeSel.onchange = () => setTheme(themeSel.value);
+    themeSel.onchange = () => { if (typeof SFX !== 'undefined') SFX.play('hover'); setTheme(themeSel.value); };
   }
 
   // Map tile style
   const tileSel = document.getElementById('map-tile-select');
   if (tileSel) {
     tileSel.value = localStorage.getItem('map_tile_style') || 'voyager';
-    tileSel.onchange = () => { if (typeof setTileStyle === 'function') setTileStyle(tileSel.value); };
+    tileSel.onchange = () => { if (typeof SFX !== 'undefined') SFX.play('hover'); if (typeof setTileStyle === 'function') setTileStyle(tileSel.value); };
   }
 
   // Animation speed preset
   const animSel = document.getElementById('anim-speed-select');
   if (animSel) {
     animSel.value = localStorage.getItem('anim_speed') || 'normal';
-    animSel.onchange = () => applyAnimSpeed(animSel.value);
+    animSel.onchange = () => { if (typeof SFX !== 'undefined') SFX.play('hover'); applyAnimSpeed(animSel.value); };
   }
 
   // TTS settings (only if TTS is available)
@@ -155,7 +156,7 @@ function initSettingsModal() {
     const hlToggle = document.getElementById('tts-highlight-toggle');
     if (hlToggle) {
       hlToggle.checked = localStorage.getItem('tts_word_highlight') === 'on';
-      hlToggle.onchange = () => localStorage.setItem('tts_word_highlight', hlToggle.checked ? 'on' : 'off');
+      hlToggle.onchange = () => { if (typeof SFX !== 'undefined') SFX.play('hover'); localStorage.setItem('tts_word_highlight', hlToggle.checked ? 'on' : 'off'); };
     }
   }
 
@@ -163,7 +164,15 @@ function initSettingsModal() {
   const sfxToggle = document.getElementById('sfx-toggle');
   if (sfxToggle && typeof SFX !== 'undefined') {
     sfxToggle.checked = SFX.isEnabled();
-    sfxToggle.onchange = () => SFX.setEnabled(sfxToggle.checked);
+    sfxToggle.onchange = () => {
+      if (sfxToggle.checked) {
+        SFX.setEnabled(true);
+        SFX.play('hover');
+      } else {
+        SFX.play('hover');
+        SFX.setEnabled(false);
+      }
+    };
   }
 
   // SFX volume slider
@@ -196,6 +205,7 @@ function initSettingsModal() {
   if (msSelect) {
     msSelect.value = localStorage.getItem('marker_size') || '32';
     msSelect.onchange = () => {
+      if (typeof SFX !== 'undefined') SFX.play('hover');
       localStorage.setItem('marker_size', msSelect.value);
       applyMarkerSize(parseInt(msSelect.value));
     };
@@ -208,6 +218,7 @@ function initSettingsModal() {
     if (voiceEnabledToggle) {
       voiceEnabledToggle.checked = (localStorage.getItem('voice_enabled') || 'on') === 'on';
       voiceEnabledToggle.onchange = () => {
+        if (typeof SFX !== 'undefined') SFX.play('hover');
         Voice.applySettings({ enabled: voiceEnabledToggle.checked });
       };
     }

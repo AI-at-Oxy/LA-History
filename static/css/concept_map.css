@@ -922,6 +922,13 @@
   letter-spacing: 0.03em;
 }
 
+.era-unlock-hint {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  margin: 2px 0 6px;
+  line-height: 1.4;
+}
+
 /* ── Context menu ── */
 .cm-context-menu {
   position: absolute;
@@ -1300,6 +1307,40 @@ html.dark .cm-chat-header {
 
 html.dark .cm-chat-messages {
   background: #161210;
+}
+
+/* ── AI Hint message type ── */
+.chat-hint-label {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #1a6e5a;
+  margin-bottom: 3px;
+  padding-left: 2px;
+}
+
+.chat-hint-icon {
+  font-size: 0.80rem;
+}
+
+.chat-msg-hint .chat-bubble {
+  background: #e8f7f3;
+  color: #133d30;
+  border: 1.5px solid #7ecab8;
+  border-radius: 4px 14px 14px 14px;
+  box-shadow: 0 2px 8px rgba(26,110,90,0.12);
+}
+
+html.dark .chat-hint-label { color: #5ecfb8; }
+html.dark .chat-msg-hint .chat-bubble {
+  background: #0d2e26;
+  color: #a8ede0;
+  border-color: #2a7060;
+  box-shadow: 0 2px 8px rgba(26,110,90,0.25);
 }
 
 /* ── Zoom controls ── */
