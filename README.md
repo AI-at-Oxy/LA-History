@@ -1,6 +1,6 @@
 # LA-History
 
-An educational web game about Los Angeles history. Users explore an interactive Leaflet map of ~57 historical locations across 4 eras (Tongva/Native, Spanish, Rancho, Modern), read descriptions, take quizzes, earn points and badges, build concept maps, and chat with a Socratic AI tutor powered by a local Ollama LLM.
+LA-History is an educational web game that guides players through ~57 historical locations across Los Angeles, spanning the Tongva/Native, Spanish, Rancho, and Modern eras. Players explore an interactive Leaflet map, read location histories, take quizzes, build concept maps, and chat with a Socratic AI tutor powered by a local Ollama LLM. Features a points/badge economy, era-unlock progression, Memory Challenge mode, and ambient era-themed music — all built with Flask, SQLAlchemy, and vanilla JavaScript.
 
 ---
 
