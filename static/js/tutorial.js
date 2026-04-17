@@ -118,6 +118,7 @@ var Tutorial = (function () {
       targetSelector: '.cm-panel-footer',
       placement: 'top',
       spotlightPadding: 6,
+      noArrow: true,
       beforeRender: null,
     },
     {
@@ -128,6 +129,7 @@ var Tutorial = (function () {
       targetSelector: '#cm-chat-panel',
       placement: 'left',
       spotlightPadding: 6,
+      noArrow: true,
       beforeRender: _cmShowHintBtn,
     },
     {
@@ -138,6 +140,7 @@ var Tutorial = (function () {
       targetSelector: '#cm-tour-btn',
       placement: 'left',
       spotlightPadding: 6,
+      noArrow: true,
       beforeRender: _cmHideHintBtn,
     },
   ];
@@ -536,7 +539,7 @@ var Tutorial = (function () {
     if (!svg || !pathEl) return;
 
     var isCentered = !step.targetSelector || step.placement === 'center' || window.innerWidth < 600;
-    if (isCentered || _reducedMotion) {
+    if (isCentered || _reducedMotion || step.noArrow) {
       svg.style.opacity = '0';
       return;
     }

@@ -184,8 +184,6 @@ function renderQuizQuestion() {
       savedBtn.classList.add('selected');
       const nextBtn = document.getElementById('quiz-next-btn');
       if (nextBtn) nextBtn.disabled = false;
-      const optionsEl = document.getElementById('quiz-options');
-      if (optionsEl) optionsEl.classList.add('locked');
     }
   }
 
@@ -193,6 +191,8 @@ function renderQuizQuestion() {
   if (questionChecked && currentFeedback[q.id] && !currentFeedback[q.id].is_correct) {
     const explEl = document.getElementById('quiz-explanation');
     const nextBtn = document.getElementById('quiz-next-btn');
+    const optionsEl = document.getElementById('quiz-options');
+    if (optionsEl) optionsEl.classList.add('locked');
     if (explEl) {
       explEl.innerHTML = `<div class="quiz-feedback-wrong"><strong>Not quite.</strong> ${escapeHtml(currentFeedback[q.id].explanation)}</div>`;
     }
@@ -227,15 +227,13 @@ function optionHTML(value, letter, text) {
 
 function selectOption(btn, q) {
   if (quizSubmitted) return;
-  if (currentAnswers[q.id]) return; // locked after first selection
+  if (questionChecked) return; // locked after answer was checked
   document.querySelectorAll('.quiz-option').forEach(b => b.classList.remove('selected'));
   btn.classList.add('selected');
   btn.classList.add('just-selected');
   btn.addEventListener('animationend', () => btn.classList.remove('just-selected'), { once: true });
   if (typeof SFX !== 'undefined') SFX.play('hover');
   currentAnswers[q.id] = btn.dataset.value;
-  const optionsEl = document.getElementById('quiz-options');
-  if (optionsEl) optionsEl.classList.add('locked');
   document.getElementById('quiz-next-btn').disabled = false;
 }
 
@@ -296,6 +294,8 @@ async function advanceQuiz() {
 
   if (!questionChecked) {
     // Phase 1: check the answer for immediate feedback
+    const optionsEl = document.getElementById('quiz-options');
+    if (optionsEl) optionsEl.classList.add('locked');
     const nextBtn = document.getElementById('quiz-next-btn');
     if (nextBtn) { nextBtn.disabled = true; nextBtn.textContent = 'Checking…'; }
 
