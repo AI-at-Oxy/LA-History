@@ -429,6 +429,7 @@ async function onMarkerClick(locationId) {
 function openDetailPanel(loc) {
   TTS.stop();
   ttsActive = false;
+  if (typeof MusicPlayer !== 'undefined') MusicPlayer.play(loc.era);
 
   const panel = document.getElementById('detail-panel');
   const pill  = document.getElementById('detail-era-pill');
@@ -812,6 +813,9 @@ document.addEventListener('keydown', function (e) {
 
 document.addEventListener('DOMContentLoaded', () => {
   initMap();
+  if (typeof MusicPlayer !== 'undefined') {
+    MusicPlayer.play(localStorage.getItem('music_last_era') || 'native');
+  }
   // Deep-link: open location from URL hash #loc-{id}
   const hashMatch = location.hash.match(/^#loc-(\d+)$/);
   if (hashMatch) {

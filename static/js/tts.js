@@ -190,6 +190,7 @@ const TTS = (() => {
 
     utterance.onstart = () => {
       _speechStart = Date.now();
+      if (typeof MusicPlayer !== 'undefined') MusicPlayer.duck();
       if (callbacks.onBoundary) {
         _interval = setInterval(() => {
           if (_speechStart === null) return;
@@ -216,6 +217,7 @@ const TTS = (() => {
 
     utterance.onend = () => {
       if (_interval) { clearInterval(_interval); _interval = null; }
+      if (typeof MusicPlayer !== 'undefined') MusicPlayer.restore();
       // Calibrate with actual duration (only for naturally completed utterances)
       if (_speechStart !== null) {
         _updateCalibration(processed.length, Date.now() - _speechStart, s.rate);
@@ -232,6 +234,7 @@ const TTS = (() => {
   function stop() {
     _speechStart = null; // Exclude manually stopped sessions from calibration
     if (synth) synth.cancel();
+    if (typeof MusicPlayer !== 'undefined') MusicPlayer.restore();
   }
 
   function isSpeaking() {

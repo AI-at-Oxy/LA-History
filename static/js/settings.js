@@ -160,6 +160,28 @@ function initSettingsModal() {
     }
   }
 
+  // Music toggle
+  const musicToggle = document.getElementById('music-toggle');
+  if (musicToggle && typeof MusicPlayer !== 'undefined') {
+    musicToggle.checked = MusicPlayer.isEnabled();
+    musicToggle.onchange = () => {
+      if (typeof SFX !== 'undefined') SFX.play('hover');
+      MusicPlayer.setEnabled(musicToggle.checked);
+    };
+  }
+
+  // Music volume slider
+  const musicVolSlider = document.getElementById('music-volume-slider');
+  const musicVolVal    = document.getElementById('music-volume-val');
+  if (musicVolSlider && typeof MusicPlayer !== 'undefined') {
+    musicVolSlider.value = MusicPlayer.getVolume();
+    if (musicVolVal) musicVolVal.textContent = Math.round(MusicPlayer.getVolume() * 100) + '%';
+    musicVolSlider.oninput = () => {
+      MusicPlayer.setVolume(parseFloat(musicVolSlider.value));
+      if (musicVolVal) musicVolVal.textContent = Math.round(musicVolSlider.value * 100) + '%';
+    };
+  }
+
   // Sound effects toggle
   const sfxToggle = document.getElementById('sfx-toggle');
   if (sfxToggle && typeof SFX !== 'undefined') {
