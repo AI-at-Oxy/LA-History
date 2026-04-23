@@ -42,6 +42,21 @@ def create_app(config_name=None):
     app.register_blueprint(concept_map_bp)
     app.register_blueprint(memory_challenge_bp)
 
+    # SQLite concurrency: enable WAL + a generous busy_timeout so concurrent
+    # requests don't immediately hit "database is locked" when one holds a write.
+    from sqlalchemy import event
+    from sqlalchemy.engine import Engine
+
+    @event.listens_for(Engine, 'connect')
+    def _sqlite_pragmas(dbapi_conn, _):
+        try:
+            cur = dbapi_conn.cursor()
+            cur.execute('PRAGMA journal_mode=WAL')
+            cur.execute('PRAGMA busy_timeout=10000')
+            cur.close()
+        except Exception:
+            pass
+
     # Create tables
     with app.app_context():
         db.create_all()

@@ -35,6 +35,14 @@ def start_challenge(era_order):
     if not ok:
         return jsonify({'error': err}), 402
 
+    # Reserve the attempt row and commit BEFORE the slow Ollama call so we
+    # don't hold SQLite's write lock for the duration of AI generation.
+    if not attempt:
+        attempt = MemoryChallengeAttempt(user_id=current_user.id, era_order=era_order)
+        db.session.add(attempt)
+    attempt.attempted = True
+    db.session.commit()
+
     # Gather era locations and build context for AI generation
     era_locs = Location.query.filter_by(era_order=era_order).all()
     era_name = ERA_NAMES.get(era_order, f'Era {era_order}')
@@ -49,11 +57,6 @@ def start_challenge(era_order):
 
     # Try AI generation first; fall back to sampling existing quiz questions
     ai_questions, ai_err = generate_memory_challenge_questions(era_name, locations_context, count=8)
-
-    if not attempt:
-        attempt = MemoryChallengeAttempt(user_id=current_user.id, era_order=era_order)
-        db.session.add(attempt)
-    attempt.attempted = True
 
     if ai_questions:
         # Store full question data (including answers) server-side for grading

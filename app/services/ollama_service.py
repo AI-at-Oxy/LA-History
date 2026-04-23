@@ -3,6 +3,15 @@ import requests
 from flask import current_app
 
 
+def _chat_once(base_url, payload, timeout):
+    """Single Ollama /api/chat call. Returns (content_stripped_or_empty, raw_data_dict)."""
+    response = requests.post(f'{base_url}/api/chat', json=payload, timeout=timeout)
+    response.raise_for_status()
+    data = response.json()
+    content = (data.get('message', {}) or {}).get('content', '') or ''
+    return content.strip(), data
+
+
 def chat_with_ollama(messages, system_prompt):
     """
     Send a conversation to Ollama and return the assistant's reply.
@@ -103,6 +112,38 @@ def _summarize_graph_for_chat(graph_json):
         return "Map state unavailable."
 
 
+def _summarize_graph_for_eval(graph_json):
+    """Render every node and every edge (no cap) for concept-map evaluation."""
+    if not graph_json:
+        return "The map is empty."
+    try:
+        g = json.loads(graph_json) if isinstance(graph_json, str) else graph_json
+        els = g.get('elements', {})
+        if isinstance(els, dict):
+            nodes = [n['data'].get('label', '?') for n in els.get('nodes', [])]
+            edges = [
+                f"{e['data'].get('source', '?')} --[{e['data'].get('label', '')}]--> {e['data'].get('target', '?')}"
+                for e in els.get('edges', [])
+            ]
+        else:
+            nodes = [e['data'].get('label', '?') for e in els if e.get('group') == 'nodes']
+            edges = [
+                f"{e['data'].get('source', '?')} --[{e['data'].get('label', '')}]--> {e['data'].get('target', '?')}"
+                for e in els if e.get('group') == 'edges'
+            ]
+        if not nodes:
+            return "The map is empty."
+        parts = [f"Nodes ({len(nodes)}): {', '.join(nodes)}."]
+        if edges:
+            parts.append(f"Edges ({len(edges)}):")
+            parts.extend(f"- {e}" for e in edges)
+        else:
+            parts.append("No edges.")
+        return "\n".join(parts)
+    except Exception:
+        return "Map state unavailable."
+
+
 def build_concept_map_chat_prompt(era_name, locations_summary, graph_json):
     """Build the system prompt for concept-map-integrated Socratic chat."""
     graph_summary = _summarize_graph_for_chat(graph_json)
@@ -113,18 +154,16 @@ def build_concept_map_chat_prompt(era_name, locations_summary, graph_json):
     )
 
 
-QUIZ_HINT_PROMPT = """You are helping a student who is answering a history quiz about {location_name}, a historical site in Los Angeles.
+QUIZ_HINT_PROMPT = """Quiz hint for a student studying {location_name} (Los Angeles history).
 
-LOCATION CONTEXT (use to inform your hint — do not reveal this directly):
+Context (do not reveal verbatim):
 {location_description}
 
-QUESTION:
-{question_text}
-
-OPTIONS:
+Question: {question_text}
+Options:
 {options_text}
 
-Your task: Write a 2-3 sentence contextual clue that helps the student reason toward the answer WITHOUT naming the correct option or saying phrases like "the answer is" or "option X is correct." Reference specific historical context from the location. Guide their thinking, not their guessing.
+Write a 2-3 sentence clue that points to the reasoning. Do not name the correct option or say "the answer is". Reference the context; guide thinking, not guessing.
 """
 
 
@@ -155,15 +194,24 @@ def get_quiz_hint(question, location):
         'model': model,
         'messages': [{'role': 'user', 'content': prompt}],
         'stream': False,
+        'think': False,
+        'options': {
+            'num_predict': 260,
+            'temperature': 0.5,
+            'top_p': 0.9,
+        },
     }
 
     try:
-        response = requests.post(f'{base_url}/api/chat', json=payload, timeout=30)
-        response.raise_for_status()
-        data = response.json()
-        hint = data.get('message', {}).get('content', '').strip()
+        hint, data = _chat_once(base_url, payload, 45)
         if not hint:
-            return None, 'Hint service returned empty response.'
+            current_app.logger.warning('Quiz hint empty; raw ollama response: %s', data)
+            payload['options']['temperature'] = 0.8
+            payload['options']['num_predict'] = 400
+            hint, data = _chat_once(base_url, payload, 45)
+            if not hint:
+                current_app.logger.warning('Quiz hint empty after retry; raw: %s', data)
+                return None, 'Hint service returned empty response.'
         return hint, None
     except requests.exceptions.ConnectionError:
         return None, 'Could not connect to Ollama. Make sure Ollama is running on port 11434.'
@@ -173,20 +221,17 @@ def get_quiz_hint(question, location):
         return None, f'Hint service error: {str(e)}'
 
 
-CONCEPT_MAP_INSIGHT_PROMPT = """You are a helpful history hint assistant. A student is building a concept map about {era_name} Los Angeles history and has spent points to get a targeted hint.
+CONCEPT_MAP_INSIGHT_PROMPT = """Targeted concept-map hint for a student studying {era_name} Los Angeles history.
 
-ERA CONTEXT (draw from this to suggest connections — do not quote it verbatim):
+Era context (do not quote verbatim):
 {locations_summary}
 
-STUDENT'S CURRENT MAP:
+Student's current map:
 {graph_summary}
 
-Your task: Give 1-2 direct, concrete hints about connections the student could add or strengthen. You MAY:
-- Name two specific nodes and explain how they are related (e.g., "Consider how Mission San Gabriel relates to agriculture in the Rancho era — missions trained the labor force that later worked the ranchos.")
-- Point out a missing link between nodes already on the map
-- Suggest a more precise label for an existing connection
+Give 1-2 direct, concrete hints about connections they could add or strengthen. You may: name two nodes and explain the relationship, point out a missing link between existing nodes, or suggest a more precise label for an existing edge.
 
-Keep your response to 3 sentences maximum. Be direct and informative — this is a hint, not a question. Do not ask questions. Start with "Consider…" or "You might notice…" to signal this is a suggestion.
+Max 3 sentences. Be direct and informative — no questions. Start with "Consider…" or "You might notice…".
 """
 
 
@@ -210,15 +255,24 @@ def get_concept_map_insight(era_name, locations_summary, graph_json):
         'model': model,
         'messages': [{'role': 'user', 'content': prompt}],
         'stream': False,
+        'think': False,
+        'options': {
+            'num_predict': 300,
+            'temperature': 0.5,
+            'top_p': 0.9,
+        },
     }
 
     try:
-        response = requests.post(f'{base_url}/api/chat', json=payload, timeout=45)
-        response.raise_for_status()
-        data = response.json()
-        insight = data.get('message', {}).get('content', '').strip()
+        insight, data = _chat_once(base_url, payload, 75)
         if not insight:
-            return None, 'Insight service returned empty response.'
+            current_app.logger.warning('Concept-map insight empty; raw ollama response: %s', data)
+            payload['options']['temperature'] = 0.8
+            payload['options']['num_predict'] = 500
+            insight, data = _chat_once(base_url, payload, 75)
+            if not insight:
+                current_app.logger.warning('Concept-map insight empty after retry; raw: %s', data)
+                return None, 'Insight service returned empty response.'
         return insight, None
     except requests.exceptions.ConnectionError:
         return None, 'Could not connect to Ollama. Make sure Ollama is running on port 11434.'
@@ -228,27 +282,24 @@ def get_concept_map_insight(era_name, locations_summary, graph_json):
         return None, f'Insight service error: {str(e)}'
 
 
-MEMORY_CHALLENGE_GEN_PROMPT = """You are creating a memory challenge quiz for a student who just finished studying {era_name} Los Angeles history.
+MEMORY_CHALLENGE_GEN_PROMPT = """Generate a memory challenge quiz for a student who just finished {era_name} Los Angeles history.
 
-LOCATION FACTS (use only these as your source — do not invent facts outside this list):
+LOCATION FACTS (only source — do not invent facts beyond this list):
 {locations_context}
 
-TASK: Generate exactly {count} multiple-choice questions that test recall of the facts above.
+Generate exactly {count} multiple-choice questions:
+- Cover at least {spread} different locations
+- Straightforward recall, not tricky; no negatively worded questions
+- Each has 4 plausible options (a, b, c, d) with exactly one correct
+- Each question must be grounded in a specific fact above
 
-GUIDELINES:
-- Cover at least {spread} different locations (do not ask all questions about the same place)
-- Questions should be straightforward and accessible, not tricky or obscure
-- Each question has exactly 4 answer choices (A, B, C, D) with one clearly correct answer
-- Avoid negatively worded questions ("Which is NOT...")
-- Base every question on a specific fact stated in the location context above
+Rules:
+1. Return ONLY valid JSON — no prose, no markdown fences
+2. "correct_answer" is one lowercase letter: a, b, c, or d
+3. "explanation" (1 sentence) cites the fact that makes the answer correct
+4. "wrong_explanation_<letter>" (1 short sentence) is provided for each incorrect option
 
-STRICT RULES:
-1. Return ONLY valid JSON — no prose, no markdown fences, nothing outside the JSON
-2. The "correct_answer" field must be exactly one lowercase letter: a, b, c, or d
-3. All four options must be plausible but only one correct
-4. The "explanation" field (1 sentence) must cite the specific fact that makes the answer correct
-
-REQUIRED JSON STRUCTURE (exactly these keys, no others):
+JSON shape:
 {{
   "questions": [
     {{
@@ -258,10 +309,10 @@ REQUIRED JSON STRUCTURE (exactly these keys, no others):
       "option_c": "...",
       "option_d": "...",
       "correct_answer": "a",
-      "explanation": "..."
+      "explanation": "...",
       "wrong_explanation_b": "...",
       "wrong_explanation_c": "...",
-      "wrong_explanation_d": "...",
+      "wrong_explanation_d": "..."
     }}
   ]
 }}"""
@@ -290,7 +341,13 @@ def generate_memory_challenge_questions(era_name, locations_context, count=8):
         'model': model,
         'messages': [{'role': 'user', 'content': prompt}],
         'stream': False,
+        'think': False,
         'format': 'json',
+        'options': {
+            'num_predict': max(800, 180 * count),
+            'temperature': 0.4,
+            'top_p': 0.9,
+        },
     }
 
     raw = ''
@@ -334,34 +391,33 @@ def generate_memory_challenge_questions(era_name, locations_context, count=8):
         return None, f'Question generation error: {str(e)}'
 
 
-CONCEPT_MAP_EVAL_PROMPT = """You are reviewing a student's concept map about {era_name} Los Angeles history.
+CONCEPT_MAP_EVAL_PROMPT = """Review a student's concept map about {era_name} Los Angeles history.
 
-LOCATION CONTEXT (use to assess connections — do not recite verbatim):
+Location context (do not recite verbatim):
 {locations_context}
 
-STUDENT'S GRAPH:
-{graph_json}
+Student's graph (edges formatted as "source --[label]--> target"):
+{graph_summary}
 
-YOUR TASK:
-For every directed edge in the graph, write a brief Socratic comment that:
-- Asks one probing question if the connection seems insightful or partially correct
-- Gently surfaces a factual concern through a question if something seems inaccurate (never say "this is wrong")
-- Notes surprising or creative connections without over-praising
+For every edge, write a brief Socratic comment:
+- If insightful/partially correct: ask one probing question
+- If factually questionable: surface the concern as a question (never say "this is wrong")
+- If surprising/creative: note it without over-praising
 
-STRICT RULES — no exceptions:
-1. Return ONLY valid JSON — no prose, no markdown fences before or after the JSON
-2. Never tell the student what connections they SHOULD have made
-3. Never assign a letter grade or include a percentage in any comment text
-4. Never praise a factually incorrect connection without raising a Socratic challenge
-5. The follow_up_question must extend the student's thinking beyond the map itself
-6. synthesis_score is an integer 0-100 reflecting conceptual depth and accuracy
+Rules:
+1. Return ONLY valid JSON — no prose, no markdown fences
+2. Do not tell the student what connections they should have made
+3. No letter grades or percentages inside any comment text
+4. Never praise a factually incorrect connection without a Socratic challenge
+5. follow_up_question extends thinking beyond the map itself
+6. synthesis_score is an integer 0-100 reflecting depth and accuracy
 
-REQUIRED JSON STRUCTURE (exactly these keys, no others):
+JSON shape:
 {{
   "edge_feedback": [
     {{"source": "source node label", "target": "target node label", "label": "edge label", "comment": "Socratic question or observation"}}
   ],
-  "overall_comment": "2-3 sentence synthesis observation — no grades, no percentages",
+  "overall_comment": "2-3 sentence synthesis — no grades, no percentages",
   "synthesis_score": 72,
   "follow_up_question": "One open-ended question to extend thinking"
 }}"""
@@ -376,17 +432,25 @@ def evaluate_concept_map(era_name, locations_context, graph_json):
     base_url = current_app.config.get('OLLAMA_BASE_URL', 'http://localhost:11434')
     model    = current_app.config.get('OLLAMA_MODEL', 'gemma4:latest')
 
+    graph_summary = _summarize_graph_for_eval(graph_json)
+
     prompt = CONCEPT_MAP_EVAL_PROMPT.format(
         era_name=era_name,
         locations_context=locations_context,
-        graph_json=graph_json,
+        graph_summary=graph_summary,
     )
 
     payload = {
         'model': model,
         'messages': [{'role': 'user', 'content': prompt}],
         'stream': False,
+        'think': False,
         'format': 'json',
+        'options': {
+            'num_predict': 1200,
+            'temperature': 0.3,
+            'top_p': 0.9,
+        },
     }
 
     raw = ''
