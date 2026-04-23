@@ -58,7 +58,7 @@ Memory Challenge eligibility: all quizzes passed + concept map submitted for tha
 
 All Ollama calls in `ollama_service.py` are stateless functions — no shared state between calls.
 
-- **Tutor chat**: rolling 6-message context window, strict Socratic system prompt
+- **Tutor chat**: rolling 6-message context window, 13-rule Socratic system prompt (`CONCEPT_MAP_CHAT_PROMPT` in `ollama_service.py`, tracked in `prompts/system_prompt_v1.txt`); key rules: always close with a map-specific question (rule 2), probe prior knowledge before Socratic reframe (rule 10), lower cognitive floor after two deflections (rule 11), interrogate vague edge labels (rule 12), reject minimal replies and anchor to map (rule 13)
 - **Quiz hints**: 2-3 sentence contextual clue without revealing the answer; points refunded on Ollama failure
 - **Concept map insights**: direct hints (not Socratic), max 3 per era
 - **Concept map evaluation**: returns JSON with `edge_feedback`, `overall_comment`, `synthesis_score` (0-100), `follow_up_question`; has JSON decode fallback
@@ -72,8 +72,8 @@ Vanilla JS, no bundler. Each file is a self-contained IIFE or set of globals loa
 - `quiz.js` — Quiz modal and Memory Challenge modal (shared file); per-question answer checking via `/api/quiz/check_answer`; hint loading; challenge confirm overlay
 - `music.js` — `MusicPlayer` IIFE; Web Audio API synthesized ambient loops (no audio files, pure oscillators); one loop per era; ducks during SFX; persists enabled/volume to localStorage; resumes on user gesture or tab visibility change
 - `sounds.js` — `SFX` object for UI sound effects
-- `concept_map.js` — Cytoscape-based concept map; per-era; Ollama-evaluated on submit; insight token UI
-- `tutorial.js` — First-time onboarding walkthrough with spotlight overlays
+- `concept_map.js` — Cytoscape-based concept map; per-era; Ollama-evaluated on submit; insight token UI; calls `window.refreshMapMarkers()` after a successful submit so next-era locations unlock immediately without a page reload
+- `tutorial.js` — First-time onboarding walkthrough with spotlight overlays; auto-pops on first login and whenever the server sets `FORCE_TUTORIAL = true` (injected by `map.py` for returning users flagged for re-onboarding); forced run clears `tutorial_completed` and `cm_tutorial_completed` from localStorage
 - `chat.js` — Socratic tutor chat panel
 - `tts.js` — Text-to-speech for location descriptions
 - `voice.js` — Voice input (mic button in chat)
