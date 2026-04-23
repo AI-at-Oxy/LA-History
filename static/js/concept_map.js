@@ -1284,6 +1284,8 @@ async function requestInsight() {
 function closeConceptMap() {
   if (typeof SFX !== 'undefined') SFX.play('panel-close');
 
+  const wasSubmitted = cmSubmitted;
+
   // Save on close if there are unsaved changes and not yet submitted
   if (!cmSubmitted && cmEraOrder && cy) {
     apiFetch('/api/concept_map/' + cmEraOrder + '/save', 'POST', {
@@ -1292,6 +1294,11 @@ function closeConceptMap() {
   }
 
   document.getElementById('cm-overlay').classList.remove('open');
+
+  // Refresh map markers so next-era locations unlock immediately
+  if (wasSubmitted && typeof window.refreshMapMarkers === 'function') {
+    window.refreshMapMarkers();
+  }
   clearTimeout(cmAutoSaveTimer);
 
   // Clean up cytoscape to free memory
