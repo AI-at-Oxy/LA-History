@@ -34,7 +34,7 @@ def chat_with_ollama(messages, system_prompt):
         response = requests.post(
             f'{base_url}/api/chat',
             json=payload,
-            timeout=60,
+            timeout=120,
         )
         response.raise_for_status()
         data = response.json()

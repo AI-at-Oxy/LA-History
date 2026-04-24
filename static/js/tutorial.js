@@ -10,7 +10,7 @@ var Tutorial = (function () {
       id: 'welcome',
       icon: '🗺️',
       title: 'Welcome to LA History!',
-      body: 'Explore 57 historical locations across 4 eras of Los Angeles — from the Tongva people to the modern city. This quick tour shows you how everything works.',
+      body: 'Explore 15 historical locations across 4 eras of Los Angeles — from the Tongva people to the modern city. This quick tour shows you how everything works.',
       targetSelector: null,
       placement: 'center',
       spotlightPadding: 0,
@@ -34,6 +34,7 @@ var Tutorial = (function () {
       targetSelector: '#era-filter-bar',
       placement: 'bottom',
       spotlightPadding: 8,
+      noArrow: true,
       beforeRender: null,
     },
     {
@@ -44,6 +45,7 @@ var Tutorial = (function () {
       targetSelector: '#sidebar',
       placement: 'right',
       spotlightPadding: 6,
+      noArrow: true,
       beforeRender: _ensureSidebarOpen,
     },
     {
@@ -54,6 +56,7 @@ var Tutorial = (function () {
       targetSelector: '#badge-grid',
       placement: 'right',
       spotlightPadding: 8,
+      noArrow: true,
       beforeRender: _ensureSidebarOpen,
     },
     {
