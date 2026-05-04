@@ -773,10 +773,6 @@ document.addEventListener('keydown', function (e) {
       if (!anyModalOpen) document.getElementById('sidebar-toggle')?.click();
       break;
 
-    case 'c': case 'C':
-      if (!anyModalOpen && typeof toggleChat === 'function') toggleChat();
-      break;
-
     case 'r': case 'R':
       if (!anyModalOpen && map) {
         _suppressZoomSFX = true;
