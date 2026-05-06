@@ -182,24 +182,47 @@ def _summarize_graph_for_chat(graph_json):
 
 
 def _summarize_graph_for_eval(graph_json):
-    """Render every node and every edge (no cap) for concept-map evaluation."""
+    """Render every node and every edge (no cap) for concept-map evaluation.
+
+    Handles two input shapes:
+    - _minimal_graph() output: {'nodes': [{'id', 'label'}], 'edges': [{'source', 'target', 'label'}]}
+    - raw cy.json() output:    {'elements': {'nodes': [...], 'edges': [...]}}
+    """
     if not graph_json:
         return "The map is empty."
     try:
         g = json.loads(graph_json) if isinstance(graph_json, str) else graph_json
-        els = g.get('elements', {})
-        if isinstance(els, dict):
-            nodes = [n['data'].get('label', '?') for n in els.get('nodes', [])]
+
+        # _minimal_graph() format — flat nodes/edges at the top level
+        if 'nodes' in g or 'edges' in g:
+            raw_nodes = g.get('nodes', [])
+            raw_edges = g.get('edges', [])
+            id_to_label = {n['id']: n.get('label', n['id']) for n in raw_nodes}
+            nodes = [n.get('label', '?') for n in raw_nodes]
             edges = [
-                f"{e['data'].get('source', '?')} --[{e['data'].get('label', '')}]--> {e['data'].get('target', '?')}"
-                for e in els.get('edges', [])
+                f"{id_to_label.get(e.get('source', '?'), e.get('source', '?'))} "
+                f"--[{e.get('label', '')}]--> "
+                f"{id_to_label.get(e.get('target', '?'), e.get('target', '?'))}"
+                for e in raw_edges
             ]
         else:
-            nodes = [e['data'].get('label', '?') for e in els if e.get('group') == 'nodes']
-            edges = [
-                f"{e['data'].get('source', '?')} --[{e['data'].get('label', '')}]--> {e['data'].get('target', '?')}"
-                for e in els if e.get('group') == 'edges'
-            ]
+            # cy.json() format — nested under 'elements'
+            els = g.get('elements', {})
+            if isinstance(els, dict):
+                raw_nodes = els.get('nodes', [])
+                raw_edges = els.get('edges', [])
+                nodes = [n['data'].get('label', '?') for n in raw_nodes]
+                edges = [
+                    f"{e['data'].get('source', '?')} --[{e['data'].get('label', '')}]--> {e['data'].get('target', '?')}"
+                    for e in raw_edges
+                ]
+            else:
+                nodes = [e['data'].get('label', '?') for e in els if e.get('group') == 'nodes']
+                edges = [
+                    f"{e['data'].get('source', '?')} --[{e['data'].get('label', '')}]--> {e['data'].get('target', '?')}"
+                    for e in els if e.get('group') == 'edges'
+                ]
+
         if not nodes:
             return "The map is empty."
         parts = [f"Nodes ({len(nodes)}): {', '.join(nodes)}."]
@@ -351,145 +374,46 @@ def get_concept_map_insight(era_name, locations_summary, graph_json):
         return None, f'Insight service error: {str(e)}'
 
 
-MEMORY_CHALLENGE_GEN_PROMPT = """Generate a memory challenge quiz for a student who just finished {era_name} Los Angeles history.
+CONCEPT_MAP_EVAL_PROMPT = """You are a Socratic history tutor reviewing a student's concept map about {era_name} Los Angeles history.
 
-LOCATION FACTS (only source — do not invent facts beyond this list):
+Historical context for this era (for your reference — do NOT recite these descriptions back verbatim):
 {locations_context}
 
-Generate exactly {count} multiple-choice questions:
-- Cover at least {spread} different locations
-- Straightforward recall, not tricky; no negatively worded questions
-- Each has 4 plausible options (a, b, c, d) with exactly one correct
-- Each question must be grounded in a specific fact above
-
-Rules:
-1. Return ONLY valid JSON — no prose, no markdown fences
-2. "correct_answer" is one lowercase letter: a, b, c, or d
-3. "explanation" (1 sentence) cites the fact that makes the answer correct
-4. "wrong_explanation_<letter>" (1 short sentence) is provided for each incorrect option
-
-JSON shape:
-{{
-  "questions": [
-    {{
-      "question_text": "...",
-      "option_a": "...",
-      "option_b": "...",
-      "option_c": "...",
-      "option_d": "...",
-      "correct_answer": "a",
-      "explanation": "...",
-      "wrong_explanation_b": "...",
-      "wrong_explanation_c": "...",
-      "wrong_explanation_d": "..."
-    }}
-  ]
-}}"""
-
-
-def generate_memory_challenge_questions(era_name, locations_context, count=8):
-    """
-    Ask Ollama to generate `count` fresh multiple-choice questions for a memory challenge.
-    Returns (questions_list, error). One will be None.
-    Each question dict includes: id (string), question_text, option_a/b/c/d,
-    correct_answer, explanation, question_type, order_index.
-    """
-    base_url = current_app.config.get('OLLAMA_BASE_URL', 'http://localhost:11434')
-    model = current_app.config.get('OLLAMA_MODEL', 'gemma4:latest')
-
-    spread = max(3, count // 2)
-
-    prompt = MEMORY_CHALLENGE_GEN_PROMPT.format(
-        era_name=era_name,
-        locations_context=locations_context,
-        count=count,
-        spread=spread,
-    )
-
-    payload = {
-        'model': model,
-        'messages': [{'role': 'user', 'content': prompt}],
-        'stream': False,
-        'think': False,
-        'format': 'json',
-        'keep_alive': '30m',
-        'options': {
-            'num_predict': max(800, 180 * count),
-            'temperature': 0.4,
-            'top_p': 0.9,
-        },
-    }
-
-    raw = ''
-    try:
-        response = requests.post(f'{base_url}/api/chat', json=payload, timeout=90)
-        response.raise_for_status()
-        data = response.json()
-        raw = data.get('message', {}).get('content', '').strip()
-        if not raw:
-            return None, 'Question generator returned empty response.'
-
-        parsed = json.loads(raw)
-        questions = parsed.get('questions', [])
-        if not questions:
-            return None, 'No questions generated.'
-
-        validated = []
-        required_keys = ('question_text', 'option_a', 'option_b', 'option_c', 'option_d', 'correct_answer')
-        for i, q in enumerate(questions[:count]):
-            if not all(k in q for k in required_keys):
-                continue
-            if q['correct_answer'].lower() not in ('a', 'b', 'c', 'd'):
-                continue
-            q['id'] = f'ai_{i}'
-            q['question_type'] = 'multiple_choice'
-            q['order_index'] = i
-            validated.append(q)
-
-        if not validated:
-            return None, 'Generated questions failed validation.'
-
-        return validated, None
-
-    except json.JSONDecodeError:
-        return None, f'Could not parse generated questions.'
-    except requests.exceptions.ConnectionError:
-        return None, 'Could not connect to Ollama.'
-    except requests.exceptions.Timeout:
-        return None, 'Question generation timed out.'
-    except requests.exceptions.RequestException as e:
-        return None, f'Question generation error: {str(e)}'
-
-
-CONCEPT_MAP_EVAL_PROMPT = """Review a student's concept map about {era_name} Los Angeles history.
-
-Location context (do not recite verbatim):
-{locations_context}
-
-Student's graph (edges formatted as "source --[label]--> target"):
+The student's map (edges are "source --[relationship label]--> target"):
 {graph_summary}
 
-For every edge, write a brief Socratic comment:
-- If insightful/partially correct: ask one probing question
-- If factually questionable: surface the concern as a question (never say "this is wrong")
-- If surprising/creative: note it without over-praising
+Your task: for EVERY edge in the map, write one focused Socratic response. Calibrate by edge quality:
+
+- STRONG edge (historically grounded, causally specific): Affirm the core insight in one clause, then push deeper — ask about mechanism, consequence, or a complicating factor the student may not have considered.
+- PARTIAL edge (directionally right but vague or incomplete): Acknowledge what's plausible, then probe the gap — ask what specific event or dynamic the label is pointing at.
+- NEEDS_PROBING edge (label is too generic, anachronistic, or hard to justify): Surface the tension as a genuine question ("What evidence points to that connection?" or "How did that relationship actually work given [specific era constraint]?"). Never say "that's wrong."
+
+For the overall_comment:
+- Name 1-2 specific strengths visible in the map's structure (e.g. a strong causal chain, an unexpected cross-location link).
+- Identify one conceptual gap the student can reflect on — phrase it as an observation, not an instruction.
+- End with one sentence that situates their map within the broader arc of LA history.
 
 Rules:
-1. Return ONLY valid JSON — no prose, no markdown fences
-2. Do not tell the student what connections they should have made
-3. No letter grades or percentages inside any comment text
-4. Never praise a factually incorrect connection without a Socratic challenge
-5. follow_up_question extends thinking beyond the map itself
-6. synthesis_score is an integer 0-100 reflecting depth and accuracy
+1. Return ONLY valid JSON — no prose, no markdown fences, no code fences
+2. Never reveal what connections the student "should have" made
+3. No letter grades or numeric scores in any text field
+4. Ground every probe in a specific historical detail from the era context above
+5. follow_up_question must be specific to THIS student's map, not generic
+6. "quality" must be exactly one of: "strong", "partial", "needs_probing"
 
-JSON shape:
+JSON shape (fill in real content — these are placeholders):
 {{
   "edge_feedback": [
-    {{"source": "source node label", "target": "target node label", "label": "edge label", "comment": "Socratic question or observation"}}
+    {{
+      "source": "source node label",
+      "target": "target node label",
+      "label": "edge label",
+      "quality": "strong",
+      "comment": "Affirming observation + one probing question"
+    }}
   ],
-  "overall_comment": "2-3 sentence synthesis — no grades, no percentages",
-  "synthesis_score": 72,
-  "follow_up_question": "One open-ended question to extend thinking"
+  "overall_comment": "2-3 sentences: specific strengths, one reflective gap, broader arc.",
+  "follow_up_question": "One specific question about this student's map that extends thinking beyond it"
 }}"""
 
 
@@ -540,15 +464,18 @@ def evaluate_concept_map(era_name, locations_context, graph_json):
         feedback = json.loads(raw)
         feedback.setdefault('edge_feedback', [])
         feedback.setdefault('overall_comment', '')
-        feedback.setdefault('synthesis_score', 0)
         feedback.setdefault('follow_up_question', '')
+        # Normalise quality values so the frontend can trust them
+        valid_qualities = {'strong', 'partial', 'needs_probing'}
+        for ef in feedback['edge_feedback']:
+            if ef.get('quality') not in valid_qualities:
+                ef['quality'] = 'partial'
         return feedback, None
 
     except json.JSONDecodeError:
         fallback = {
             'edge_feedback': [],
             'overall_comment': raw[:500] if raw else 'The evaluator response could not be parsed.',
-            'synthesis_score': 0,
             'follow_up_question': 'What patterns do you notice across the connections you drew?',
         }
         return fallback, None

@@ -35,23 +35,3 @@ class ConceptMap(db.Model):
 
     def __repr__(self):
         return f'<ConceptMap user={self.user_id} era={self.era_order} submitted={self.submitted}>'
-
-
-class MemoryChallengeAttempt(db.Model):
-    __tablename__ = 'memory_challenge_attempts'
-    __table_args__ = (
-        db.UniqueConstraint('user_id', 'era_order', name='uq_user_era_challenge'),
-    )
-
-    id           = db.Column(db.Integer, primary_key=True)
-    user_id      = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-    era_order    = db.Column(db.Integer, nullable=False)
-    attempted           = db.Column(db.Boolean, default=False, nullable=False)
-    passed              = db.Column(db.Boolean, nullable=True)
-    score_pct           = db.Column(db.Integer, nullable=True)
-    question_ids        = db.Column(db.Text, nullable=True)   # JSON array of DB question IDs (fallback path)
-    generated_questions = db.Column(db.Text, nullable=True)   # JSON array of AI-generated question objects (preferred path)
-    attempted_at        = db.Column(db.DateTime, default=datetime.utcnow)
-
-    def __repr__(self):
-        return f'<MemoryChallengeAttempt user={self.user_id} era={self.era_order} passed={self.passed}>'

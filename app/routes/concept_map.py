@@ -244,8 +244,12 @@ def evaluate_map(era_order):
     if error:
         return jsonify({'error': error}), 503
 
+    # Award bonus if the map shows strong thinking (majority of edges rated "strong")
+    edge_fb = feedback.get('edge_feedback', [])
+    strong_count = sum(1 for ef in edge_fb if ef.get('quality') == 'strong')
+    bonus_threshold = max(1, len(edge_fb) // 2)
     pts = POINTS_CONCEPT_MAP_SUBMIT
-    if feedback.get('synthesis_score', 0) >= 80:
+    if edge_fb and strong_count >= bonus_threshold:
         pts += POINTS_CONCEPT_MAP_BONUS
 
     user = current_user._get_current_object()
@@ -265,7 +269,6 @@ def evaluate_map(era_order):
         'points_earned': pts,
         'total_points': user.total_points,
         'new_badges': new_badges,
-        'synthesis_score': feedback.get('synthesis_score', 0),
     })
 
 

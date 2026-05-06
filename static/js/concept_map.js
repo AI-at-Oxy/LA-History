@@ -1034,42 +1034,50 @@ async function handleSubmit() {
 function displayResults(result) {
   const panel = document.getElementById('cm-results-panel');
   const body  = document.getElementById('cm-results-body');
-  const score = document.getElementById('cm-synthesis-score');
 
   const feedback = result.ai_feedback || {};
-  const s = result.synthesis_score !== undefined
-    ? result.synthesis_score
-    : (feedback.synthesis_score || 0);
+  const edgeFb   = feedback.edge_feedback || [];
 
-  score.textContent = s + '/100';
+  const qualityMeta = {
+    strong:        { label: 'Strong',    icon: '✓' },
+    partial:       { label: 'Developing', icon: '~' },
+    needs_probing: { label: 'Revisit',   icon: '?' },
+  };
 
   let html = '';
 
-  (feedback.edge_feedback || []).forEach(ef => {
-    html += `
-      <div class="cm-edge-feedback-item">
-        <div class="cm-edge-feedback-connection">
-          ${ef.source || ''} → ${ef.target || ''}
-          ${ef.label ? '<span style="color:var(--text-muted);font-weight:400"> · ' + ef.label + '</span>' : ''}
-        </div>
-        <div class="cm-edge-feedback-comment">${ef.comment || ''}</div>
-      </div>
-    `;
-  });
+  if (edgeFb.length > 0) {
+    html += '<div class="cm-edge-feedback-list">';
+    edgeFb.forEach(ef => {
+      const q    = ef.quality || 'partial';
+      const meta = qualityMeta[q] || qualityMeta.partial;
+      const src  = escapeHtml(ef.source || '');
+      const tgt  = escapeHtml(ef.target || '');
+      const lbl  = ef.label ? ` <span class="cm-ef-label">${escapeHtml(ef.label)}</span>` : '';
+      html += `
+        <div class="cm-edge-feedback-item cm-ef-${q}">
+          <div class="cm-edge-feedback-connection">
+            <span class="cm-ef-quality-badge cm-ef-badge-${q}">${meta.icon} ${meta.label}</span>
+            ${src} → ${tgt}${lbl}
+          </div>
+          <div class="cm-edge-feedback-comment">${escapeHtml(ef.comment || '')}</div>
+        </div>`;
+    });
+    html += '</div>';
+  }
 
   if (feedback.overall_comment) {
-    html += `<div class="cm-results-overall">${feedback.overall_comment}</div>`;
+    html += `<div class="cm-results-overall"><span class="cm-results-overall-icon">📝</span>${escapeHtml(feedback.overall_comment)}</div>`;
   }
 
   if (feedback.follow_up_question) {
-    html += `<div class="cm-results-follow-up">💭 ${feedback.follow_up_question}</div>`;
+    html += `<div class="cm-results-follow-up"><span class="cm-results-follow-up-icon">💭</span>${escapeHtml(feedback.follow_up_question)}</div>`;
   }
 
   body.innerHTML = html || '<p style="color:var(--text-muted);font-size:0.82rem">No feedback received.</p>';
   panel.hidden = false;
   panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 
-  // Update submit button to reflect submitted state
   const submitBtn = document.getElementById('cm-submit-btn');
   submitBtn.disabled = true;
   submitBtn.textContent = 'Submitted ✓';

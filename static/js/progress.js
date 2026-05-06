@@ -72,23 +72,6 @@ function renderSidebar(data) {
           </button>`;
       }
 
-      // Memory challenge button — only shown when era is complete
-      const mc = era.memory_challenge || {};
-      let mcBtn = '';
-      if (!eraLocked) {
-        if (mc.eligible && !mc.attempted) {
-          mcBtn = `
-            <button class="cm-era-trigger-btn era-${era.era} mc-challenge-btn"
-                    onclick="openMemoryChallenge(${era.era_order})">
-              🧠 Memory Challenge (30 pts)
-            </button>`;
-        } else if (mc.attempted && mc.passed) {
-          mcBtn = `<div class="mc-challenge-result pass">🏆 Memory Champion ✓</div>`;
-        } else if (mc.attempted && !mc.passed) {
-          mcBtn = `<div class="mc-challenge-result fail">Challenge attempted (${mc.score_pct ?? 0}%)</div>`;
-        }
-      }
-
       const lockedHeader = eraLocked
         ? `<span class="era-locked-badge">🔒 Locked</span>` : '';
 
@@ -118,7 +101,6 @@ function renderSidebar(data) {
           ${eraLocked && unlockHint ? `<div class="era-unlock-hint">${unlockHint}</div>` : ''}
           ${eraLocked ? '' : `<div class="era-bar-bg"><div class="era-bar-fill ${era.era}" style="width:${pct}%;background:${color}"></div></div>`}
           ${cmBtn}
-          ${mcBtn}
         </div>
       `;
     }).join('');

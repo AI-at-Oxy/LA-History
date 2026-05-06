@@ -15,15 +15,11 @@ let quizAlreadyPassed = false;
 let currentFeedback = {};   // { question_id: { is_correct, explanation, chosen_text } }
 let questionChecked = false; // whether current question's answer has been confirmed
 
-// Memory challenge state
-let currentChallengeEraOrder = null;
-
 const overlay  = () => document.getElementById('quiz-modal-overlay');
 const modal    = () => document.getElementById('quiz-modal');
 
 async function openQuiz(locationId, alreadyPassed = false) {
   currentQuizLocationId = locationId;
-  currentChallengeEraOrder = null;
   currentAnswers = {};
   currentQuestionIndex = 0;
   quizSubmitted = false;
@@ -45,74 +41,10 @@ async function openQuiz(locationId, alreadyPassed = false) {
   if (typeof SFX !== 'undefined') SFX.play('quiz-open');
 }
 
-function openMemoryChallenge(eraOrder) {
-  const confirmOverlay = document.getElementById('mc-confirm-overlay');
-  const eraLabel = document.getElementById('mc-confirm-era-label');
-  const startBtn  = document.getElementById('mc-confirm-start');
-  const cancelBtn = document.getElementById('mc-confirm-cancel');
-
-  eraLabel.textContent = `Era ${eraOrder} — Are you ready?`;
-  confirmOverlay.classList.add('open');
-  if (typeof SFX !== 'undefined') SFX.play('quiz-open');
-
-  // Clean up any previous listeners by cloning the buttons
-  const newStart  = startBtn.cloneNode(true);
-  const newCancel = cancelBtn.cloneNode(true);
-  startBtn.parentNode.replaceChild(newStart, startBtn);
-  cancelBtn.parentNode.replaceChild(newCancel, cancelBtn);
-
-  newCancel.addEventListener('click', () => {
-    confirmOverlay.classList.remove('open');
-  });
-
-  newStart.addEventListener('click', async () => {
-    confirmOverlay.classList.remove('open');
-    await _startMemoryChallenge(eraOrder);
-  });
-}
-
-async function _startMemoryChallenge(eraOrder) {
-  currentChallengeEraOrder = eraOrder;
-  currentQuizLocationId = null;
-  currentAnswers = {};
-  currentQuestionIndex = 0;
-  quizSubmitted = false;
-  hintsUsed = {};
-  hintLoadingId = null;
-  quizAlreadyPassed = true; // no hints in memory challenge
-  currentFeedback = {};
-  questionChecked = false;
-
-  let challengeData;
-  try {
-    challengeData = await apiFetch(`/api/memory_challenge/${eraOrder}/start`, 'POST', {});
-  } catch (e) {
-    showToast(e.message || 'Could not start Memory Challenge.', 'error');
-    return;
-  }
-
-  updatePointsDisplay(challengeData.total_points);
-
-  currentQuiz = {
-    title: `Era ${eraOrder} Memory Challenge`,
-    passing_score: challengeData.threshold,
-    points_reward: challengeData.reward,
-    questions: challengeData.questions,
-    _isMemoryChallenge: true,
-  };
-
-  renderQuizQuestion();
-  overlay().classList.add('open');
-  if (typeof SFX !== 'undefined') SFX.play('quiz-open');
-}
-
 function closeQuiz() {
   if (typeof SFX !== 'undefined') SFX.play('panel-close');
   overlay().classList.remove('open');
   TTS.stop();
-  if (currentChallengeEraOrder !== null) {
-    location.reload();
-  }
 }
 
 function renderQuizQuestion() {
@@ -122,9 +54,9 @@ function renderQuizQuestion() {
 
   const options = buildOptions(q);
 
-  // Hint button — hidden for memory challenges and already-passed quizzes
+  // Hint button — hidden for already-passed quizzes
   let hintBtnHTML = '';
-  if (!currentQuiz._isMemoryChallenge && !quizAlreadyPassed) {
+  if (!quizAlreadyPassed) {
     if (hintsUsed[q.id]) {
       hintBtnHTML = `<button class="quiz-hint-btn hint-used" disabled>Hint Used ✓</button>`;
     } else {
@@ -138,10 +70,7 @@ function renderQuizQuestion() {
     ? `<span class="quiz-hint-footer">Hints used: ${totalHints} (−${totalHints * 5} pts from reward)</span>`
     : '';
 
-  // Challenge header note
-  const challengeNote = currentQuiz._isMemoryChallenge
-    ? `<p class="quiz-challenge-note">High-stakes · Pass ${currentQuiz.passing_score}% to earn ${currentQuiz.points_reward} pts · No retry</p>`
-    : `<p>Pass with ${currentQuiz.passing_score}% · ${currentQuiz.points_reward} pts on first pass</p>`;
+  const challengeNote = `<p>Pass with ${currentQuiz.passing_score}% · ${currentQuiz.points_reward} pts on first pass</p>`;
 
   modal().innerHTML = `
     <div class="quiz-header">
@@ -369,19 +298,11 @@ async function submitQuiz() {
 
   let result;
   try {
-    if (currentQuiz._isMemoryChallenge) {
-      result = await apiFetch(
-        `/api/memory_challenge/${currentChallengeEraOrder}/submit`,
-        'POST',
-        { answers }
-      );
-    } else {
-      result = await apiFetch(
-        `/api/quiz/${currentQuizLocationId}/submit`,
-        'POST',
-        { answers, hints_used: Object.keys(hintsUsed).length }
-      );
-    }
+    result = await apiFetch(
+      `/api/quiz/${currentQuizLocationId}/submit`,
+      'POST',
+      { answers, hints_used: Object.keys(hintsUsed).length }
+    );
   } catch (e) {
     showToast(e.message || 'Submit failed.', 'error');
     return;
@@ -394,18 +315,16 @@ async function submitQuiz() {
     showToast(`+${result.points_earned} points earned!`, 'points');
   }
 
-  if (!currentQuiz._isMemoryChallenge) {
-    if (result.passed && window.refreshDetailPanel) {
-      window.refreshDetailPanel(currentQuizLocationId);
-    }
+  if (result.passed && window.refreshDetailPanel) {
+    window.refreshDetailPanel(currentQuizLocationId);
+  }
 
-    if (result.newly_unlocked && result.newly_unlocked.length > 0) {
-      setTimeout(() => {
-        if (typeof SFX !== 'undefined') SFX.play('era-unlock');
-        showToast(`🔓 New locations unlocked! Explore the map.`, 'unlock', 5000);
-        if (window.refreshMapMarkers) window.refreshMapMarkers();
-      }, 1500);
-    }
+  if (result.newly_unlocked && result.newly_unlocked.length > 0) {
+    setTimeout(() => {
+      if (typeof SFX !== 'undefined') SFX.play('era-unlock');
+      showToast(`🔓 New locations unlocked! Explore the map.`, 'unlock', 5000);
+      if (window.refreshMapMarkers) window.refreshMapMarkers();
+    }, 1500);
   }
 
   if (result.new_badges && result.new_badges.length > 0) {
@@ -433,10 +352,6 @@ function renderResults(result) {
     ? `<div class="results-hint-penalty">${hintsCount} hint${hintsCount > 1 ? 's' : ''} used (−${hintsCount * 5} pts from reward)</div>`
     : '';
 
-  const challengeNote = currentQuiz._isMemoryChallenge
-    ? `<div class="results-challenge-note">${passed ? '🏛️ Memory Champion!' : 'Better luck next time — no retry available.'}</div>`
-    : '';
-
   modal().innerHTML = `
     <div class="quiz-header">
       <div class="quiz-header-left">
@@ -455,11 +370,10 @@ function renderResults(result) {
         <div class="results-detail">${result.correct_count} of ${result.total_questions} correct</div>
         ${result.points_earned > 0 ? `<div class="results-points">✦ +${result.points_earned} points</div>` : ''}
         ${hintPenaltyHTML}
-        ${challengeNote}
         ${unlockHTML}
         <div class="results-actions">
           <button class="btn btn-secondary" onclick="closeQuiz()">Close</button>
-          ${(!passed && !currentQuiz._isMemoryChallenge) ? `<button class="btn btn-primary" onclick="retryQuiz()">Try Again</button>` : ''}
+          ${!passed ? `<button class="btn btn-primary" onclick="retryQuiz()">Try Again</button>` : ''}
         </div>
         ${buildRecapHTML()}
       </div>
