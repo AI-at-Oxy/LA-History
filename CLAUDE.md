@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-LA-History is an educational web game about Los Angeles history. Users explore a Leaflet map of ~57 historical locations across 4 eras (Tongva/Native, Spanish, Rancho, Modern), read descriptions, take quizzes, earn points/badges, and chat with a Socratic AI tutor powered by a local Ollama LLM.
+LA-History is an educational web game about Los Angeles history. Users explore a Leaflet map of 15 historical locations across 4 eras (Tongva/Native, Spanish, Rancho, Modern), read descriptions, take quizzes, earn points/badges, and chat with a Socratic AI tutor powered by a local Ollama LLM.
 
 ## Running the App
 
@@ -58,7 +58,7 @@ Memory Challenge eligibility: all quizzes passed + concept map submitted for tha
 
 All Ollama calls in `ollama_service.py` are stateless functions — no shared state between calls.
 
-- **Tutor chat**: rolling 6-message context window, 13-rule Socratic system prompt (`CONCEPT_MAP_CHAT_PROMPT` in `ollama_service.py`, tracked in `prompts/system_prompt_v1.txt`); key rules: always close with a map-specific question (rule 2), probe prior knowledge before Socratic reframe (rule 10), lower cognitive floor after two deflections (rule 11), interrogate vague edge labels (rule 12), reject minimal replies and anchor to map (rule 13)
+- **Tutor chat**: rolling 6-message context window, 17-rule Socratic system prompt (`CONCEPT_MAP_CHAT_PROMPT` constant in `ollama_service.py`, versioned in `prompts/system_prompt_v3.txt`); key rules: never state historical facts (rule 1), always close with one map-specific question (rule 2), prefer causal/comparative questions over selection/recall (rule 3), probe prior knowledge first (rule 10), escalate deflections with a new question (rule 11), interrogate vague edge labels (rule 12), reject minimal replies and anchor to map (rule 13), two-turn misconception protocol (rule 14), vary openers across turns (rule 16)
 - **Quiz hints**: 2-3 sentence contextual clue without revealing the answer; points refunded on Ollama failure
 - **Concept map insights**: direct hints (not Socratic), max 3 per era
 - **Concept map evaluation**: returns JSON with `edge_feedback`, `overall_comment`, `synthesis_score` (0-100), `follow_up_question`; has JSON decode fallback
@@ -98,7 +98,7 @@ Vanilla JS, no bundler. Each file is a self-contained IIFE or set of globals loa
 | `seed_db.py` | Populate DB from `data/locations.json` and `data/quizzes.json` |
 | `app/config.py` | Dev/prod config (SQLite dev, `DATABASE_URL` env var for prod) |
 | `app/extensions.py` | Flask extensions: `db`, `login_manager`, `bcrypt`, `csrf`, `mail`, `limiter` |
-| `data/locations.json` | Source of truth for 57 historical locations |
+| `data/locations.json` | Source of truth for 15 historical locations |
 | `data/quizzes.json` | Quiz questions per location (includes `wrong_explanation_a/b/c/d`) |
 | `download_images.py` | Fetches Wikipedia images for locations, saves to `static/img/` |
 
