@@ -49,6 +49,15 @@ def get_quiz_hint(location_id):
     if not question or question.quiz.location_id != location_id:
         return jsonify({'error': 'Question not found.'}), 404
 
+    # Return cached hint instantly if already generated for this question
+    if question.hint_cache:
+        user = current_user._get_current_object()
+        ok, err = spend_points(user, POINTS_HINT)
+        if not ok:
+            return jsonify({'error': err}), 402
+        db.session.commit()
+        return jsonify({'hint': question.hint_cache, 'total_points': user.total_points})
+
     user = current_user._get_current_object()
     ok, err = spend_points(user, POINTS_HINT)
     if not ok:
@@ -62,6 +71,7 @@ def get_quiz_hint(location_id):
         db.session.commit()
         return jsonify({'error': ollama_err}), 503
 
+    question.hint_cache = hint
     db.session.commit()
     return jsonify({'hint': hint, 'total_points': user.total_points})
 

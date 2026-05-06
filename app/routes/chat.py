@@ -1,8 +1,10 @@
-from flask import Blueprint, jsonify, request
+import json
+import requests
+from flask import Blueprint, jsonify, request, Response, stream_with_context
 from flask_login import login_required, current_user
 from ..extensions import db
 from ..models.progress import ChatSession, ChatMessage
-from ..services.ollama_service import chat_with_ollama
+from ..services.ollama_service import stream_chat_with_ollama
 
 chat_bp = Blueprint('chat', __name__)
 
@@ -25,13 +27,11 @@ def chat():
     if not data or not data.get('message', '').strip():
         return jsonify({'error': 'Message is required.'}), 400
 
-    user_message = data['message'].strip()[:1000]  # cap input length
+    user_message = data['message'].strip()[:1000]
     location_id = data.get('location_id')
 
-    # Get or create chat session
     session = get_or_create_session(current_user.id, location_id)
 
-    # Build conversation history for Ollama
     past_messages = [
         {'role': msg.role, 'content': msg.content}
         for msg in session.messages
@@ -44,18 +44,39 @@ def chat():
         "Keep responses under 4 sentences."
     )
 
-    # Call Ollama
-    reply, error = chat_with_ollama(past_messages, system_prompt)
+    session_id = session.id
 
-    if error:
-        return jsonify({'error': error}), 503
+    def generate():
+        accumulated = []
+        try:
+            for token in stream_chat_with_ollama(past_messages, system_prompt):
+                accumulated.append(token)
+                yield f"data: {json.dumps({'token': token})}\n\n"
+        except requests.exceptions.ConnectionError:
+            yield f"data: {json.dumps({'error': 'Could not connect to Ollama. Make sure Ollama is running locally on port 11434.'})}\n\n"
+            return
+        except requests.exceptions.Timeout:
+            yield f"data: {json.dumps({'error': 'The tutor took too long to respond. Please try again.'})}\n\n"
+            return
+        except requests.exceptions.RequestException as e:
+            yield f"data: {json.dumps({'error': f'Tutor service error: {str(e)}'})}\n\n"
+            return
 
-    # Persist both messages
-    db.session.add(ChatMessage(session_id=session.id, role='user', content=user_message))
-    db.session.add(ChatMessage(session_id=session.id, role='assistant', content=reply))
-    db.session.commit()
+        full_reply = ''.join(accumulated)
+        if full_reply:
+            try:
+                db.session.add(ChatMessage(session_id=session_id, role='user', content=user_message))
+                db.session.add(ChatMessage(session_id=session_id, role='assistant', content=full_reply))
+                db.session.commit()
+            except Exception:
+                db.session.rollback()
 
-    return jsonify({'reply': reply})
+        yield f"data: {json.dumps({'done': True})}\n\n"
+
+    resp = Response(stream_with_context(generate()), mimetype='text/event-stream')
+    resp.headers['X-Accel-Buffering'] = 'no'
+    resp.headers['Cache-Control'] = 'no-cache'
+    return resp
 
 
 @chat_bp.route('/api/chat/history', methods=['GET'])

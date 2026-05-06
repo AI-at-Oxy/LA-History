@@ -65,14 +65,73 @@ async function sendChatMessage() {
   chatLoading = true;
   document.getElementById('chat-send-btn').disabled = true;
 
+  let bubbleEl = null;
+  let fullReply = '';
+
   try {
-    const data = await apiFetch('/api/chat', 'POST', {
-      message: text,
-      location_id: chatLocationId,
+    const response = await fetch('/api/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'X-CSRFToken': CSRF_TOKEN },
+      body: JSON.stringify({ message: text, location_id: chatLocationId }),
     });
-    removeTyping();
-    if (typeof SFX !== 'undefined') SFX.play('chat-receive');
-    appendMessage('assistant', data.reply);
+    if (!response.ok) {
+      const err = await response.json().catch(() => ({}));
+      throw new Error(err.error || `HTTP ${response.status}`);
+    }
+
+    const reader = response.body.getReader();
+    const decoder = new TextDecoder();
+    let buffer = '';
+    let streamDone = false;
+
+    while (!streamDone) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      buffer += decoder.decode(value, { stream: true });
+      const lines = buffer.split('\n');
+      buffer = lines.pop();
+
+      for (const line of lines) {
+        if (!line.startsWith('data: ')) continue;
+        const raw = line.slice(6).trim();
+        if (!raw) continue;
+        let msg;
+        try { msg = JSON.parse(raw); } catch { continue; }
+
+        if (msg.error) {
+          removeTyping();
+          showChatError(msg.error);
+          streamDone = true;
+          break;
+        }
+        if (msg.token) {
+          if (!bubbleEl) {
+            removeTyping();
+            if (typeof SFX !== 'undefined') SFX.play('chat-receive');
+            bubbleEl = appendStreamingBubble();
+          }
+          fullReply += msg.token;
+          bubbleEl.innerHTML = escapeHtml(fullReply);
+          scrollToBottom();
+        }
+        if (msg.done) {
+          streamDone = true;
+          break;
+        }
+      }
+    }
+
+    // After stream: attach TTS button with full reply
+    if (bubbleEl && fullReply && TTS.isSupported()) {
+      const outerDiv = bubbleEl.parentElement;
+      const ttsBtn = document.createElement('button');
+      ttsBtn.className = 'chat-tts-btn';
+      ttsBtn.title = 'Read aloud';
+      ttsBtn.textContent = '🔊';
+      const captured = fullReply;
+      ttsBtn.addEventListener('click', () => chatTTSToggle(ttsBtn, captured));
+      outerDiv.insertBefore(ttsBtn, outerDiv.querySelector('.chat-msg-time'));
+    }
   } catch (e) {
     removeTyping();
     showChatError(e.message || 'Could not reach the tutor. Is Ollama running?');
@@ -81,6 +140,25 @@ async function sendChatMessage() {
     document.getElementById('chat-send-btn').disabled = false;
     input.focus();
   }
+}
+
+function appendStreamingBubble() {
+  const container = document.getElementById('chat-messages');
+  const intro = container.querySelector('.chat-intro');
+  if (intro) intro.remove();
+
+  const div = document.createElement('div');
+  div.className = 'chat-msg assistant';
+  const bubble = document.createElement('div');
+  bubble.className = 'chat-bubble';
+  div.appendChild(bubble);
+  const time = document.createElement('div');
+  time.className = 'chat-msg-time';
+  time.textContent = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  div.appendChild(time);
+  container.appendChild(div);
+  scrollToBottom();
+  return bubble;
 }
 
 function appendMessage(role, content, animate = true) {

@@ -1,6 +1,7 @@
 import json
+import requests
 from datetime import datetime
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, jsonify, request, Response, stream_with_context
 from flask_login import login_required, current_user
 from ..extensions import db
 from ..models.concept_map import ConceptMap
@@ -15,8 +16,9 @@ from ..services.gamification import (
 )
 from ..models.progress import ChatSession, ChatMessage
 from ..services.ollama_service import (
-    evaluate_concept_map, build_concept_map_chat_prompt, chat_with_ollama,
-    get_concept_map_insight,
+    evaluate_concept_map, build_concept_map_chat_prompt,
+    stream_chat_with_ollama, get_concept_map_insight,
+    _summarize_graph_for_chat,
 )
 
 concept_map_bp = Blueprint('concept_map', __name__)
@@ -324,10 +326,8 @@ def concept_map_chat(era_order):
         for msg in session.messages
     ]
 
-    # Detect greeting sentinel — synthetic opening, don't persist the user turn
     is_greeting = (user_message == '__greeting__')
     if is_greeting:
-        from ..services.ollama_service import _summarize_graph_for_chat
         graph_summary = _summarize_graph_for_chat(graph_json)
         ollama_user_msg = (
             f"The student has just opened their concept map for the {resolved_era_name} era. "
@@ -338,15 +338,34 @@ def concept_map_chat(era_order):
         ollama_user_msg = user_message
 
     messages_to_send = past_messages + [{'role': 'user', 'content': ollama_user_msg}]
+    session_id = session.id
 
-    reply, error = chat_with_ollama(messages_to_send, system_prompt)
-    if error:
-        return jsonify({'error': error}), 503
+    def generate():
+        accumulated = []
+        try:
+            for token in stream_chat_with_ollama(messages_to_send, system_prompt):
+                accumulated.append(token)
+                yield f"data: {json.dumps({'token': token})}\n\n"
+        except requests.exceptions.ConnectionError:
+            yield f"data: {json.dumps({'error': 'Could not connect to Ollama. Make sure Ollama is running locally on port 11434.'})}\n\n"
+            return
+        except requests.exceptions.Timeout:
+            yield f"data: {json.dumps({'error': 'The tutor took too long to respond. Please try again.'})}\n\n"
+            return
+        except requests.exceptions.RequestException as e:
+            yield f"data: {json.dumps({'error': f'Tutor service error: {str(e)}'})}\n\n"
+            return
 
-    # Persist: for greeting, only store the assistant reply; for normal messages, store both
-    if not is_greeting:
-        db.session.add(ChatMessage(session_id=session.id, role='user', content=user_message))
-    db.session.add(ChatMessage(session_id=session.id, role='assistant', content=reply))
-    db.session.commit()
+        full_reply = ''.join(accumulated)
+        if full_reply:
+            if not is_greeting:
+                db.session.add(ChatMessage(session_id=session_id, role='user', content=user_message))
+            db.session.add(ChatMessage(session_id=session_id, role='assistant', content=full_reply))
+            db.session.commit()
 
-    return jsonify({'reply': reply})
+        yield f"data: {json.dumps({'done': True})}\n\n"
+
+    resp = Response(stream_with_context(generate()), mimetype='text/event-stream')
+    resp.headers['X-Accel-Buffering'] = 'no'
+    resp.headers['Cache-Control'] = 'no-cache'
+    return resp

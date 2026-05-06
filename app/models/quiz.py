@@ -48,6 +48,7 @@ class QuizQuestion(db.Model):
     wrong_explanation_c = db.Column(db.Text, nullable=True)
     wrong_explanation_d = db.Column(db.Text, nullable=True)
     order_index = db.Column(db.Integer, nullable=False, default=0)
+    hint_cache = db.Column(db.Text, nullable=True)
 
     def __repr__(self):
         return f'<QuizQuestion {self.id}>'

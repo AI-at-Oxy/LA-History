@@ -620,6 +620,106 @@ function clearSourceSelection() {
 
 // ── Concept Map Tutor Chat ────────────────────
 
+/**
+ * Stream a single request to the concept-map chat endpoint.
+ * Appends an assistant bubble and fills it token-by-token.
+ * Returns a promise that resolves with the full reply string (or '' on error).
+ */
+async function cmDoStreamChat(payload) {
+  let bubble = null;
+  let fullReply = '';
+  try {
+    const response = await fetch('/api/concept_map/' + cmEraOrder + '/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'X-CSRFToken': CSRF_TOKEN },
+      body: JSON.stringify(payload),
+    });
+    if (!response.ok) {
+      const err = await response.json().catch(() => ({}));
+      throw new Error(err.error || `HTTP ${response.status}`);
+    }
+
+    const reader = response.body.getReader();
+    const decoder = new TextDecoder();
+    let buffer = '';
+    let streamDone = false;
+
+    while (!streamDone) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      buffer += decoder.decode(value, { stream: true });
+      const lines = buffer.split('\n');
+      buffer = lines.pop();
+
+      for (const line of lines) {
+        if (!line.startsWith('data: ')) continue;
+        const raw = line.slice(6).trim();
+        if (!raw) continue;
+        let msg;
+        try { msg = JSON.parse(raw); } catch { continue; }
+
+        if (msg.error) {
+          cmChatRemoveTyping();
+          const container = document.getElementById('cm-chat-messages');
+          if (container) {
+            const err = document.createElement('div');
+            err.className = 'chat-error';
+            err.textContent = msg.error;
+            container.appendChild(err);
+            cmChatScrollToBottom();
+          }
+          streamDone = true;
+          break;
+        }
+        if (msg.token) {
+          if (!bubble) {
+            cmChatRemoveTyping();
+            bubble = cmAppendStreamingBubble();
+          }
+          fullReply += msg.token;
+          bubble.innerHTML = escapeHtml(fullReply);
+          cmChatScrollToBottom();
+        }
+        if (msg.done) {
+          streamDone = true;
+          break;
+        }
+      }
+    }
+  } catch (e) {
+    cmChatRemoveTyping();
+    const container = document.getElementById('cm-chat-messages');
+    if (container && !fullReply) {
+      const err = document.createElement('div');
+      err.className = 'chat-error';
+      err.textContent = (e && e.message) || 'Could not reach the tutor. Is Ollama running?';
+      container.appendChild(err);
+      cmChatScrollToBottom();
+    }
+  }
+  return fullReply;
+}
+
+function cmAppendStreamingBubble() {
+  const container = document.getElementById('cm-chat-messages');
+  if (!container) return null;
+  const intro = container.querySelector('.chat-intro');
+  if (intro) intro.remove();
+
+  const div = document.createElement('div');
+  div.className = 'chat-msg assistant';
+  const bubble = document.createElement('div');
+  bubble.className = 'chat-bubble';
+  div.appendChild(bubble);
+  const time = document.createElement('div');
+  time.className = 'chat-msg-time';
+  time.textContent = new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', timeZone: 'America/Los_Angeles' });
+  div.appendChild(time);
+  container.appendChild(div);
+  cmChatScrollToBottom();
+  return bubble;
+}
+
 function cmChatScrollToBottom() {
   const el = document.getElementById('cm-chat-messages');
   if (el) el.scrollTop = el.scrollHeight;
@@ -681,26 +781,12 @@ async function cmSendChatMessage() {
   if (sendBtn) sendBtn.disabled = true;
 
   try {
-    const data = await apiFetch(
-      '/api/concept_map/' + cmEraOrder + '/chat', 'POST', {
-        message: text,
-        graph_json: cy ? cy.json() : null,
-        era_name: cmEraData ? cmEraData.era_name : '',
-      }
-    );
-    cmChatRemoveTyping();
-    cmChatAppendMessage('assistant', data.reply);
-    if (typeof SFX !== 'undefined') SFX.play('chat-receive');
-  } catch (e) {
-    cmChatRemoveTyping();
-    const container = document.getElementById('cm-chat-messages');
-    if (container) {
-      const err = document.createElement('div');
-      err.className = 'chat-error';
-      err.textContent = (e && e.message) || 'Could not reach the tutor. Is Ollama running?';
-      container.appendChild(err);
-      cmChatScrollToBottom();
-    }
+    const reply = await cmDoStreamChat({
+      message: text,
+      graph_json: cy ? cy.json() : null,
+      era_name: cmEraData ? cmEraData.era_name : '',
+    });
+    if (reply && typeof SFX !== 'undefined') SFX.play('chat-receive');
   } finally {
     cmChatLoading = false;
     if (sendBtn) sendBtn.disabled = false;
@@ -712,20 +798,11 @@ async function cmChatGreeting() {
   if (cmChatGreetingSent || !cmEraOrder || cmSubmitted) return;
   cmChatGreetingSent = true;
   cmChatShowTyping();
-  try {
-    const data = await apiFetch(
-      '/api/concept_map/' + cmEraOrder + '/chat', 'POST', {
-        message: '__greeting__',
-        graph_json: cy ? cy.json() : null,
-        era_name: cmEraData ? cmEraData.era_name : '',
-      }
-    );
-    cmChatRemoveTyping();
-    cmChatAppendMessage('assistant', data.reply, true);
-  } catch (_) {
-    cmChatRemoveTyping();
-    // Silent fail — greeting is not critical
-  }
+  await cmDoStreamChat({
+    message: '__greeting__',
+    graph_json: cy ? cy.json() : null,
+    era_name: cmEraData ? cmEraData.era_name : '',
+  });
 }
 
 async function cmChatContextualNudge() {
@@ -744,17 +821,11 @@ async function cmChatContextualNudge() {
   cmChatShowTyping();
   cmChatLoading = true;
   try {
-    const data = await apiFetch(
-      '/api/concept_map/' + cmEraOrder + '/chat', 'POST', {
-        message: syntheticMsg,
-        graph_json: cy.json(),
-        era_name: cmEraData ? cmEraData.era_name : '',
-      }
-    );
-    cmChatRemoveTyping();
-    cmChatAppendMessage('assistant', data.reply);
-  } catch (_) {
-    cmChatRemoveTyping();
+    await cmDoStreamChat({
+      message: syntheticMsg,
+      graph_json: cy.json(),
+      era_name: cmEraData ? cmEraData.era_name : '',
+    });
   } finally {
     cmChatLoading = false;
   }

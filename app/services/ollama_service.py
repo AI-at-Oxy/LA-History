@@ -5,11 +5,50 @@ from flask import current_app
 
 def _chat_once(base_url, payload, timeout):
     """Single Ollama /api/chat call. Returns (content_stripped_or_empty, raw_data_dict)."""
+    payload.setdefault('keep_alive', '30m')
     response = requests.post(f'{base_url}/api/chat', json=payload, timeout=timeout)
     response.raise_for_status()
     data = response.json()
     content = (data.get('message', {}) or {}).get('content', '') or ''
     return content.strip(), data
+
+
+def stream_chat_with_ollama(messages, system_prompt):
+    """
+    Generator that yields token strings from Ollama's streaming API.
+    Raises requests.exceptions.* on connection/timeout/HTTP errors.
+    """
+    base_url = current_app.config.get('OLLAMA_BASE_URL', 'http://localhost:11434')
+    model = current_app.config.get('OLLAMA_MODEL', 'gemma4:latest')
+
+    recent_messages = messages[-6:] if len(messages) > 6 else messages
+    payload = {
+        'model': model,
+        'messages': [{'role': 'system', 'content': system_prompt}] + recent_messages,
+        'stream': True,
+        'think': False,
+        'keep_alive': '30m',
+        'options': {'num_predict': 400},
+    }
+    response = requests.post(
+        f'{base_url}/api/chat',
+        json=payload,
+        stream=True,
+        timeout=120,
+    )
+    response.raise_for_status()
+    for line in response.iter_lines():
+        if not line:
+            continue
+        try:
+            data = json.loads(line)
+        except json.JSONDecodeError:
+            continue
+        token = (data.get('message', {}) or {}).get('content', '') or ''
+        if token:
+            yield token
+        if data.get('done'):
+            return
 
 
 def chat_with_ollama(messages, system_prompt):
@@ -28,6 +67,8 @@ def chat_with_ollama(messages, system_prompt):
         'model': model,
         'messages': [{'role': 'system', 'content': system_prompt}] + recent_messages,
         'stream': False,
+        'keep_alive': '30m',
+        'options': {'num_predict': 300},
     }
 
     try:
@@ -371,6 +412,7 @@ def generate_memory_challenge_questions(era_name, locations_context, count=8):
         'stream': False,
         'think': False,
         'format': 'json',
+        'keep_alive': '30m',
         'options': {
             'num_predict': max(800, 180 * count),
             'temperature': 0.4,
@@ -474,6 +516,7 @@ def evaluate_concept_map(era_name, locations_context, graph_json):
         'stream': False,
         'think': False,
         'format': 'json',
+        'keep_alive': '30m',
         'options': {
             'num_predict': 1200,
             'temperature': 0.3,

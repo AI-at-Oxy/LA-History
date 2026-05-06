@@ -116,6 +116,14 @@ def create_app(config_name=None):
                     conn.commit()
             except Exception:
                 pass
+            # Quiz hint cache column
+            try:
+                qq_cols = [c['name'] for c in inspector.get_columns('quiz_questions')]
+                if 'hint_cache' not in qq_cols:
+                    conn.execute(text('ALTER TABLE quiz_questions ADD COLUMN hint_cache TEXT'))
+                    conn.commit()
+            except Exception:
+                pass
 
     @app.route('/')
     def index():
