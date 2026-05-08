@@ -1,0 +1,576 @@
+[
+  {
+    "id": 1,
+    "name": "Kuruvungna Springs",
+    "slug": "kuruvungna-springs",
+    "latitude": 34.0699,
+    "longitude": -118.4438,
+    "era": "native",
+    "era_order": 1,
+    "is_starter": true,
+    "unlock_threshold": 0,
+    "image_url": "/static/img/Kuruvungna.png",
+    "image_caption": "The Kuruvungna freshwater spring shaded by willow trees and lush native vegetation on the UCLA campus.",
+    "short_description": "A freshwater spring on the UCLA campus, once the center of the Tongva village of Kuruvungna — 'a place where we are in the sun.'",
+    "full_description": "Before roads crossed the land and buildings covered the ground, the area now known as UCLA was home to something far older: a freshwater spring flowing steadily from the earth. The Tongva people called it Kuruvungna, meaning 'a place where we are in the sun.' For thousands of years, it served as the center of village life. The Tongva built dome-shaped homes called 'ap' from willow branches and tule reeds, designed to breathe with the coastal air. Families gathered near the spring because it provided water year-round, making the site a place for living, gathering, and ceremony. Children were raised there, food was prepared there, and traditions were passed from one generation to the next. Kuruvungna was also part of a larger landscape of connected resources. Streams flowed from the mountains, wetlands stretched toward the coast, and trade routes carried shell beads, tools, and goods across long distances. The spring sat where the hills and ocean worlds met, offering both water and access to surrounding lands. When Mission San Gabriel was founded in 1771, Tongva life across the region changed dramatically. Even so, the spring continued to flow. Today it remains on the UCLA campus, where a small preserved space honors the memory of the village that once stood there.",
+    "events": [
+      {
+        "title": "Tongva Settlement of the Basin",
+        "year": -3000,
+        "year_display": "~3000 BCE",
+        "content": "The Tongva people settle the Los Angeles Basin, establishing villages near reliable water sources. Kuruvungna becomes a central gathering place.",
+        "order_index": 0
+      },
+      {
+        "title": "Village Life at Kuruvungna",
+        "year": 1500,
+        "year_display": "~1500 CE",
+        "content": "At its peak, the village near Kuruvungna Springs had a population of several hundred people. Tongva society was organized around clans, with a hereditary chief called a 'tomyaar' leading each village.",
+        "order_index": 1
+      },
+      {
+        "title": "Spanish Contact and Disruption",
+        "year": 1771,
+        "year_display": "1771",
+        "content": "The founding of Mission San Gabriel Arcángel 10 miles east brought dramatic changes. Spanish missionaries began drawing Tongva people into the mission system, disrupting village life at Kuruvungna.",
+        "order_index": 2
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "name": "Ballona Wetlands",
+    "slug": "ballona-wetlands",
+    "latitude": 33.9775,
+    "longitude": -118.4305,
+    "era": "native",
+    "era_order": 1,
+    "is_starter": true,
+    "unlock_threshold": 0,
+    "image_url": "/static/img/ballona-wetlands.jpg",
+    "image_caption": "The Ballona Wetlands State Ecological Reserve entrance sign, with open coastal marsh grasses and the Marina del Rey skyline in the background.",
+    "short_description": "Once a 2,900-acre coastal marsh and Tongva launching point for plank canoes, Ballona Wetlands today survives as a small remnant under restoration.",
+    "full_description": "Today, Ballona Wetlands appears as a narrow stretch of marsh between city development and roads. Long ago, however, it covered nearly 2,900 acres and was filled with birds, fish, reeds, and flowing water. For the Tongva people, it was an important source of food, materials, and transportation. The Tongva viewed the coast not as an edge, but as a pathway. They built plank canoes that carried people and goods across the ocean to nearby islands. Ballona served as both a launching point and a place of abundance. Tule reeds were used for baskets and homes, fish filled the waters, and birds provided food. The wetlands were connected to the inland mountains through river systems and seasonal floods. Water from higher elevations refreshed the marshlands, while resources moved between coast and foothills throughout the year. Acorns came from the hills in autumn, while fishing was strongest during warmer seasons. Much of the wetland disappeared in the twentieth century as flood channels and development reshaped the land. By 2003, only a portion remained. Restoration efforts today aim to rebuild the balance that once supported life there for centuries.",
+    "events": [
+      {
+        "title": "Tongva Use of Coastal Resources",
+        "year": 1000,
+        "year_display": "~1000 CE",
+        "content": "Tongva communities around Ballona harvest tule, catch waterfowl, and launch tomol canoes for ocean fishing. The wetlands are a crossroads of food and trade.",
+        "order_index": 0
+      },
+      {
+        "title": "Rancho La Ballona Established",
+        "year": 1839,
+        "year_display": "1839",
+        "content": "Mexican authorities grant Rancho La Ballona to the Talamantes and Machado families, beginning large-scale cattle grazing that begins to alter the wetland ecosystem.",
+        "order_index": 1
+      },
+      {
+        "title": "Draining and Development",
+        "year": 1930,
+        "year_display": "1930s",
+        "content": "Flood control projects and real estate development drain much of the original wetlands. The Hughes Aircraft Company later builds facilities on the land.",
+        "order_index": 2
+      }
+    ]
+  },
+  {
+    "id": 3,
+    "name": "San Gabriel Valley Foothills",
+    "slug": "san-gabriel-foothills",
+    "latitude": 34.15,
+    "longitude": -118.05,
+    "era": "native",
+    "era_order": 1,
+    "is_starter": true,
+    "unlock_threshold": 0,
+    "image_url": "/static/img/san-gabriel-foothills.jpg",
+    "image_caption": "A snow-capped panorama of the San Gabriel Mountains, which formed the northern horizon of Tongva territory for thousands of years.",
+    "short_description": "Tongva villages lined the streams flowing from the San Gabriel Mountains, where oak groves and trade routes shaped daily life.",
+    "full_description": "North of the Los Angeles Basin, the San Gabriel Mountains rise sharply above the city. Their foothills once supported many Tongva villages, each located near streams flowing down from the mountains. These communities relied on the land's rich resources and deep knowledge of seasonal cycles. Oak trees were especially important. Their acorns were collected, ground into flour with stone mortars, and turned into porridge or bread. Many of these grinding stones remain in the foothills today, marking places where families worked and gathered over generations. The foothills were also part of broad trade networks. Obsidian came from desert regions, shell beads arrived from the coast, and dried fish and plant medicines moved between communities. Leaders helped maintain relationships between villages and neighboring peoples, allowing trade and cooperation to continue. In 1769, the Portolá Expedition passed through the valley and noted the thriving settlements and fertile land. Within two years, Mission San Gabriel was founded nearby, beginning major changes to the Tongva world that had been shaped carefully over thousands of years.",
+    "events": [
+      {
+        "title": "Acorn Economy of the Foothills",
+        "year": 900,
+        "year_display": "~900 CE",
+        "content": "Tongva communities develop sophisticated acorn processing techniques. Women use bedrock mortars to grind acorns into flour, which is leached of tannins and cooked into porridge or bread.",
+        "order_index": 0
+      },
+      {
+        "title": "Trade Networks Flourish",
+        "year": 1200,
+        "year_display": "~1200 CE",
+        "content": "The Tongva develop extensive trade routes connecting the coast, the basin, and the desert. Shell beads from the Channel Islands serve as a regional currency.",
+        "order_index": 1
+      },
+      {
+        "title": "Portolá Expedition Passes Through",
+        "year": 1769,
+        "year_display": "1769",
+        "content": "The Spanish Portolá expedition, the first overland European crossing of California, camps near the San Gabriel River. The soldiers and priests note large Tongva settlements and the richness of the land.",
+        "order_index": 2
+      }
+    ]
+  },
+  {
+    "id": 4,
+    "name": "El Pueblo de Los Ángeles",
+    "slug": "el-pueblo",
+    "latitude": 34.0579,
+    "longitude": -118.2372,
+    "era": "spanish",
+    "era_order": 2,
+    "is_starter": false,
+    "unlock_threshold": 0,
+    "image_url": "/static/img/el-pueblo.jpg",
+    "image_caption": "Our Lady Queen of Angels Church (La Placita) near the original Los Angeles Plaza, at the heart of the historic El Pueblo district.",
+    "short_description": "Founded September 4, 1781 by 44 settlers of Indigenous, African, and Spanish ancestry, El Pueblo became the seed of modern Los Angeles.",
+    "full_description": "On September 4, 1781, forty-four settlers established a new civilian town in Alta California. They came from Sonora and Sinaloa and represented many backgrounds, including Indigenous, African, and Spanish ancestry. These settlers became the first residents of what would grow into Los Angeles. The pueblo was built around a central plaza, with adobe homes, farms, and irrigation channels. Like many Spanish colonial settlements, the plaza served as the center of community life, government, and trade. It was a statement of order and control placed onto the landscape. By 1800, the pueblo had grown steadily. Agriculture shaped daily life, and labor from nearby Indigenous communities supported much of the work. Mission San Gabriel strongly influenced the economy, directing resources and labor across the region. When Mexico gained independence from Spain in 1821, the pueblo officially became part of Mexico. Though governments changed, the plaza remained the center of the settlement. Today, the historic district near Olvera Street preserves part of that early city.",
+    "events": [
+      {
+        "title": "Founding of the Pueblo",
+        "year": 1781,
+        "year_display": "September 4, 1781",
+        "content": "Governor Felipe de Neve establishes El Pueblo de la Reina de Los Ángeles with 44 settlers. The founding pobladores come from Sonora and Sinaloa, with diverse Indigenous, African, and Spanish heritage.",
+        "order_index": 0
+      },
+      {
+        "title": "Growth Under Spanish Rule",
+        "year": 1800,
+        "year_display": "~1800",
+        "content": "The pueblo grows to over 300 residents. Agriculture and cattle ranching dominate the economy, with forced Tongva labor playing a central but under-documented role.",
+        "order_index": 1
+      },
+      {
+        "title": "Mexican Independence",
+        "year": 1821,
+        "year_display": "1821",
+        "content": "Mexico wins independence from Spain, and California becomes a Mexican territory. The missions are eventually secularized, releasing mission lands and transforming the regional economy.",
+        "order_index": 2
+      }
+    ]
+  },
+  {
+    "id": 5,
+    "name": "Mission San Gabriel Arcángel",
+    "slug": "mission-san-gabriel",
+    "latitude": 34.0957,
+    "longitude": -118.1058,
+    "era": "spanish",
+    "era_order": 2,
+    "is_starter": false,
+    "unlock_threshold": 0,
+    "image_url": "/static/img/mission-san-gabriel.jpg",
+    "image_caption": "Mission San Gabriel Arcángel's long adobe nave and bell wall, flanked by palm trees on the grounds in the city of San Gabriel.",
+    "short_description": "Founded in 1771, Mission San Gabriel was Alta California's most productive mission — built on Tongva labor and devastating to Tongva life.",
+    "full_description": "Mission San Gabriel Arcángel was founded in 1771 and became one of the most productive missions in Alta California. Its thick adobe walls and surviving church still stand today in the city of San Gabriel. The mission produced crops, raised cattle, and operated vineyards that supplied food and goods across the region. It became wealthy through organized agriculture and access to labor. Tongva people were baptized, renamed, and required to live and work under mission control. Crowded conditions and disease caused devastating population loss among Indigenous communities. Mission records carefully documented baptisms, marriages, and burials, creating a written record of lives transformed and lost during the colonial period. In 1833, Mexico secularized the missions, ending church control over much of their land. However, land was often transferred to private ranch owners rather than returned to Native communities. The mission remains both a religious landmark and a reminder of major historical change.",
+    "events": [
+      {
+        "title": "Mission Founded",
+        "year": 1771,
+        "year_display": "September 8, 1771",
+        "content": "Franciscan priests establish Mission San Gabriel near the Tongva village of Shevaanga. Within years, thousands of Tongva are baptized and absorbed into the mission labor system.",
+        "order_index": 0
+      },
+      {
+        "title": "Mission at Peak Production",
+        "year": 1810,
+        "year_display": "~1810",
+        "content": "Mission San Gabriel becomes the most productive mission in California, with over 1,600 Indigenous neophytes and vast herds of cattle. Wine from its vineyards is traded across Alta California.",
+        "order_index": 1
+      },
+      {
+        "title": "Secularization",
+        "year": 1833,
+        "year_display": "1833",
+        "content": "The Mexican government secularizes the missions, transferring land to private ranchers. The Tongva neophytes are technically freed but left landless and impoverished.",
+        "order_index": 2
+      }
+    ]
+  },
+  {
+    "id": 6,
+    "name": "Fort Moore Hill",
+    "slug": "fort-moore-hill",
+    "latitude": 34.0594,
+    "longitude": -118.2414,
+    "era": "spanish",
+    "era_order": 2,
+    "is_starter": false,
+    "unlock_threshold": 0,
+    "image_url": "/static/img/fort-moore-hill.jpg",
+    "image_caption": "The Fort Moore Pioneer Memorial bas-relief panel, depicting U.S. troops raising the American flag over Los Angeles on July 4, 1847.",
+    "short_description": "A short-lived 1847 hilltop fort that marked the transfer of Los Angeles from Mexican to American rule.",
+    "full_description": "Just north of downtown Los Angeles stands Fort Moore Hill, a place tied to the transfer of power from Mexico to the United States. Though often overlooked today, it once overlooked the original plaza of Los Angeles. During the Mexican-American War, U.S. forces entered Los Angeles in 1847. Soldiers built a fort on the hill and raised the American flag there on July 4 of that year. The ceremony marked a new political era for the city. The fort itself did not last long. Military officials soon saw little need for a permanent fortification, and it was abandoned after only a few years. Its symbolic meaning, however, remained strong. The Treaty of Guadalupe Hidalgo in 1848 officially made California part of the United States. Families who had lived under Spanish and Mexican rule now faced new laws, language, and land systems. Fort Moore Hill became a marker of another major transition in Los Angeles history.",
+    "events": [
+      {
+        "title": "U.S. Forces Occupy Los Angeles",
+        "year": 1846,
+        "year_display": "January 1847",
+        "content": "Commodore Robert Stockton leads U.S. forces into Los Angeles following the Battle of Río San Gabriel. The city changes hands from Mexico to the United States during the Mexican-American War.",
+        "order_index": 0
+      },
+      {
+        "title": "Fort Moore Constructed",
+        "year": 1847,
+        "year_display": "July 4, 1847",
+        "content": "The U.S. Army builds Fort Moore on a hilltop overlooking the Plaza. The American flag is raised over Los Angeles for the first time on Independence Day.",
+        "order_index": 1
+      },
+      {
+        "title": "Treaty of Guadalupe Hidalgo",
+        "year": 1848,
+        "year_display": "February 1848",
+        "content": "The Treaty of Guadalupe Hidalgo ends the Mexican-American War. California is ceded to the United States, and Los Angeles officially becomes an American city.",
+        "order_index": 2
+      }
+    ]
+  },
+  {
+    "id": 7,
+    "name": "Old Chinatown",
+    "slug": "old-chinatown",
+    "latitude": 34.0573,
+    "longitude": -118.2385,
+    "era": "rancho",
+    "era_order": 3,
+    "is_starter": false,
+    "unlock_threshold": 0,
+    "image_url": "/static/img/old-chinatown.jpg",
+    "image_caption": "The golden twin-dragon gate at the entrance to Chinatown during a Lunar New Year celebration, a landmark of the community rebuilt after the 1933 demolition.",
+    "short_description": "The original Chinatown near the Plaza, built by railroad-era immigrants and demolished in 1933 to make way for Union Station.",
+    "full_description": "Chinese immigrants began building a neighborhood near the Los Angeles Plaza in the 1870s after many had worked on the transcontinental railroad. They created businesses, homes, temples, and community spaces close to the city center. The neighborhood faced hostility and violence. In 1871, a white mob attacked residents, killing approximately nineteen Chinese people in one of the largest mass lynchings in American history. Despite discrimination and exclusion laws, the community rebuilt and continued to grow. Chinese residents often had limited places where they were allowed to live, making the neighborhood especially important. In 1933, the city condemned Old Chinatown to make way for Union Station. Residents and businesses were displaced, but the community rebuilt several blocks away in what became New Chinatown.",
+    "events": [
+      {
+        "title": "Chinese Immigrants Arrive",
+        "year": 1860,
+        "year_display": "1860s",
+        "content": "Chinese laborers, many recently arrived to work on the transcontinental railroad, begin settling near the Plaza in Los Angeles. They establish laundries and small businesses.",
+        "order_index": 0
+      },
+      {
+        "title": "Chinese Massacre of 1871",
+        "year": 1871,
+        "year_display": "October 24, 1871",
+        "content": "A white mob attacks the Chinese neighborhood, killing approximately 19 residents. It remains one of the deadliest episodes of anti-Chinese violence in U.S. history.",
+        "order_index": 1
+      },
+      {
+        "title": "Chinatown Demolished for Union Station",
+        "year": 1933,
+        "year_display": "1933",
+        "content": "The city condemns the original Chinatown to build Union Station. Hundreds of Chinese residents and businesses are displaced. The community rebuilds several blocks north.",
+        "order_index": 2
+      }
+    ]
+  },
+  {
+    "id": 8,
+    "name": "Bradbury Building",
+    "slug": "bradbury-building",
+    "latitude": 34.0505,
+    "longitude": -118.2483,
+    "era": "rancho",
+    "era_order": 3,
+    "is_starter": false,
+    "unlock_threshold": 0,
+    "image_url": "/static/img/bradbury-building.jpg",
+    "image_caption": "The ornate red-brick exterior of the Bradbury Building at the corner of 3rd and Broadway in downtown Los Angeles, completed in 1893.",
+    "short_description": "Completed in 1893, the Bradbury Building hides one of LA's most ornate atriums behind a plain Broadway façade.",
+    "full_description": "Completed in 1893, the Bradbury Building is one of Los Angeles's most famous historic structures. Its plain exterior contrasts with an interior filled with ornate ironwork, open elevators, skylights, and natural light. The building was constructed during a period of rapid growth in Los Angeles. Railroad expansion and land speculation brought thousands of new residents, transforming the city into a booming urban center. Lewis Bradbury commissioned the structure, while draftsman George Wyman designed much of its striking interior. The result was unlike anything else in the city at the time. Located on Broadway, the building stood in the heart of Los Angeles commerce. It has survived economic shifts and redevelopment and remains a symbol of late nineteenth-century ambition.",
+    "events": [
+      {
+        "title": "The Great Boom of the 1880s",
+        "year": 1885,
+        "year_display": "1885–1888",
+        "content": "The arrival of the Santa Fe Railroad in 1885 ignites a price war with the Southern Pacific, driving fares to as low as $1 from Missouri. Land prices soar; the population of Los Angeles explodes.",
+        "order_index": 0
+      },
+      {
+        "title": "Bradbury Building Completed",
+        "year": 1893,
+        "year_display": "1893",
+        "content": "The Bradbury Building opens on Broadway in downtown Los Angeles, showcasing the city's ambitions as an architectural and commercial center.",
+        "order_index": 1
+      },
+      {
+        "title": "Broadway as the Commercial Hub",
+        "year": 1910,
+        "year_display": "1900s–1920s",
+        "content": "Broadway in downtown LA becomes the premier shopping and entertainment district west of the Mississippi, lined with grand theaters and department stores.",
+        "order_index": 2
+      }
+    ]
+  },
+  {
+    "id": 9,
+    "name": "Hollenbeck Park",
+    "slug": "hollenbeck-park",
+    "latitude": 34.0417,
+    "longitude": -118.2113,
+    "era": "rancho",
+    "era_order": 3,
+    "is_starter": false,
+    "unlock_threshold": 0,
+    "image_url": "/static/img/hollenbeck-park.jpg",
+    "image_caption": "A historic early-1900s view of Hollenbeck Park's lake, ornamental footbridge, and flower beds, shortly after the park was gifted to the city.",
+    "short_description": "Opened in 1892 as Los Angeles's first public park, Hollenbeck Park anchored a famously diverse Boyle Heights neighborhood.",
+    "full_description": "Hollenbeck Park opened in 1892 after Elizabeth Hollenbeck donated land to the city in memory of her husband. It became Los Angeles's first public park. Located in Boyle Heights, the park soon served a neighborhood known for its diversity. Jewish, Japanese, Mexican, Russian Molokan, and African American families all lived nearby, often because other neighborhoods excluded them. The park's lake and open space became a shared gathering place for communities with different languages, religions, and traditions. It offered public space in a growing city marked by social divisions. Boyle Heights continued changing through the twentieth century, but Hollenbeck Park remained a lasting part of neighborhood life.",
+    "events": [
+      {
+        "title": "Park Donated to the City",
+        "year": 1892,
+        "year_display": "1892",
+        "content": "Elizabeth Hollenbeck donates land to Los Angeles for a public park in memory of her husband. It becomes the city's first public green space.",
+        "order_index": 0
+      },
+      {
+        "title": "Boyle Heights as Immigrant Hub",
+        "year": 1920,
+        "year_display": "1910s–1940s",
+        "content": "Boyle Heights becomes one of America's most diverse urban neighborhoods, home to Jewish, Japanese, Mexican, and Russian Molokan immigrants — many excluded from other LA neighborhoods by restrictive covenants.",
+        "order_index": 1
+      },
+      {
+        "title": "Japanese American Incarceration",
+        "year": 1942,
+        "year_display": "1942",
+        "content": "After the attack on Pearl Harbor, the Japanese American community of Boyle Heights is forcibly incarcerated. Many return after the war to find their homes and businesses gone.",
+        "order_index": 2
+      }
+    ]
+  },
+  {
+    "id": 10,
+    "name": "La Placita Church (Plaza Catholic Church)",
+    "slug": "la-placita-church",
+    "latitude": 34.058,
+    "longitude": -118.2365,
+    "era": "rancho",
+    "era_order": 3,
+    "is_starter": false,
+    "unlock_threshold": 0,
+    "image_url": "/static/img/la-placita-church.jpg",
+    "image_caption": "The white stucco facade of Our Lady Queen of Angels Church (La Placita), with its cross-topped bell towers and red doorway on Main Street.",
+    "short_description": "Founded in 1784 beside the original Plaza, La Placita is LA's oldest surviving church and a long-standing Latino spiritual center.",
+    "full_description": "La Placita Church began in 1784 near the original Los Angeles Plaza. The current Adobe structure, completed in 1822, is the oldest surviving church in the city. The church was closely tied to Mission San Gabriel during the colonial era and served as both a religious center and part of the broader social order of the pueblo. Over time, it remained important to generations of Latino families living near the Plaza. It hosted baptisms, weddings, funerals, and community gatherings through multiple political eras. In the 1980s, the church became known for offering sanctuary to refugees fleeing violence in Central America. Its long history of shelter and service continued into the modern age.",
+    "events": [
+      {
+        "title": "Church Founded",
+        "year": 1784,
+        "year_display": "1784",
+        "content": "The first chapel near the Plaza is established to serve the small colonial pueblo. It is staffed by Franciscan priests from Mission San Gabriel.",
+        "order_index": 0
+      },
+      {
+        "title": "Current Building Completed",
+        "year": 1822,
+        "year_display": "1822",
+        "content": "The present adobe church structure is completed, becoming the parish church of El Pueblo de Los Ángeles under Mexican rule.",
+        "order_index": 1
+      },
+      {
+        "title": "Sanctuary Movement",
+        "year": 1985,
+        "year_display": "1985–1990",
+        "content": "Father Luis Olivares declares La Placita a sanctuary for undocumented refugees fleeing violence in Central America, drawing national attention and FBI scrutiny.",
+        "order_index": 2
+      }
+    ]
+  },
+  {
+    "id": 11,
+    "name": "Watts Towers",
+    "slug": "watts-towers",
+    "latitude": 33.9382,
+    "longitude": -118.2415,
+    "era": "modern",
+    "era_order": 4,
+    "is_starter": false,
+    "unlock_threshold": 0,
+    "image_url": "/static/img/watts-towers.jpg",
+    "image_caption": "Simon Rodia's Watts Towers — 17 interlocking steel-and-mosaic structures rising up to 99 feet — seen from the surrounding fence in the Watts neighborhood.",
+    "video_url": "https://www.youtube.com/watch?v=9L3hlXe3-Uc",
+    "video_caption": "Watts Towers Documentary",
+    "short_description": "Italian immigrant Simon Rodia spent 33 years alone building 17 interlocking towers in Watts — one of America's greatest works of folk art.",
+    "full_description": "Beginning in 1921, Italian immigrant Simon Rodia started building a series of towers in Watts using steel, cement, broken tile, glass, and pottery. He worked alone for thirty-three years. The finished site included seventeen interconnected structures, with the tallest reaching ninety-nine feet. Rodia used simple tools and climbing belts to create one of the most remarkable works of folk art in the United States. He left Los Angeles in 1954 and never returned. Years later, Watts became nationally known during the 1965 uprising sparked by tensions over inequality and policing. The towers survived and were protected by neighbors. They remain a symbol of creativity, perseverance, and community pride.",
+    "events": [
+      {
+        "title": "Rodia Begins Construction",
+        "year": 1921,
+        "year_display": "1921",
+        "content": "Simon Rodia, a tile setter by trade, begins building his towers in the backyard of his Watts home. He works alone, nights and weekends, for 33 years.",
+        "order_index": 0
+      },
+      {
+        "title": "Towers Completed and Donated",
+        "year": 1954,
+        "year_display": "1954",
+        "content": "Rodia completes the towers and deeds his property to a neighbor before moving away. He never returns to see them again.",
+        "order_index": 1
+      },
+      {
+        "title": "Watts Uprising",
+        "year": 1965,
+        "year_display": "August 1965",
+        "content": "The Watts Uprising, triggered by a racially charged traffic stop, burns for six days. The towers survive untouched — neighbors protect them. The event forces a national reckoning with racism and urban poverty.",
+        "order_index": 2
+      }
+    ]
+  },
+  {
+    "id": 12,
+    "name": "Griffith Observatory",
+    "slug": "griffith-observatory",
+    "latitude": 34.1184,
+    "longitude": -118.3004,
+    "era": "modern",
+    "era_order": 4,
+    "is_starter": false,
+    "unlock_threshold": 0,
+    "image_url": "/static/img/griffith-observatory.jpg",
+    "image_caption": "The Griffith Observatory's three copper domes and white Art Deco facade overlooking the sprawling Los Angeles Basin from Griffith Park.",
+    "short_description": "Opened in 1935 on land donated by Griffith J. Griffith, the observatory offers free telescopes, science exhibits, and sweeping views of Los Angeles.",
+    "full_description": "Griffith Observatory opened in 1935 on land donated to the city by Griffith J. Griffith. His gift created Griffith Park, intended as a place for all residents to enjoy. The observatory gave Angelenos free access to telescopes, science exhibits, and sweeping views of the city. Visitors could see both the stars above and the expanding city below. The land had passed through many eras before becoming a public park, including Indigenous stewardship, Mexican rancho ownership, and private speculation. The observatory later became famous through films such as Rebel Without a Cause and remains one of Los Angeles's most visited landmarks.",
+    "events": [
+      {
+        "title": "Griffith Donates the Land",
+        "year": 1896,
+        "year_display": "December 1896",
+        "content": "Colonel Griffith J. Griffith donates 3,015 acres of Rancho Los Feliz to the City of Los Angeles, envisioning a park where working-class people can enjoy nature.",
+        "order_index": 0
+      },
+      {
+        "title": "Observatory Opens",
+        "year": 1935,
+        "year_display": "May 14, 1935",
+        "content": "The Griffith Observatory opens to the public, offering free access to telescopes and planetarium shows. Over 10,000 people visit on opening day.",
+        "order_index": 1
+      },
+      {
+        "title": "Hollywood Icon",
+        "year": 1955,
+        "year_display": "1955",
+        "content": "James Dean's 'Rebel Without a Cause' films a pivotal scene at the observatory, cementing it as a symbol of Los Angeles youth culture and Hollywood mythology.",
+        "order_index": 2
+      }
+    ]
+  },
+  {
+    "id": 13,
+    "name": "Chavez Ravine",
+    "slug": "chavez-ravine",
+    "latitude": 34.0739,
+    "longitude": -118.24,
+    "era": "modern",
+    "era_order": 4,
+    "is_starter": false,
+    "unlock_threshold": 0,
+    "image_url": "/static/img/chavez-ravine.jpg",
+    "image_caption": "A wooded walking path in Elysian Park near Chavez Ravine, the hillside area where the Palo Verde, La Loma, and Bishop communities stood before their demolition.",
+    "video_url": "https://www.youtube.com/watch?v=SZuoFTcTGco",
+    "video_caption": "Chavez Ravine Oral History Documentary",
+    "short_description": "Three Mexican American communities — Palo Verde, La Loma, and Bishop — were displaced from Chavez Ravine to make way for what became Dodger Stadium.",
+    "full_description": "Before Dodger Stadium, Chavez Ravine was home to three communities: Palo Verde, La Loma, and Bishop. Mostly Mexican American families lived there in homes surrounded by gardens, schools, and churches. In the late 1940s, the city acquired land in the ravine for a planned public housing project. Residents were promised new housing, and many sold their homes. The housing project was later canceled, leaving the land empty. In 1958, the city offered the cleared site to the Brooklyn Dodgers as part of the team's move to Los Angeles. Dodger Stadium opened in 1962. The site remains connected to both the excitement of baseball and the memory of displaced families.",
+    "events": [
+      {
+        "title": "Community Displacement Begins",
+        "year": 1950,
+        "year_display": "1950–1951",
+        "content": "The City of Los Angeles acquires land in Chavez Ravine for a proposed public housing project. Over 1,000 families — mostly Mexican American — are displaced with promises of new housing.",
+        "order_index": 0
+      },
+      {
+        "title": "Housing Project Cancelled",
+        "year": 1952,
+        "year_display": "1952",
+        "content": "Amid Red Scare politics, the Los Angeles City Council cancels the public housing project. The cleared land sits vacant for years, and displaced families receive nothing.",
+        "order_index": 1
+      },
+      {
+        "title": "Dodger Stadium Opens",
+        "year": 1962,
+        "year_display": "April 10, 1962",
+        "content": "Dodger Stadium opens on the land where the community once stood. The last holdout family, the Arechiga's, were forcibly evicted by sheriff's deputies in 1959 in scenes broadcast on local TV.",
+        "order_index": 2
+      }
+    ]
+  },
+  {
+    "id": 14,
+    "name": "MacArthur Park",
+    "slug": "macarthur-park",
+    "latitude": 34.0573,
+    "longitude": -118.2768,
+    "era": "modern",
+    "era_order": 4,
+    "is_starter": false,
+    "unlock_threshold": 0,
+    "image_url": "/static/img/macarthur-park.jpg",
+    "image_caption": "MacArthur Park's lake framed by palm trees, with the historic Westlake Theatre sign and the downtown Los Angeles skyline visible in the background.",
+    "short_description": "Originally Westlake Park (1890), MacArthur Park went from elite playground to a center of Central American immigrant life in Los Angeles.",
+    "full_description": "MacArthur Park began as Westlake Park in 1890 and was once surrounded by luxury hotels and fashionable neighborhoods. Its lake and walking paths attracted wealthy residents. As Los Angeles expanded outward, the surrounding neighborhood changed. Immigrant and working-class communities increasingly made the area their home. By the 1980s, many Central American refugees fleeing war settled nearby. The park became a place for commerce, gathering, and daily life shaped by many cultures. In 2007, a major immigration rights rally in the park ended in a controversial police response, highlighting ongoing debates about protest and public space.",
+    "events": [
+      {
+        "title": "Westlake Park Opens",
+        "year": 1890,
+        "year_display": "1890",
+        "content": "Westlake Park opens as a fashionable green space on the western edge of downtown. The artificial lake and boathouse attract wealthy Angelenos.",
+        "order_index": 0
+      },
+      {
+        "title": "Central American Immigration Wave",
+        "year": 1980,
+        "year_display": "1980s",
+        "content": "Refugees from civil wars in El Salvador, Guatemala, and Nicaragua transform the neighborhoods around MacArthur Park into the heart of Central American Los Angeles.",
+        "order_index": 1
+      },
+      {
+        "title": "May Day Police Crackdown",
+        "year": 2007,
+        "year_display": "May 1, 2007",
+        "content": "LAPD officers fire rubber bullets and beat journalists covering an immigration rights rally at MacArthur Park. The incident prompts the firing of the police chief and a national debate on policing.",
+        "order_index": 2
+      }
+    ]
+  },
+  {
+    "id": 15,
+    "name": "The Hollywood Sign",
+    "slug": "hollywood-sign",
+    "latitude": 34.1341,
+    "longitude": -118.3217,
+    "era": "modern",
+    "era_order": 4,
+    "is_starter": false,
+    "unlock_threshold": 0,
+    "image_url": "/static/img/hollywood-sign.jpg",
+    "image_caption": "The Hollywood Sign on the dry chaparral slopes of Mount Lee, the restored 45-foot-tall icon against a clear blue sky.",
+    "short_description": "Built in 1923 as a temporary real estate ad reading 'HOLLYWOODLAND,' the sign became one of the world's most recognized symbols.",
+    "full_description": "In 1923, developers placed giant letters spelling HOLLYWOODLAND on Mount Lee as an advertisement for a housing development. It was intended to be temporary. As the film industry grew, the sign came to represent Hollywood itself and the larger idea of fame, reinvention, and entertainment. By the 1970s, the structure had fallen into disrepair. A fundraising campaign replaced the letters in 1978, restoring the landmark. Today, the Hollywood Sign is one of the most recognized symbols in the world, visible across Los Angeles as a lasting image of the city.",
+    "events": [
+      {
+        "title": "Sign Erected as Advertisement",
+        "year": 1923,
+        "year_display": "1923",
+        "content": "The 'HOLLYWOODLAND' sign is built to advertise a real estate development. At 50 feet tall and 450 feet wide, it is visible across the Los Angeles Basin.",
+        "order_index": 0
+      },
+      {
+        "title": "Hollywood Film Industry Dominates",
+        "year": 1930,
+        "year_display": "1920s–1930s",
+        "content": "Hollywood becomes the undisputed center of the global film industry. Studios like Paramount, MGM, and Warner Bros. produce the movies that shape global popular culture.",
+        "order_index": 1
+      },
+      {
+        "title": "Sign Restored",
+        "year": 1978,
+        "year_display": "1978",
+        "content": "A celebrity campaign raises $250,000 to restore the deteriorating sign. Each letter is sponsored by a celebrity — Alice Cooper paid for an 'O' in memory of Groucho Marx.",
+        "order_index": 2
+      }
+    ]
+  }
+]

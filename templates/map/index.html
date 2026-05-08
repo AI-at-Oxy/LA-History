@@ -1,0 +1,333 @@
+{% extends 'base.html' %}
+{% block title %}Map — LA History{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/map.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/chat.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/quiz.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/concept_map.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/tutorial.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="map-layout">
+
+  <!-- Left Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-header-top">
+        <div>
+          <h3>Your Journey</h3>
+          <div class="sidebar-username">{{ current_user.username }}</div>
+        </div>
+        <!-- Overall completion ring -->
+        <div class="sidebar-ring" id="sidebar-ring" title="Overall completion">
+          <svg width="52" height="52" viewBox="0 0 52 52">
+            <circle class="sidebar-ring-bg" cx="26" cy="26" r="20"/>
+            <circle class="sidebar-ring-fill" id="sidebar-ring-fill" cx="26" cy="26" r="20"
+              stroke-dasharray="125.7"
+              stroke-dashoffset="125.7"/>
+          </svg>
+          <div class="sidebar-ring-text">
+            <span class="sidebar-ring-pct" id="sidebar-ring-pct">0%</span>
+          </div>
+        </div>
+      </div>
+      <div class="sidebar-points">
+        <span class="points-label">Points</span>
+        <span class="points-value" id="sidebar-points">{{ current_user.total_points or 0 }}</span>
+        <span class="sidebar-visited-counter" id="sidebar-visited-counter">0/0 visited</span>
+      </div>
+    </div>
+    <div class="sidebar-body">
+      <div class="era-progress-section">
+        <h4>Era Progress</h4>
+        <div id="era-progress-list">
+          <!-- Populated by progress.js -->
+          <div style="color:var(--text-muted);font-size:0.82rem;font-style:italic">Loading...</div>
+        </div>
+      </div>
+
+      <div class="sidebar-divider"></div>
+
+      <div class="badge-section">
+        <h4>Badges Earned</h4>
+        <div class="badge-grid" id="badge-grid">
+          <span class="badge-empty">Complete quizzes to earn badges.</span>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Sidebar toggle -->
+  <button class="sidebar-toggle" id="sidebar-toggle" title="Toggle sidebar">‹</button>
+
+  <!-- Map -->
+  <div id="map">
+    <div id="map-loading">
+      <div class="map-loader-ring"></div>
+      <span class="map-loader-text">Loading map…</span>
+    </div>
+
+    <!-- Era filter toolbar -->
+    <div id="era-filter-bar">
+      <button class="era-filter-btn active" data-era="native" onclick="applyEraFilter('native')">🌿 Tongva</button>
+      <button class="era-filter-btn active" data-era="spanish" onclick="applyEraFilter('spanish')">⚓ Spanish</button>
+      <button class="era-filter-btn active" data-era="rancho" onclick="applyEraFilter('rancho')">🏗️ Rancho</button>
+      <button class="era-filter-btn active" data-era="modern" onclick="applyEraFilter('modern')">🌆 Modern</button>
+    </div>
+
+    <!-- Location search bar -->
+    <div id="map-search-wrap">
+      <input id="map-search-input" type="search" placeholder="Search locations…" autocomplete="off" spellcheck="false">
+      <div id="map-search-results"></div>
+    </div>
+  </div>
+
+  <!-- Right Detail Panel -->
+  <aside class="detail-panel" id="detail-panel">
+    <div class="detail-panel-header">
+      <span id="detail-era-pill"></span>
+      <button class="detail-close" id="detail-close" title="Close">×</button>
+    </div>
+    <div class="detail-panel-body" id="detail-panel-body">
+      <!-- Populated by map.js -->
+    </div>
+  </aside>
+</div>
+
+<!-- Quiz Modal -->
+<div class="modal-overlay" id="quiz-modal-overlay">
+  <div class="quiz-modal" id="quiz-modal">
+    <!-- Populated by quiz.js -->
+  </div>
+</div>
+
+<!-- Concept Map Overlay -->
+<div class="cm-overlay" id="cm-overlay" role="dialog" aria-modal="true" aria-label="Concept Map">
+  <div class="cm-panel">
+
+    <div class="cm-panel-header">
+      <div class="cm-panel-title">
+        <span class="cm-panel-title-icon">🗺️</span>
+        <span>Concept Map</span>
+        <span class="cm-era-pill" id="cm-era-pill"></span>
+      </div>
+      <div class="cm-header-actions">
+        <span class="cm-status" id="cm-status"></span>
+        <button class="cm-tour-btn" id="cm-tour-btn" aria-label="Replay concept map tutorial" title="Replay tutorial">?</button>
+        <button class="cm-close-btn" id="cm-close-btn" aria-label="Close concept map">×</button>
+      </div>
+    </div>
+
+    <div class="cm-body">
+
+      <!-- Palette -->
+      <aside class="cm-palette" id="cm-palette" aria-label="Location palette">
+        <div class="cm-palette-section cm-section--era">
+          <h4 class="cm-palette-heading">
+            <span class="cm-section-icon">📍</span>Era Locations
+          </h4>
+          <div id="cm-palette-list"></div>
+        </div>
+        <div class="cm-palette-section cm-section--cross">
+          <h4 class="cm-palette-heading">
+            <span class="cm-section-icon">🔗</span>Cross-Era
+          </h4>
+          <button class="cm-palette-action-btn cm-palette-action-btn--cross" id="cm-add-cross-era-btn">
+            <span class="cm-action-plus">＋</span>Add from another era
+          </button>
+          <div id="cm-cross-era-list"></div>
+        </div>
+        <div class="cm-palette-section cm-section--custom">
+          <h4 class="cm-palette-heading">
+            <span class="cm-section-icon">✦</span>Custom Nodes
+          </h4>
+          <button class="cm-palette-action-btn cm-palette-action-btn--custom" id="cm-add-custom-node-btn">
+            <span class="cm-action-plus">＋</span>Create custom node
+          </button>
+          <div id="cm-custom-node-list"></div>
+        </div>
+        <div class="cm-instructions">
+          <strong>💡Quick Start</strong>
+          <div class="cm-steps">
+            <div class="cm-step"><span class="cm-step-n">1</span><span>Click <strong>+</strong> beside a location to add it to the canvas</span></div>
+            <div class="cm-step"><span class="cm-step-n">2</span><span>Click a node, then choose <strong>Start Connection</strong></span></div>
+            <div class="cm-step"><span class="cm-step-n">3</span><span>Click the destination node</span></div>
+            <div class="cm-step"><span class="cm-step-n">4</span><span>Describe the relationship, then click <strong>Add Connection</strong></span></div>
+          </div>
+          <div class="cm-instructions-tip">Click any edge to edit its label or delete it</div>
+        </div>
+      </aside>
+
+      <!-- Canvas area -->
+      <div class="cm-canvas-area">
+        <div id="cm-canvas" tabindex="0" aria-label="Concept map canvas"></div>
+
+        <!-- Empty state -->
+        <div class="cm-empty-state" id="cm-empty-state">
+          <div class="cm-empty-state-icon">🕸️</div>
+          <div class="cm-empty-state-text">Add locations from the sidebar to start building your concept map</div>
+        </div>
+
+        <!-- Zoom controls -->
+        <div class="cm-zoom-controls">
+          <button class="cm-zoom-btn" id="cm-zoom-in-btn" title="Zoom in">+</button>
+          <button class="cm-zoom-btn" id="cm-zoom-out-btn" title="Zoom out">−</button>
+        </div>
+
+        <!-- Edge label popup -->
+        <div class="cm-edge-popup" id="cm-edge-popup" aria-hidden="true">
+          <label class="cm-edge-popup-label" for="cm-edge-label-input">Relationship label</label>
+          <input type="text" id="cm-edge-label-input"
+                 placeholder="e.g. both displaced by Mission system"
+                 aria-label="Relationship label" maxlength="120" autocomplete="off">
+          <div class="cm-edge-popup-actions">
+            <button class="cm-btn cm-btn-secondary" id="cm-edge-cancel-btn">Cancel</button>
+            <button class="cm-btn cm-btn-primary" id="cm-edge-add-btn">Add Connection</button>
+          </div>
+        </div>
+
+        <!-- Custom node dialog -->
+        <div class="cm-custom-node-dialog" id="cm-custom-node-dialog" aria-hidden="true">
+          <div class="cm-custom-node-dialog-inner">
+            <div class="cm-cross-era-picker-header">
+              <span>Add custom node</span>
+              <button class="cm-close-btn" id="cm-custom-node-close" aria-label="Close">×</button>
+            </div>
+            <div style="padding:14px 16px 16px">
+              <label class="cm-edge-popup-label" for="cm-custom-node-input">Node label</label>
+              <input type="text" id="cm-custom-node-input"
+                     placeholder="e.g. Trade Routes, Disease, Religion…"
+                     aria-label="Custom node label" maxlength="60" autocomplete="off"
+                     style="width:100%;box-sizing:border-box;padding:8px 11px;border:1.5px solid var(--border);border-radius:8px;font-size:0.85rem;background:var(--bg);color:var(--text);outline:none;">
+              <div class="cm-edge-popup-actions" style="margin-top:10px">
+                <button class="cm-btn cm-btn-secondary" id="cm-custom-node-cancel">Cancel</button>
+                <button class="cm-btn cm-btn-primary" id="cm-custom-node-confirm">Add Node</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Cross-era picker -->
+        <div class="cm-cross-era-picker" id="cm-cross-era-picker" aria-hidden="true">
+          <div class="cm-cross-era-picker-inner">
+            <div class="cm-cross-era-picker-header">
+              <span>Add location from another era</span>
+              <button class="cm-close-btn" id="cm-picker-close" aria-label="Close picker">×</button>
+            </div>
+            <div id="cm-picker-list"></div>
+          </div>
+        </div>
+
+        <!-- Right-click context menu -->
+        <div class="cm-context-menu" id="cm-context-menu" role="menu" aria-hidden="true">
+          <div id="cm-context-menu-items"></div>
+        </div>
+      </div>
+
+      <!-- Concept Map Tutor Panel -->
+      <aside class="cm-chat-panel" id="cm-chat-panel" aria-label="AI Tutor">
+        <div class="cm-chat-header">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" style="flex-shrink:0;opacity:0.8">
+            <path d="M14 1H2C1.45 1 1 1.45 1 2v8c0 .55.45 1 1 1h2v3l3.5-3H14c.55 0 1-.45 1-1V2c0-.55-.45-1-1-1z"
+                  stroke="currentColor" stroke-width="1.2" stroke-linejoin="round" fill="none"/>
+          </svg>
+          <span class="cm-chat-title">AI Tutor</span>
+          <button class="cm-chat-clear-btn" id="cm-chat-clear-btn" title="Clear conversation">
+            <svg width="12" height="12" viewBox="0 0 13 13" fill="none">
+              <path d="M2 3h9M5 3V2h3v1M4 3l.5 7h4L9 3" stroke="currentColor" stroke-width="1.2"
+                    stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+        </div>
+        <div class="cm-chat-messages" id="cm-chat-messages">
+          <div class="chat-intro">
+            <div class="chat-intro-icon">🎓</div>
+            <strong>AI Tutor</strong>
+            I guide your thinking with questions — I won't give answers directly. Use the <strong>💡 AI Hint</strong> button below for direct suggestions.
+          </div>
+        </div>
+        <div class="chat-input-area">
+          <div class="chat-input-wrap">
+            <textarea id="cm-chat-input" placeholder="Ask about your map…" rows="1"></textarea>
+            <button class="chat-mic-btn" id="cm-chat-mic-btn" type="button"
+                    title="Voice input" aria-label="Start voice input" aria-pressed="false">
+              <svg width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden="true">
+                <rect x="4" y="1" width="5" height="7" rx="2.5" stroke="currentColor" stroke-width="1.4"/>
+                <path d="M2 7a4.5 4.5 0 009 0" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+                <line x1="6.5" y1="11.5" x2="6.5" y2="12.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+              </svg>
+            </button>
+          </div>
+          <button class="chat-send-btn" id="cm-chat-send-btn" title="Send">
+            <svg width="15" height="15" viewBox="0 0 15 15" fill="none">
+              <path d="M13 7.5L2 2l2.5 5.5L2 13l11-5.5z" fill="currentColor"/>
+            </svg>
+          </button>
+        </div>
+      </aside>
+
+    </div>
+
+    <!-- AI feedback panel (hidden until submission) -->
+    <div class="cm-results-panel" id="cm-results-panel" hidden>
+      <div class="cm-results-header">
+        <div class="cm-results-header-title">
+          <span class="cm-results-header-icon">✨</span>
+          <span>AI Feedback</span>
+        </div>
+      </div>
+      <div class="cm-results-body" id="cm-results-body"></div>
+    </div>
+
+    <div class="cm-panel-footer">
+      <div class="cm-footer-left">
+        <span class="cm-edge-count" id="cm-graph-stats">0 nodes · 0 connections</span>
+        <span class="cm-save-indicator" id="cm-save-indicator">✓ Saved</span>
+        <button class="cm-btn cm-btn-secondary" id="cm-fit-btn" title="Fit all nodes in view">⤢ Fit</button>
+        <button class="cm-btn cm-btn-secondary" id="cm-layout-btn" title="Auto-arrange nodes">⟳ Auto-arrange</button>
+        <button class="cm-btn cm-btn-secondary cm-clear-all-btn" id="cm-clear-btn">Clear All</button>
+        <button class="cm-btn cm-btn-insight" id="cm-insight-btn" style="display:none"
+                onclick="requestInsight()" title="Spend 15 pts for a direct hint about connections you might be missing">
+          💡 AI Hint (15 pts) &mdash; <span id="cm-insight-uses">3</span> left
+        </button>
+      </div>
+      <div class="cm-footer-right">
+        <button class="cm-btn cm-btn-secondary" id="cm-save-btn">💾 Save</button>
+        <div class="cm-submit-wrapper">
+          <button class="cm-btn cm-btn-primary" id="cm-submit-btn" disabled
+                  aria-describedby="cm-submit-tooltip">Submit for Feedback</button>
+          <span class="cm-submit-tooltip" id="cm-submit-tooltip" role="tooltip"></span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://unpkg.com/cytoscape@3.30.2/dist/cytoscape.min.js"></script>
+<script>
+  const CURRENT_USER = {
+    id: {{ current_user.id }},
+    username: "{{ current_user.username | e }}",
+    totalPoints: {{ current_user.total_points or 0 }},
+  };
+  const CSRF_TOKEN = "{{ csrf_token() }}";
+  const FORCE_TUTORIAL = {{ 'true' if show_tutorial else 'false' }};
+</script>
+<script src="{{ url_for('static', filename='js/utils.js') }}"></script>
+<script src="{{ url_for('static', filename='js/sounds.js') }}"></script>
+<script src="{{ url_for('static', filename='js/tts.js') }}"></script>
+<script src="{{ url_for('static', filename='js/progress.js') }}"></script>
+<script src="{{ url_for('static', filename='js/quiz.js') }}"></script>
+<script src="{{ url_for('static', filename='js/voice.js') }}"></script>
+<script src="{{ url_for('static', filename='js/map.js') }}"></script>
+<script src="{{ url_for('static', filename='js/concept_map.js') }}"></script>
+<script src="{{ url_for('static', filename='js/tutorial.js') }}"></script>
+{% endblock %}

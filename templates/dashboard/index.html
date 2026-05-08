@@ -1,0 +1,1289 @@
+{% extends 'base.html' %}
+{% block title %}Dashboard — LA History{% endblock %}
+
+{% block extra_css %}
+<style>
+/* ---- Dashboard Page ---- */
+.dashboard-page {
+  padding: calc(var(--nav-height) + 32px) 28px 56px;
+  max-width: 940px;
+  margin: 0 auto;
+}
+
+/* ---- Hero ---- */
+.dashboard-hero {
+  background: var(--bg-dark);
+  border-radius: 12px;
+  padding: 36px 40px 34px;
+  color: #fff;
+  margin-bottom: 36px;
+  display: flex;
+  align-items: center;
+  gap: 40px;
+  flex-wrap: wrap;
+  position: relative;
+  overflow: visible;
+  box-shadow: var(--shadow-lg);
+  border: 1px solid rgba(212,168,67,0.15);
+}
+
+/* Art deco diagonal weave on hero */
+.dashboard-hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 12px;
+  overflow: hidden;
+  background:
+    repeating-linear-gradient(
+      135deg,
+      transparent 0px, transparent 28px,
+      rgba(212,168,67,0.035) 28px, rgba(212,168,67,0.035) 29px
+    ),
+    repeating-linear-gradient(
+      45deg,
+      transparent 0px, transparent 28px,
+      rgba(212,168,67,0.02) 28px, rgba(212,168,67,0.02) 29px
+    );
+  pointer-events: none;
+}
+
+/* Subtle glow accent behind greeting */
+.dashboard-hero::after {
+  content: '';
+  position: absolute;
+  left: -60px;
+  top: -60px;
+  width: 300px;
+  height: 300px;
+  background: radial-gradient(ellipse, rgba(184,115,26,0.12) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.hero-greeting {
+  flex: 1;
+  min-width: 200px;
+  position: relative;
+}
+
+.hero-greeting-eyebrow {
+  font-size: 0.68rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--accent-gold);
+  margin-bottom: 6px;
+  font-weight: 500;
+}
+
+.hero-greeting h1 {
+  font-family: var(--font-display);
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 6px;
+  color: #f0ece4;
+  line-height: 1.15;
+}
+
+.hero-greeting p {
+  color: #6e6458;
+  font-size: 0.88rem;
+  letter-spacing: 0.02em;
+}
+
+.hero-rule {
+  display: block;
+  width: 40px;
+  height: 2px;
+  background: linear-gradient(to right, var(--accent), transparent);
+  margin: 12px 0;
+}
+
+.hero-stats {
+  display: flex;
+  gap: 0;
+  flex-wrap: wrap;
+  position: relative;
+  margin-left: auto;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.hero-stat {
+  text-align: center;
+  padding: 10px 18px;
+  border-right: 1px solid rgba(255,255,255,0.07);
+  min-width: 78px;
+}
+.hero-stat:last-child { border-right: none; }
+
+.hero-stat-value {
+  font-family: var(--font-display);
+  font-size: 2.2rem;
+  font-weight: 900;
+  color: var(--accent-gold);
+  display: block;
+  line-height: 1;
+  margin-bottom: 5px;
+}
+
+.hero-stat-label {
+  font-size: 0.68rem;
+  color: #6e6458;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-weight: 500;
+}
+
+/* ---- Section title ---- */
+.section-title {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 18px;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.section-title::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(to right, var(--border), transparent);
+}
+
+/* ---- Era cards ---- */
+.era-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(205px, 1fr));
+  gap: 18px;
+  margin-bottom: 40px;
+}
+
+.era-card {
+  background: var(--bg-card);
+  border-radius: 10px;
+  padding: 20px;
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+  transition: transform 0.2s, box-shadow 0.2s;
+  position: relative;
+  overflow: visible;
+}
+
+/* ---- Era card tooltip ---- */
+.era-card-tip {
+  display: none;
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--bg-dark);
+  border: 1px solid rgba(212,168,67,0.25);
+  border-radius: 8px;
+  padding: 10px 14px;
+  white-space: nowrap;
+  z-index: 20;
+  flex-direction: column;
+  gap: 5px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.35);
+  pointer-events: none;
+  min-width: 190px;
+}
+.era-card-tip span {
+  font-size: 0.78rem;
+  color: #c8baa8;
+  letter-spacing: 0.02em;
+}
+.era-card-tip span strong {
+  color: #f0ece4;
+  font-weight: 600;
+}
+.era-card-tip::before {
+  content: '';
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 6px solid transparent;
+  border-bottom-color: rgba(212,168,67,0.25);
+}
+.era-card:hover .era-card-tip {
+  display: flex;
+}
+.era-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-lg);
+}
+
+/* Subtle era color accent on card top */
+.era-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  border-radius: 10px 10px 0 0;
+}
+.era-card.native::before  { background: var(--era-native); }
+.era-card.spanish::before { background: var(--era-spanish); }
+.era-card.rancho::before  { background: var(--era-rancho); }
+.era-card.modern::before  { background: var(--era-modern); }
+
+.era-card-name {
+  font-weight: 700;
+  font-size: 0.9rem;
+  margin-bottom: 2px;
+  color: var(--text);
+}
+.era-card-sub {
+  font-size: 0.74rem;
+  color: var(--text-muted);
+  margin-bottom: 16px;
+  letter-spacing: 0.02em;
+}
+
+.era-ring-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 16px;
+}
+
+.era-ring {
+  position: relative;
+  width: 84px;
+  height: 84px;
+}
+
+.era-ring svg { transform: rotate(-90deg); }
+
+.era-ring-bg   { fill: none; stroke: var(--border-light); stroke-width: 7; }
+.era-ring-fill { fill: none; stroke-width: 7; stroke-linecap: round; transition: stroke-dashoffset 1.1s cubic-bezier(0.22,1,0.36,1); }
+
+.era-ring-text {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  line-height: 1.2;
+}
+
+.era-ring-pct  { font-family: var(--font-display); font-size: 1.15rem; font-weight: 800; }
+.era-ring-sub  { font-size: 0.6rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; }
+
+.era-card-stats {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.76rem;
+  color: var(--text-muted);
+  border-top: 1px solid var(--border-light);
+  padding-top: 12px;
+  margin-top: 4px;
+}
+.era-card-stats span strong { color: var(--text); font-weight: 600; }
+
+.era-card-status {
+  font-size: 0.74rem;
+  color: var(--text-muted);
+  margin-top: 8px;
+  text-align: center;
+}
+
+/* ---- Badge showcase ---- */
+.badge-showcase {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 40px;
+}
+
+.badge-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 16px 18px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  box-shadow: var(--shadow);
+  min-width: 200px;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.badge-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+.badge-card-icon {
+  font-size: 1.9rem;
+  width: 54px;
+  height: 54px;
+  background: linear-gradient(135deg, #f8f4ec, #ece4d4);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid rgba(184,115,26,0.35);
+  flex-shrink: 0;
+  box-shadow: 0 2px 8px rgba(184,115,26,0.18);
+}
+
+.badge-card-info h4 {
+  font-size: 0.88rem;
+  margin-bottom: 3px;
+  font-weight: 600;
+  color: var(--text);
+}
+.badge-card-info p {
+  font-size: 0.76rem;
+  color: var(--text-muted);
+  margin-bottom: 5px;
+  line-height: 1.45;
+}
+.badge-card-date {
+  font-size: 0.68rem;
+  color: #bdb0a0;
+  letter-spacing: 0.03em;
+}
+.badge-card-locked {
+  opacity: 0.45;
+  filter: grayscale(60%);
+}
+
+.no-badges {
+  color: var(--text-muted);
+  font-size: 0.875rem;
+  font-style: italic;
+  padding: 18px 0;
+  opacity: 0.8;
+}
+
+/* ---- Location table ---- */
+.location-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 36px;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--border);
+}
+
+.location-table th {
+  text-align: left;
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
+  padding: 11px 14px;
+  background: #f0ebe0;
+  border-bottom: 1.5px solid var(--border);
+  font-weight: 600;
+}
+
+.location-table td {
+  padding: 11px 14px;
+  border-bottom: 1px solid var(--border-light);
+  font-size: 0.875rem;
+  vertical-align: middle;
+}
+
+.location-table tr:last-child td { border-bottom: none; }
+.location-table tr:hover td { background: #fdf8f0; }
+.location-table tbody tr { transition: background 0.15s; }
+
+.status-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  display: inline-block;
+  margin-right: 7px;
+  vertical-align: middle;
+}
+.status-dot.visited   { background: var(--success); box-shadow: 0 0 0 2px rgba(42,110,48,0.2); }
+.status-dot.unvisited { background: var(--border); }
+
+/* ---- CTA footer ---- */
+.dashboard-footer {
+  text-align: center;
+  margin-top: 8px;
+  padding-top: 8px;
+}
+
+/* ---- Stat tooltips ---- */
+.hero-stat-points,
+.hero-stat-has-tip {
+  position: relative;
+  cursor: default;
+}
+
+.points-breakdown-tip,
+.hero-stat-tip {
+  display: none;
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--bg-dark);
+  border: 1px solid rgba(212,168,67,0.25);
+  border-radius: 8px;
+  padding: 9px 14px;
+  white-space: nowrap;
+  z-index: 10;
+  flex-direction: column;
+  gap: 5px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.35);
+  pointer-events: none;
+}
+
+.points-breakdown-tip span,
+.hero-stat-tip span {
+  font-size: 0.78rem;
+  color: #c8baa8;
+  letter-spacing: 0.02em;
+}
+
+.points-breakdown-tip::after,
+.hero-stat-tip::after {
+  content: '';
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 6px solid transparent;
+  border-bottom-color: rgba(212,168,67,0.25);
+}
+
+.hero-stat-points:hover .points-breakdown-tip,
+.hero-stat-has-tip:hover .hero-stat-tip {
+  display: flex;
+}
+
+/* ---- Location map link button ---- */
+.loc-map-btn {
+  display: inline-flex;
+  align-items: center;
+  margin-left: 7px;
+  padding: 2px 7px;
+  font-size: 0.68rem;
+  color: var(--accent);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  text-decoration: none;
+  vertical-align: middle;
+  white-space: nowrap;
+  transition: background 0.12s, color 0.12s, border-color 0.12s;
+}
+.loc-map-btn:hover {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
+}
+
+/* ---- Concept map dashboard cards ---- */
+.cm-dash-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(205px, 1fr));
+  gap: 18px;
+  margin-bottom: 40px;
+}
+
+.cm-dash-card {
+  background: var(--bg-card);
+  border-radius: 10px;
+  padding: 20px;
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+}
+
+.cm-dash-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  border-radius: 10px 10px 0 0;
+}
+.cm-dash-card.native::before  { background: var(--era-native); }
+.cm-dash-card.spanish::before { background: var(--era-spanish); }
+.cm-dash-card.rancho::before  { background: var(--era-rancho); }
+.cm-dash-card.modern::before  { background: var(--era-modern); }
+
+.cm-dash-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+}
+
+.cm-dash-card-name {
+  font-weight: 700;
+  font-size: 0.88rem;
+  color: var(--text);
+}
+
+.cm-dash-status {
+  font-size: 0.67rem;
+  padding: 2px 8px;
+  border-radius: 99px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+}
+.cm-dash-status.submitted   { background: rgba(42,110,48,0.12);  color: var(--success); }
+.cm-dash-status.in-progress { background: rgba(212,168,67,0.15); color: var(--accent); }
+.cm-dash-status.not-started { background: var(--border-light);   color: var(--text-muted); }
+.cm-dash-status.locked      { background: var(--border-light);   color: var(--text-muted); }
+
+.cm-dash-stats {
+  font-size: 0.77rem;
+  color: var(--text-muted);
+}
+
+.cm-dash-score {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.cm-score-bar-bg {
+  flex: 1;
+  height: 5px;
+  border-radius: 3px;
+  background: var(--border-light);
+  overflow: hidden;
+}
+.cm-score-bar-fill {
+  height: 100%;
+  border-radius: 3px;
+  background: linear-gradient(to right, var(--accent), var(--accent-gold));
+}
+.cm-score-val {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 0.85rem;
+  color: var(--accent-gold);
+  white-space: nowrap;
+}
+
+.cm-dash-concepts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+.cm-concept-tag {
+  font-size: 0.67rem;
+  padding: 2px 7px;
+  background: #f0ebe0;
+  border-radius: 4px;
+  color: var(--text-muted);
+  border: 1px solid var(--border-light);
+}
+
+.cm-dash-footer {
+  margin-top: auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 4px;
+  border-top: 1px solid var(--border-light);
+}
+.cm-dash-pts {
+  font-size: 0.74rem;
+  color: var(--accent);
+  font-weight: 600;
+}
+.cm-dash-open-btn {
+  font-size: 0.74rem;
+  padding: 4px 12px;
+  border-radius: 6px;
+  background: var(--bg-dark);
+  color: var(--accent-gold);
+  border: 1px solid rgba(212,168,67,0.3);
+  text-decoration: none;
+  transition: background 0.15s;
+}
+.cm-dash-open-btn:hover { background: rgba(212,168,67,0.1); }
+.cm-dash-open-btn-disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  color: var(--text-muted);
+  border-color: var(--border);
+}
+.cm-dash-card-locked {
+  opacity: 0.65;
+  filter: grayscale(30%);
+}
+.cm-dash-locked-hint {
+  font-style: italic;
+  font-size: 0.73rem;
+}
+
+/* ---- Sort bar ---- */
+.sort-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: -10px;
+  margin-bottom: 18px;
+}
+.sort-label {
+  font-family: var(--font-display);
+  font-size: 0.78rem;
+  font-style: italic;
+  letter-spacing: 0.04em;
+  color: var(--text-muted);
+  font-weight: 600;
+  white-space: nowrap;
+}
+.sort-select {
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  letter-spacing: 0.02em;
+  padding: 4px 28px 4px 10px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: var(--bg-card);
+  color: var(--text);
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23b87316'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 9px center;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.sort-select:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px rgba(184,115,26,0.15);
+}
+
+/* ---- Hero completion ring ---- */
+.hero-stat-completion {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+}
+
+.hero-completion-ring {
+  position: relative;
+  width: 54px;
+  height: 54px;
+  margin-bottom: 6px;
+}
+
+.hero-completion-ring svg {
+  transform: rotate(-90deg);
+}
+
+.hero-ring-bg {
+  fill: none;
+  stroke: rgba(255,255,255,0.07);
+  stroke-width: 4.5;
+}
+
+.hero-ring-fill {
+  fill: none;
+  stroke: var(--accent-gold);
+  stroke-width: 4.5;
+  stroke-linecap: round;
+}
+
+.hero-ring-label {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-size: 0.82rem;
+  font-weight: 800;
+  color: var(--accent-gold);
+  line-height: 1;
+}
+
+/* ---- Dashboard dark mode overrides ---- */
+html.dark .badge-card-icon { background: linear-gradient(135deg, #2e2820, #3a3028); }
+html.dark .location-table th { background: #1e1a14; }
+html.dark .location-table tr:hover td { background: #2a231c; }
+html.dark .cm-concept-tag { background: #2a231c; }
+html.dark .cm-dash-open-btn { background: #1e1a14; }
+html.dark .sort-select { background-color: #1e1a14; }
+
+/* ---- Location image hover preview ---- */
+#loc-img-preview {
+  display: none;
+  position: fixed;
+  z-index: 9999;
+  pointer-events: none;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 6px 24px rgba(0,0,0,0.35);
+  border: 2px solid rgba(212,168,67,0.4);
+  background: var(--bg-dark);
+  width: 160px;
+}
+#loc-img-preview img {
+  display: block;
+  width: 160px;
+  height: 110px;
+  object-fit: cover;
+}
+#loc-img-preview-name {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: #f0ece4;
+  padding: 5px 8px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  background: rgba(0,0,0,0.5);
+  letter-spacing: 0.02em;
+}
+
+/* ---- Concept map mini-preview ---- */
+.cm-mini-preview {
+  border-radius: 6px;
+  overflow: hidden;
+  background: #f8f4ec;
+  border: 1px solid var(--border-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 110px;
+}
+.cm-mini-preview svg {
+  display: block;
+}
+.cm-mini-preview-empty {
+  color: var(--text-muted);
+  font-size: 0.72rem;
+  font-style: italic;
+  padding: 16px;
+  text-align: center;
+}
+html.dark .cm-mini-preview {
+  background: #1e1a14;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="dashboard-page">
+
+  <!-- Hero -->
+  <div class="dashboard-hero">
+    <div class="hero-greeting">
+      <div class="hero-greeting-eyebrow">Explorer Profile</div>
+      <h1>{{ summary.user.username }}</h1>
+      <span class="hero-rule"></span>
+      <p>Your Los Angeles history journey</p>
+    </div>
+    <div class="hero-stats">
+      {% set completion_pct = ((summary.total_passed / summary.total_locations) * 100) | round | int if summary.total_locations > 0 else 0 %}
+      {% set ring_offset = 125.7 - (125.7 * completion_pct / 100) %}
+      <div class="hero-stat hero-stat-has-tip hero-stat-completion" tabindex="0">
+        <div class="hero-completion-ring">
+          <svg width="54" height="54" viewBox="0 0 52 52">
+            <circle class="hero-ring-bg" cx="26" cy="26" r="20"/>
+            <circle class="hero-ring-fill" cx="26" cy="26" r="20"
+              stroke-dasharray="125.7"
+              stroke-dashoffset="{{ ring_offset }}"/>
+          </svg>
+          <div class="hero-ring-label">{{ completion_pct }}%</div>
+        </div>
+        <span class="hero-stat-label">Complete</span>
+        <div class="hero-stat-tip">
+          <span>📊 {{ completion_pct }}% overall completion</span>
+          <span>✅ {{ summary.total_passed }} / {{ summary.total_locations }} quizzes passed</span>
+          <span>📍 {{ summary.total_visited }} / {{ summary.total_locations }} locations visited</span>
+        </div>
+      </div>
+      <div class="hero-stat hero-stat-points" tabindex="0"
+           title="{{ summary.points_breakdown.visit_pts }} from visits · {{ summary.points_breakdown.quiz_pts }} from quizzes">
+        <span class="hero-stat-value">{{ summary.user.total_points }}</span>
+        <span class="hero-stat-label">Points</span>
+        <div class="points-breakdown-tip">
+          <span>🗺 {{ summary.points_breakdown.visit_pts }} visit pts</span>
+          <span>📝 {{ summary.points_breakdown.quiz_pts }} quiz pts</span>
+        </div>
+      </div>
+      <div class="hero-stat hero-stat-has-tip" tabindex="0">
+        <span class="hero-stat-value">{{ summary.total_visited }}</span>
+        <span class="hero-stat-label">Visited</span>
+        <div class="hero-stat-tip">
+          <span>🗺 {{ summary.total_visited }} of {{ summary.total_locations }} locations</span>
+          <span>⬜ {{ summary.total_locations - summary.total_visited }} remaining</span>
+        </div>
+      </div>
+      <div class="hero-stat hero-stat-has-tip" tabindex="0">
+        <span class="hero-stat-value">{{ summary.total_passed }}</span>
+        <span class="hero-stat-label">Quizzes Passed</span>
+        <div class="hero-stat-tip">
+          <span>✅ {{ summary.total_passed }} of {{ summary.total_locations }} quizzes</span>
+          <span>❌ {{ summary.total_locations - summary.total_passed }} not yet passed</span>
+        </div>
+      </div>
+      {% set earned_count = summary.badges | selectattr('earned') | list | length %}
+      <div class="hero-stat hero-stat-has-tip" tabindex="0">
+        <span class="hero-stat-value">{{ earned_count }}</span>
+        <span class="hero-stat-label">Badges</span>
+        <div class="hero-stat-tip">
+          <span>🏅 {{ earned_count }} of {{ summary.badges | length }} earned</span>
+          <span>🔒 {{ summary.badges | length - earned_count }} still locked</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Era Progress -->
+  <h2 class="section-title">Era Progress</h2>
+  <div class="era-cards">
+    {% set era_colors  = {'native': '#b87316', 'spanish': '#5c7a2e', 'rancho': '#2d5f96', 'modern': '#a82828'} %}
+    {% set era_labels  = {'native': 'Tongva People', 'spanish': '1769–1847', 'rancho': '1848–1899', 'modern': '1900–Present'} %}
+    {% set era_emojis  = {'native': '🌿', 'spanish': '⛵', 'rancho': '🤠', 'modern': '🏙️'} %}
+    {% for era in summary.eras %}
+    {% set pct = ((era.passed / era.total) * 100) | int if era.total > 0 else 0 %}
+    {% set color = era_colors.get(era.era, '#999') %}
+    {% set circumference = 213 %}
+    {% set offset = circumference - (circumference * pct / 100) %}
+    <div class="era-card {{ era.era }}">
+      <div class="era-card-name">Era {{ era.era_order }}: {{ era.era | capitalize }}</div>
+      <div class="era-card-sub">{{ era_labels.get(era.era, '') }}</div>
+      <div class="era-ring-container">
+        <div class="era-ring">
+          <svg width="84" height="84" viewBox="0 0 84 84">
+            <circle class="era-ring-bg" cx="42" cy="42" r="34"/>
+            <circle class="era-ring-fill" cx="42" cy="42" r="34"
+              stroke="{{ color }}"
+              stroke-dasharray="{{ circumference }}"
+              stroke-dashoffset="{{ offset }}"/>
+          </svg>
+          <div class="era-ring-text">
+            <span class="era-ring-pct" style="color:{{ color }}">{{ pct }}%</span>
+            <span class="era-ring-sub">passed</span>
+          </div>
+        </div>
+      </div>
+      <div class="era-card-stats">
+        <span>📍 Visited: <strong>{{ era.visited }}/{{ era.total }}</strong></span>
+        <span>✅ Passed: <strong>{{ era.passed }}/{{ era.total }}</strong></span>
+      </div>
+      <div class="era-card-status">
+        {% if not era.era_unlocked %}
+          🔒 Locked
+        {% elif era.passed == era.total %}
+          🏆 Era complete!
+        {% else %}
+          ⬜ {{ era.total - era.passed }} quiz{{ 'zes' if (era.total - era.passed) != 1 else '' }} remaining
+        {% endif %}
+      </div>
+      <div class="era-card-tip">
+        <span>{{ era_emojis.get(era.era, '🗺') }} <strong>{{ era_labels.get(era.era, '') }}</strong></span>
+        <span>📊 Completion: <strong>{{ pct }}%</strong></span>
+        {% if not era.era_unlocked %}
+          <span>🔒 Locked — complete Era {{ era.era_order - 1 }} to unlock</span>
+        {% elif era.passed == era.total %}
+          <span>🏆 Era complete!</span>
+        {% else %}
+          <span>⬜ {{ era.total - era.passed }} quiz{{ 'zes' if (era.total - era.passed) != 1 else '' }} remaining</span>
+        {% endif %}
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+  <!-- Badges -->
+  <h2 class="section-title">Badge Collection</h2>
+  <div class="sort-bar">
+    <span class="sort-label">Sort:</span>
+    <select class="sort-select" id="badge-sort">
+      <option value="default">Default</option>
+      <option value="name">Name A→Z</option>
+      <option value="name-desc">Name Z→A</option>
+      <option value="earned">Earned First</option>
+      <option value="date-new">Date (Newest)</option>
+      <option value="date-old">Date (Oldest)</option>
+    </select>
+  </div>
+  <div class="badge-showcase" id="badge-showcase">
+    {% for badge in summary.badges %}
+    {% if badge.earned %}
+    <div class="badge-card"
+         data-name="{{ badge.name }}"
+         data-earned="1"
+         data-date="{{ badge.earned_at[:10] }}">
+      <div class="badge-card-icon">{{ badge.icon }}</div>
+      <div class="badge-card-info">
+        <h4>{{ badge.name }}</h4>
+        <p>{{ badge.description }}</p>
+        <span class="badge-card-date">{{ badge.earned_at[:10] }}</span>
+      </div>
+    </div>
+    {% else %}
+    <div class="badge-card badge-card-locked"
+         data-name="{{ badge.name }}"
+         data-earned="0"
+         data-date="">
+      <div class="badge-card-icon">{{ badge.icon }}</div>
+      <div class="badge-card-info">
+        <h4>🔒 {{ badge.name }}</h4>
+        <p>{{ badge.description }}</p>
+      </div>
+    </div>
+    {% endif %}
+    {% endfor %}
+  </div>
+
+  <!-- Location Breakdown -->
+  <h2 class="section-title">Location Breakdown</h2>
+  <div class="sort-bar">
+    <span class="sort-label">Sort:</span>
+    <select class="sort-select" id="location-sort">
+      <option value="era">By Era</option>
+      <option value="name">Name A→Z</option>
+      <option value="name-desc">Name Z→A</option>
+      <option value="visited">Visited First</option>
+      <option value="quiz">Quiz Score ↓</option>
+      <option value="points">Points ↓</option>
+    </select>
+  </div>
+  <table class="location-table" id="location-table">
+    <thead>
+      <tr>
+        <th>Location</th>
+        <th>Era</th>
+        <th>Status</th>
+        <th>Quiz</th>
+        <th>Tries</th>
+        <th>Points</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for era in summary.eras %}
+        {% for loc in era.locations %}
+        <tr data-name="{{ loc.name }}"
+            data-era-order="{{ era.era_order }}"
+            data-visited="{{ '1' if loc.visited else '0' }}"
+            data-locked="{{ '0' if loc.unlocked else '1' }}"
+            data-quiz-score="{{ loc.quiz_score if loc.quiz_passed else '0' }}"
+            data-points="{{ loc.points_earned or 0 }}"
+            data-image="{{ loc.image_url or '' }}">
+          <td style="font-weight:500">
+            {{ loc.name }}
+            {% if loc.unlocked %}
+            <a href="{{ url_for('map.map_page') }}#loc-{{ loc.id }}" class="loc-map-btn" title="View on map" onclick="if(typeof SFX!=='undefined')SFX.play('marker-click')">↗ Map</a>
+            {% endif %}
+          </td>
+          <td><span class="era-badge {{ era.era }}">{{ era.era }}</span></td>
+          <td>
+            {% if not loc.unlocked %}
+              <span style="color:var(--era-locked);font-size:0.8rem">🔒 Locked</span>
+            {% elif loc.visited %}
+              <span class="status-dot visited"></span>Visited
+            {% else %}
+              <span class="status-dot unvisited"></span>Unvisited
+            {% endif %}
+          </td>
+          <td>
+            {% if loc.quiz_passed %}
+              <span class="quiz-passed-badge">✓ {{ loc.quiz_score }}%</span>
+            {% elif loc.unlocked %}
+              <span style="color:var(--text-muted);font-size:0.8rem">Not taken</span>
+            {% else %}
+              <span style="color:var(--border)">—</span>
+            {% endif %}
+          </td>
+          <td style="color:var(--text-muted);font-size:0.82rem">
+            {% if loc.quiz_attempts and loc.quiz_attempts > 0 %}
+              {{ loc.quiz_attempts }}×
+            {% else %}
+              —
+            {% endif %}
+          </td>
+          <td style="font-weight:600;color:var(--accent)">{{ loc.points_earned or 0 }}</td>
+        </tr>
+        {% endfor %}
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <!-- Concept Maps -->
+  <h2 class="section-title">Concept Maps</h2>
+  {% set era_css_map    = {'native':'native','spanish':'spanish','rancho':'rancho','modern':'modern'} %}
+  {% set era_emoji_map  = {'native':'🌿','spanish':'⛵','rancho':'🤠','modern':'🏙️'} %}
+  {% set era_colors     = {'native': '#b87316', 'spanish': '#5c7a2e', 'rancho': '#2d5f96', 'modern': '#a82828'} %}
+  <div class="cm-dash-grid">
+    {% for era in summary.eras %}
+    {% set cm = concept_maps.get(era.era_order) %}
+    {% set era_css   = era_css_map.get(era.era, '') %}
+    {% set era_emoji = era_emoji_map.get(era.era, '🗺') %}
+    <div class="cm-dash-card {{ era_css }}{% if not era.era_unlocked %} cm-dash-card-locked{% endif %}">
+
+      <div class="cm-dash-card-header">
+        <span class="cm-dash-card-name">{{ era_emoji }} Era {{ era.era_order }}: {{ era.era | capitalize }}</span>
+        {% if not era.era_unlocked %}
+          <span class="cm-dash-status locked">🔒 Locked</span>
+        {% elif cm %}
+          {% if cm.submitted %}
+            <span class="cm-dash-status submitted">Submitted ✓</span>
+          {% else %}
+            <span class="cm-dash-status in-progress">In Progress</span>
+          {% endif %}
+        {% else %}
+          <span class="cm-dash-status not-started">Not Started</span>
+        {% endif %}
+      </div>
+
+      {% if not era.era_unlocked %}
+        <div class="cm-dash-stats cm-dash-locked-hint">
+          Pass all Era {{ era.era_order - 1 }} quizzes and submit that concept map to unlock
+        </div>
+      {% elif cm and cm.node_count > 0 %}
+        <div class="cm-dash-stats">{{ cm.node_count }} concept{{ 's' if cm.node_count != 1 }} · {{ cm.edge_count }} connection{{ 's' if cm.edge_count != 1 }}</div>
+      {% elif not cm %}
+        <div class="cm-dash-stats" style="font-style:italic">No map created yet</div>
+      {% else %}
+        <div class="cm-dash-stats" style="font-style:italic">Empty map</div>
+      {% endif %}
+
+      {% if cm and cm.submitted and cm.synthesis_score is not none %}
+        <div class="cm-dash-score">
+          <div class="cm-score-bar-bg">
+            <div class="cm-score-bar-fill" style="width:{{ cm.synthesis_score }}%"></div>
+          </div>
+          <span class="cm-score-val">{{ cm.synthesis_score }}/100</span>
+        </div>
+      {% endif %}
+
+      {% if era.era_unlocked %}
+        <div class="cm-mini-preview"
+             data-nodes='{{ (cm.node_labels if cm else []) | tojson }}'
+             data-edges='{{ (cm.edge_pairs if cm else []) | tojson }}'
+             data-era-color="{{ era_colors.get(era.era, '#999') }}">
+        </div>
+      {% endif %}
+
+      <div class="cm-dash-footer">
+        <span class="cm-dash-pts">
+          {% if cm and cm.points_earned %}✦ {{ cm.points_earned }} pts{% endif %}
+        </span>
+        {% if era.era_unlocked %}
+          <a href="{{ url_for('map.map_page') }}?cm={{ era.era_order }}" class="cm-dash-open-btn">Open →</a>
+        {% else %}
+          <span class="cm-dash-open-btn cm-dash-open-btn-disabled">🔒 Locked</span>
+        {% endif %}
+      </div>
+
+    </div>
+    {% endfor %}
+  </div>
+
+  <div class="dashboard-footer">
+    <a href="{{ url_for('map.map_page') }}" class="btn btn-primary btn-lg">Continue Exploring →</a>
+  </div>
+
+</div>
+
+<script>
+(function () {
+  // ---- Badge sorting ----
+  const badgeShowcase = document.getElementById('badge-showcase');
+  const badgeSelect   = document.getElementById('badge-sort');
+
+  if (badgeShowcase && badgeSelect) {
+    // Tag each card with its original DOM index so we can restore it
+    Array.from(badgeShowcase.children).forEach((el, i) => { el.dataset.idx = i; });
+
+    badgeSelect.addEventListener('change', () => {
+      const method = badgeSelect.value;
+      const cards  = Array.from(badgeShowcase.querySelectorAll('.badge-card'));
+
+      cards.sort((a, b) => {
+        switch (method) {
+          case 'name':
+            return a.dataset.name.localeCompare(b.dataset.name);
+          case 'name-desc':
+            return b.dataset.name.localeCompare(a.dataset.name);
+          case 'earned':
+            // earned first, then by original order within each group
+            if (a.dataset.earned !== b.dataset.earned)
+              return parseInt(b.dataset.earned) - parseInt(a.dataset.earned);
+            return parseInt(a.dataset.idx) - parseInt(b.dataset.idx);
+          case 'date-new':
+            // earned before locked, then newest date first
+            if (a.dataset.earned !== b.dataset.earned)
+              return parseInt(b.dataset.earned) - parseInt(a.dataset.earned);
+            return (b.dataset.date || '').localeCompare(a.dataset.date || '');
+          case 'date-old':
+            if (a.dataset.earned !== b.dataset.earned)
+              return parseInt(b.dataset.earned) - parseInt(a.dataset.earned);
+            return (a.dataset.date || '').localeCompare(b.dataset.date || '');
+          default: // original order
+            return parseInt(a.dataset.idx) - parseInt(b.dataset.idx);
+        }
+      });
+
+      cards.forEach(c => badgeShowcase.appendChild(c));
+    });
+  }
+
+  // ---- Location table sorting ----
+  const locationTable  = document.getElementById('location-table');
+  const locationSelect = document.getElementById('location-sort');
+
+  if (locationTable && locationSelect) {
+    const tbody = locationTable.querySelector('tbody');
+
+    // Tag each row with its original DOM index
+    Array.from(tbody.rows).forEach((row, i) => { row.dataset.idx = i; });
+
+    locationSelect.addEventListener('change', () => {
+      const method = locationSelect.value;
+      const rows   = Array.from(tbody.rows);
+
+      rows.sort((a, b) => {
+        switch (method) {
+          case 'name':
+            return a.dataset.name.localeCompare(b.dataset.name);
+          case 'name-desc':
+            return b.dataset.name.localeCompare(a.dataset.name);
+          case 'visited':
+            // visited > unvisited > locked, then original order
+            {
+              const visitedA = parseInt(a.dataset.locked) ? -1 : parseInt(a.dataset.visited);
+              const visitedB = parseInt(b.dataset.locked) ? -1 : parseInt(b.dataset.visited);
+              if (visitedA !== visitedB) return visitedB - visitedA;
+              return parseInt(a.dataset.idx) - parseInt(b.dataset.idx);
+            }
+          case 'quiz':
+            // highest score first; unscored rows go to the bottom
+            {
+              const scoreA = parseInt(a.dataset.quizScore) || 0;
+              const scoreB = parseInt(b.dataset.quizScore) || 0;
+              if (scoreA !== scoreB) return scoreB - scoreA;
+              return parseInt(a.dataset.idx) - parseInt(b.dataset.idx);
+            }
+          case 'points':
+            {
+              const ptA = parseInt(a.dataset.points) || 0;
+              const ptB = parseInt(b.dataset.points) || 0;
+              if (ptA !== ptB) return ptB - ptA;
+              return parseInt(a.dataset.idx) - parseInt(b.dataset.idx);
+            }
+          default: // era (original order preserves era grouping)
+            return parseInt(a.dataset.idx) - parseInt(b.dataset.idx);
+        }
+      });
+
+      rows.forEach(r => tbody.appendChild(r));
+    });
+  }
+})();
+
+// ---- Location image hover preview ----
+(function () {
+  const preview = document.createElement('div');
+  preview.id = 'loc-img-preview';
+  preview.innerHTML = '<img src="" alt=""><div id="loc-img-preview-name"></div>';
+  document.body.appendChild(preview);
+
+  const previewImg  = preview.querySelector('img');
+  const previewName = preview.querySelector('#loc-img-preview-name');
+  const PAD = 16; // px offset from cursor
+
+  function position(e) {
+    let x = e.clientX + PAD;
+    let y = e.clientY + PAD;
+    // Keep inside viewport
+    if (x + 180 > window.innerWidth)  x = e.clientX - 180 - PAD;
+    if (y + 150 > window.innerHeight) y = e.clientY - 150 - PAD;
+    preview.style.left = x + 'px';
+    preview.style.top  = y + 'px';
+  }
+
+  document.querySelectorAll('#location-table tbody tr').forEach(row => {
+    const imgUrl = row.dataset.image;
+    if (!imgUrl) return;
+
+    row.addEventListener('mouseenter', e => {
+      previewImg.src = imgUrl;
+      previewName.textContent = row.dataset.name || '';
+      position(e);
+      preview.style.display = 'block';
+    });
+    row.addEventListener('mousemove', position);
+    row.addEventListener('mouseleave', () => {
+      preview.style.display = 'none';
+    });
+  });
+})();
+
+// ---- Concept map mini-preview ----
+(function () {
+  const isDark = () => document.documentElement.classList.contains('dark');
+
+  function renderMiniMap(container) {
+    const nodes = JSON.parse(container.dataset.nodes || '[]');
+    const edges = JSON.parse(container.dataset.edges || '[]');
+    const color = container.dataset.eraColor || '#b87316';
+
+    if (!nodes.length) {
+      container.innerHTML = '<div class="cm-mini-preview-empty">No concepts added yet</div>';
+      return;
+    }
+
+    const W = 200, H = 130;
+    const cx = W / 2, cy = H / 2;
+    const n = nodes.length;
+    // Arrange nodes in a circle; single node goes in center
+    const positions = nodes.map((_, i) => {
+      if (n === 1) return { x: cx, y: cy };
+      const angle = (2 * Math.PI * i / n) - Math.PI / 2;
+      const r = Math.min(W, H) * 0.36;
+      return { x: cx + r * Math.cos(angle), y: cy + r * Math.sin(angle) };
+    });
+
+    const dark = isDark();
+    const nodeFill   = dark ? '#2e2820' : '#f8f4ec';
+    const nodeStroke = color;
+    const textFill   = dark ? '#d4c4a8' : '#5a4535';
+    const edgeStroke = dark ? 'rgba(255,255,255,0.12)' : 'rgba(0,0,0,0.12)';
+
+    let svgParts = [`<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg">`];
+
+    // Edges
+    for (const [si, ti] of edges) {
+      if (si < 0 || ti < 0 || si >= n || ti >= n) continue;
+      const p1 = positions[si], p2 = positions[ti];
+      svgParts.push(`<line x1="${p1.x.toFixed(1)}" y1="${p1.y.toFixed(1)}" x2="${p2.x.toFixed(1)}" y2="${p2.y.toFixed(1)}" stroke="${edgeStroke}" stroke-width="1.5"/>`);
+    }
+
+    // Nodes
+    for (let i = 0; i < n; i++) {
+      const p = positions[i];
+      const label = nodes[i].length > 9 ? nodes[i].slice(0, 8) + '…' : nodes[i];
+      svgParts.push(`<circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="15" fill="${nodeFill}" stroke="${nodeStroke}" stroke-width="1.5"/>`);
+      svgParts.push(`<text x="${p.x.toFixed(1)}" y="${p.y.toFixed(1)}" text-anchor="middle" dominant-baseline="middle" font-size="5.5" font-family="sans-serif" fill="${textFill}">${label}</text>`);
+    }
+
+    svgParts.push('</svg>');
+    container.innerHTML = svgParts.join('');
+  }
+
+  document.querySelectorAll('.cm-mini-preview').forEach(renderMiniMap);
+
+  // Re-render on theme toggle so colors update
+  const observer = new MutationObserver(() => {
+    document.querySelectorAll('.cm-mini-preview').forEach(renderMiniMap);
+  });
+  observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+})();
+</script>
+{% endblock %}

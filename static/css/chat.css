@@ -1,0 +1,367 @@
+/* =========================================
+   LA History — Chat Panel
+   ========================================= */
+
+.chat-panel {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  width: var(--chat-w);
+  height: 490px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-bottom: none;
+  border-radius: 14px 14px 0 0;
+  box-shadow: -4px 0 30px rgba(20,16,10,0.16), var(--shadow-lg);
+  display: flex;
+  flex-direction: column;
+  z-index: 500;
+  transform: translateY(calc(100% - 54px));
+  transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.chat-panel.open {
+  transform: translateY(0);
+}
+
+.chat-panel-header {
+  padding: 0 16px;
+  height: 54px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-bottom: 1px solid rgba(212,168,67,0.15);
+  cursor: pointer;
+  flex-shrink: 0;
+  border-radius: 14px 14px 0 0;
+  background: var(--bg-dark);
+  color: #fff;
+  user-select: none;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Subtle diagonal texture on header */
+.chat-panel-header::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    135deg,
+    transparent,
+    transparent 18px,
+    rgba(212,168,67,0.04) 18px,
+    rgba(212,168,67,0.04) 19px
+  );
+  pointer-events: none;
+}
+
+.chat-panel-icon {
+  font-size: 1rem;
+  position: relative;
+}
+
+.chat-panel-title {
+  font-size: 0.84rem;
+  font-weight: 600;
+  flex: 1;
+  color: #e8e4dc;
+  letter-spacing: 0.02em;
+  position: relative;
+}
+
+.chat-panel-context {
+  font-size: 0.72rem;
+  color: #7a7060;
+  max-width: 130px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  position: relative;
+}
+
+.chat-panel-actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  position: relative;
+}
+
+.chat-action-btn {
+  background: rgba(255,255,255,0.10);
+  border: 1px solid rgba(255,255,255,0.18);
+  color: #d0c8b8;
+  font-size: 0.82rem;
+  cursor: pointer;
+  padding: 5px 8px;
+  border-radius: 5px;
+  transition: background 0.18s, color 0.18s, border-color 0.18s;
+}
+.chat-action-btn:hover { background: rgba(255,255,255,0.18); border-color: rgba(255,255,255,0.30); color: #e8e4dc; }
+.chat-action-btn svg { transition: transform 0.3s cubic-bezier(0.22,1,0.36,1); }
+#chat-clear-btn:hover svg { transform: rotate(-15deg) scale(1.1); }
+#chat-toggle-btn { transition: background 0.18s, color 0.18s, border-color 0.18s, transform 0.3s cubic-bezier(0.22,1,0.36,1); }
+#chat-toggle-btn:hover { transform: translateY(-2px); }
+
+/* Messages area */
+.chat-messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 14px 14px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+  background: var(--bg);
+}
+
+.chat-intro {
+  text-align: center;
+  padding: 24px 16px;
+  color: var(--text-muted);
+  font-size: 0.84rem;
+  line-height: 1.65;
+}
+
+.chat-intro-icon {
+  font-size: 2rem;
+  margin-bottom: 10px;
+}
+
+.chat-intro strong {
+  display: block;
+  color: var(--text);
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  margin-bottom: 5px;
+}
+
+.chat-msg {
+  max-width: 84%;
+  animation: msgIn 0.22s cubic-bezier(0.22,1,0.36,1);
+}
+
+@keyframes msgIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.chat-msg.user { align-self: flex-end; }
+.chat-msg.assistant { align-self: flex-start; }
+
+.chat-bubble {
+  padding: 9px 14px;
+  border-radius: 14px;
+  font-size: 0.875rem;
+  line-height: 1.6;
+}
+
+.chat-msg.user .chat-bubble {
+  background: var(--accent);
+  color: #fff;
+  border-radius: 14px 14px 4px 14px;
+  box-shadow: 0 2px 8px rgba(184,115,26,0.25);
+}
+
+.chat-msg.assistant .chat-bubble {
+  background: var(--bg-card);
+  color: var(--text);
+  border-radius: 4px 14px 14px 14px;
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+}
+
+.chat-msg-time {
+  font-size: 0.68rem;
+  color: var(--text-muted);
+  margin-top: 4px;
+  padding: 0 4px;
+  opacity: 0.7;
+}
+.chat-msg.user .chat-msg-time { text-align: right; }
+
+.chat-tts-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 0.8rem;
+  padding: 2px 4px;
+  opacity: 0.5;
+  transition: opacity 0.2s;
+  align-self: flex-start;
+}
+.chat-tts-btn:hover { opacity: 1; }
+.chat-tts-btn.active { opacity: 1; color: #c0392b; }
+
+/* Typing indicator */
+.chat-typing {
+  align-self: flex-start;
+  padding: 11px 15px;
+  background: var(--bg-card);
+  border-radius: 4px 14px 14px 14px;
+  border: 1px solid var(--border);
+  display: flex;
+  gap: 5px;
+  align-items: center;
+  box-shadow: var(--shadow);
+}
+
+.typing-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--text-muted);
+  animation: typingBounce 1.2s infinite;
+}
+.typing-dot:nth-child(2) { animation-delay: 0.18s; }
+.typing-dot:nth-child(3) { animation-delay: 0.36s; }
+
+@keyframes typingBounce {
+  0%, 60%, 100% { transform: translateY(0); opacity: 0.35; }
+  30% { transform: translateY(-5px); opacity: 1; }
+}
+
+/* Input area */
+.chat-input-area {
+  padding: 10px 12px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  gap: 8px;
+  align-items: flex-end;
+  background: var(--bg-card);
+  flex-shrink: 0;
+}
+
+#chat-input {
+  flex: 1;
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  padding: 8px 12px;
+  font-size: 0.875rem;
+  font-family: var(--font-body);
+  resize: none;
+  max-height: 100px;
+  min-height: 38px;
+  outline: none;
+  background: var(--bg);
+  color: var(--text);
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+#chat-input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(184,115,26,0.12);
+}
+#chat-input::placeholder { color: #bdb0a0; }
+
+.chat-send-btn {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  border: none;
+  background: var(--accent);
+  color: #fff;
+  font-size: 1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: background 0.18s, transform 0.18s, box-shadow 0.18s;
+  box-shadow: 0 2px 8px rgba(184,115,26,0.3);
+}
+.chat-send-btn:hover { background: var(--accent-dark); transform: scale(1.06); }
+.chat-send-btn:active { transform: scale(0.97); }
+.chat-send-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: none; }
+
+/* Error state */
+.chat-error {
+  background: #fdf0f0;
+  color: #7a1010;
+  border: 1px solid #f0d0d0;
+  border-radius: 10px;
+  padding: 9px 13px;
+  font-size: 0.8rem;
+  margin: 0 14px 10px;
+}
+
+/* =========================================
+   Voice Input — Floating Mic Button
+   ========================================= */
+
+/* Wrapper that holds textarea + floating mic button */
+.chat-input-wrap {
+  position: relative;
+  flex: 1;
+  display: flex;
+}
+
+/* When voice is active, add right padding so text doesn't overlap the button */
+.chat-input-wrap.voice-enabled #chat-input,
+.chat-input-wrap.voice-enabled #cm-chat-input {
+  padding-right: 42px;
+}
+
+/* Mic button — hidden by default; voice.js adds .visible after support check */
+.chat-mic-btn {
+  display: none;
+  position: absolute;
+  right: 6px;
+  bottom: 6px;
+  width: 26px;
+  height: 26px;
+  border-radius: 6px;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  transition: opacity 0.18s, background 0.18s, color 0.18s, box-shadow 0.2s, transform 0.15s;
+  opacity: 0.55;
+  z-index: 2;
+}
+
+.chat-mic-btn.visible {
+  display: flex;
+}
+
+.chat-mic-btn:hover {
+  opacity: 1;
+  background: var(--bg-card);
+  color: var(--accent);
+  transform: scale(1.08);
+}
+
+/* LISTENING state — pulsing accent ring */
+.chat-mic-btn.listening {
+  opacity: 1;
+  color: var(--accent);
+  animation: mic-pulse 1.1s ease-in-out infinite;
+}
+
+/* PROCESSING state — spinner */
+.chat-mic-btn.processing {
+  opacity: 0.8;
+  color: var(--accent);
+  animation: mic-spin 0.9s linear infinite;
+}
+
+/* ERROR state — brief red flash */
+.chat-mic-btn.error {
+  opacity: 1;
+  color: #c0392b;
+  background: rgba(192, 57, 43, 0.08);
+  animation: none;
+}
+
+@keyframes mic-pulse {
+  0%   { box-shadow: 0 0 0 0   rgba(184,115,26,0.45); transform: scale(1); }
+  50%  { box-shadow: 0 0 0 6px rgba(184,115,26,0);    transform: scale(1.12); }
+  100% { box-shadow: 0 0 0 0   rgba(184,115,26,0);    transform: scale(1); }
+}
+
+@keyframes mic-spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}

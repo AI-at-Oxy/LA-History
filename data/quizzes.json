@@ -1,0 +1,902 @@
+[
+  {
+    "location_slug": "kuruvungna-springs",
+    "title": "The Tongva at Kuruvungna",
+    "passing_score": 70,
+    "points_reward": 50,
+    "questions": [
+      {
+        "question_text": "What does the name 'Kuruvungna' mean in the Tongva language?",
+        "question_type": "multiple_choice",
+        "option_a": "A place near the water",
+        "option_b": "Sacred ground of the elders",
+        "option_c": "A place where we are in the sun",
+        "option_d": "The meeting of two rivers",
+        "correct_answer": "c",
+        "explanation": "Kuruvungna means 'a place where we are in the sun.' The name reflects how the Tongva embedded their relationship with the landscape — including its quality of light — directly into language.",
+        "wrong_explanation_a": "Although a freshwater spring sat at the heart of the village, the Tongva name itself describes a quality of sunlight, not proximity to water.",
+        "wrong_explanation_b": "Kuruvungna was indeed a sacred site, but the name encodes a sensory quality of the place — not a reference to elders or leadership.",
+        "wrong_explanation_d": "Kuruvungna sat near streams flowing from the mountains, but the name does not describe a confluence of waterways.",
+        "order_index": 0
+      },
+      {
+        "question_text": "What materials did the Tongva use to build their dome-shaped homes, called 'ap'?",
+        "question_type": "multiple_choice",
+        "option_a": "Cedar planks and stone",
+        "option_b": "Adobe mud and straw",
+        "option_c": "Oak timber and clay",
+        "option_d": "Willow branches and tule reeds",
+        "correct_answer": "d",
+        "explanation": "The Tongva built dome-shaped 'ap' homes from willow branches and tule reeds. These materials were abundant near springs and wetlands and were designed to breathe with the coastal air.",
+        "wrong_explanation_a": "Cedar planks were associated with Pacific Northwest peoples, not the Tongva of Southern California — and the LA Basin's ecology supplied lighter, more flexible materials.",
+        "wrong_explanation_b": "Adobe construction was a Spanish colonial technique introduced after 1771 — long after the Tongva had developed their own tradition of organic, breathable shelters.",
+        "wrong_explanation_c": "Oak provided acorns for food, but the Tongva did not build homes from oak timber — they relied on flexible willow and tule that could form a dome easily.",
+        "order_index": 1
+      },
+      {
+        "question_text": "True or False: The Tongva used shell beads as part of a trade network that stretched across long distances.",
+        "question_type": "true_false",
+        "option_a": "True",
+        "option_b": "False",
+        "correct_answer": "a",
+        "explanation": "True. Shell beads were a key part of Tongva trade, moving across regional networks that also carried obsidian, dried fish, and plant medicines.",
+        "wrong_explanation_b": "Shell beads are well documented as exchange items in Tongva and neighboring trade networks — they linked coastal, basin, and desert peoples across long distances.",
+        "order_index": 2
+      },
+      {
+        "question_text": "Why was the spring at Kuruvungna so important to village life?",
+        "question_type": "multiple_choice",
+        "option_a": "It was believed to have healing powers",
+        "option_b": "It provided water year-round",
+        "option_c": "It connected to the ocean",
+        "option_d": "It was used only for ceremonies",
+        "correct_answer": "b",
+        "explanation": "The spring flowed steadily year-round, which is why families could live, gather, and raise children there for thousands of years. Reliable water was the foundation of village life.",
+        "wrong_explanation_a": "The spring was sacred, but the source description points to its year-round flow — practical reliability, not specific healing properties — as the reason it anchored the village.",
+        "wrong_explanation_c": "Kuruvungna was inland — near where hills and ocean worlds met — but the spring itself did not connect to the sea.",
+        "wrong_explanation_d": "Ceremonies took place at the spring, but the site was also home to daily life: cooking, raising children, and gathering. Limiting it to ceremony alone misses what made it central.",
+        "order_index": 3
+      }
+    ]
+  },
+  {
+    "location_slug": "ballona-wetlands",
+    "title": "Ballona Wetlands and Tongva Coastal Life",
+    "passing_score": 70,
+    "points_reward": 50,
+    "questions": [
+      {
+        "question_text": "What did the Tongva use tule reeds for?",
+        "question_type": "multiple_choice",
+        "option_a": "Trade with distant villages only",
+        "option_b": "Baskets and homes",
+        "option_c": "Building canoes",
+        "option_d": "Storing acorns",
+        "correct_answer": "b",
+        "explanation": "Tule reeds were one of the most versatile wetland resources — used to weave baskets and to construct dome-shaped 'ap' homes.",
+        "wrong_explanation_a": "Tule reeds were a daily-use material, not a long-distance trade good. The Tongva harvested and worked them locally for everyday needs.",
+        "wrong_explanation_c": "Plank canoes used wood planks sewn together with plant fiber and sealed with tar — not tule reeds, which were too soft to handle ocean travel.",
+        "wrong_explanation_d": "Acorns were typically stored in granaries or woven baskets, but tule's primary uses were construction and weaving — not as storage vessels themselves.",
+        "order_index": 0
+      },
+      {
+        "question_text": "What mainly caused Ballona Wetlands to shrink during the twentieth century?",
+        "question_type": "multiple_choice",
+        "option_a": "Flood channels and development",
+        "option_b": "A major drought",
+        "option_c": "Sea level rise",
+        "option_d": "Overhunting by the Tongva",
+        "correct_answer": "a",
+        "explanation": "Twentieth-century flood control projects and real estate development drained and reshaped most of Ballona's original 2,900 acres, leaving only a small remnant.",
+        "wrong_explanation_b": "Drought may strain wetlands temporarily, but Ballona's loss was driven by deliberate engineering — channelizing creeks and filling marshland for development.",
+        "wrong_explanation_c": "Sea level change is a long-term factor, but Ballona's twentieth-century shrinkage was a direct result of human construction, not rising seas.",
+        "wrong_explanation_d": "The Tongva managed Ballona sustainably for thousands of years. The wetlands declined only after twentieth-century development — long after Tongva life was disrupted.",
+        "order_index": 1
+      },
+      {
+        "question_text": "True or False: The Tongva built plank canoes to travel across the ocean to nearby islands.",
+        "question_type": "true_false",
+        "option_a": "True",
+        "option_b": "False",
+        "correct_answer": "a",
+        "explanation": "True. The Tongva built plank canoes that carried people and goods across the ocean to nearby islands, treating the coast as a pathway rather than an edge.",
+        "wrong_explanation_b": "Tongva ocean-going plank canoes are well documented, used to reach the Channel Islands and to carry trade goods up and down the coast.",
+        "order_index": 2
+      },
+      {
+        "question_text": "How large was Ballona Wetlands historically?",
+        "question_type": "multiple_choice",
+        "option_a": "Nearly 500 acres",
+        "option_b": "Nearly 5,000 acres",
+        "option_c": "Nearly 1,200 acres",
+        "option_d": "Nearly 2,900 acres",
+        "correct_answer": "d",
+        "explanation": "Ballona Wetlands historically covered nearly 2,900 acres of marsh, reeds, and flowing water — a vast coastal ecosystem that has since been reduced to a small remnant.",
+        "wrong_explanation_a": "500 acres is far smaller than the historical wetland — closer to the size of remaining fragments today than the original ecosystem.",
+        "wrong_explanation_b": "5,000 acres overshoots the historical figure. Ballona was vast but not that large at its peak.",
+        "wrong_explanation_c": "1,200 acres falls short of the original extent. The wetlands stretched nearly 2,900 acres before twentieth-century development.",
+        "order_index": 3
+      }
+    ]
+  },
+  {
+    "location_slug": "san-gabriel-foothills",
+    "title": "Tongva Lifeways in the Foothills",
+    "passing_score": 70,
+    "points_reward": 50,
+    "questions": [
+      {
+        "question_text": "How did the Tongva prepare acorns from oak trees?",
+        "question_type": "multiple_choice",
+        "option_a": "Ate them raw after soaking",
+        "option_b": "Dried them for trade only",
+        "option_c": "Boiled them whole in clay pots",
+        "option_d": "Ground them into flour using stone mortars",
+        "correct_answer": "d",
+        "explanation": "The Tongva ground acorns into flour with stone mortars, then leached the bitter tannins and turned the flour into porridge or bread. Many of these grinding stones still survive in the foothills today.",
+        "wrong_explanation_a": "Raw acorns are bitter and even toxic due to tannins. The Tongva developed a careful processing tradition — grinding, leaching, and cooking — to make them edible.",
+        "wrong_explanation_b": "Acorns were a dietary staple, not just a trade good. They fed families through the year, especially in autumn when the harvest came in.",
+        "wrong_explanation_c": "Boiling acorns whole would not remove their tannins. The standard practice was grinding to flour, then leaching the flour with water to remove bitterness.",
+        "order_index": 0
+      },
+      {
+        "question_text": "What is implied when the Spanish admired the land's richness without recognizing Tongva management?",
+        "question_type": "multiple_choice",
+        "option_a": "They fully respected Tongva stewardship",
+        "option_b": "They mistook cultivated land for untouched wilderness",
+        "option_c": "They found the land empty and poor",
+        "option_d": "They only wanted trade partnerships",
+        "correct_answer": "b",
+        "explanation": "Tongva villages had shaped the foothills for generations through controlled burning, oak grove management, and seasonal harvest. The Spanish saw abundance but read it as wild nature, missing the human work that produced it.",
+        "wrong_explanation_a": "Spanish accounts admired the land's richness but did not credit the Tongva for it — the failure to recognize Indigenous stewardship is precisely the problem the question highlights.",
+        "wrong_explanation_c": "The Portolá Expedition specifically noted the land's fertility and large settlements. The Spanish did not see emptiness; they saw abundance — and misread its source.",
+        "wrong_explanation_d": "Trade partnerships were not the framework of Spanish colonization in California. Within two years of the expedition, Mission San Gabriel was founded — colonization, not partnership.",
+        "order_index": 1
+      },
+      {
+        "question_text": "True or False: Tongva villages in the foothills were located near streams flowing down from the mountains.",
+        "question_type": "true_false",
+        "option_a": "True",
+        "option_b": "False",
+        "correct_answer": "a",
+        "explanation": "True. Tongva villages in the San Gabriel foothills were placed deliberately near mountain streams, providing reliable water and access to seasonal resources.",
+        "wrong_explanation_b": "Reliable streams from the mountains were essential for Tongva village life, supporting drinking water, food preparation, and seasonal harvest.",
+        "order_index": 2
+      },
+      {
+        "question_text": "What does the contrast between thousands of years of knowledge and rapid loss suggest?",
+        "question_type": "multiple_choice",
+        "option_a": "Colonization was gradual and harmless",
+        "option_b": "Knowledge systems can be destroyed faster than they are built",
+        "option_c": "Knowledge always disappears naturally",
+        "option_d": "Tongva knowledge had little value",
+        "correct_answer": "b",
+        "explanation": "Tongva knowledge of the foothills was built carefully over thousands of years and disrupted within a generation of mission founding. The contrast highlights how fragile long-developed knowledge systems can be under colonization.",
+        "wrong_explanation_a": "The mission system caused devastating disruption — population loss, forced labor, and the breakdown of village life. None of this was harmless or gradual.",
+        "wrong_explanation_c": "Knowledge does not disappear naturally — Tongva knowledge was disrupted by specific colonial policies and institutions, not by some inevitable process.",
+        "wrong_explanation_d": "Tongva knowledge supported a sustainable society for thousands of years. Its loss is a tragedy precisely because of its depth and value.",
+        "order_index": 3
+      }
+    ]
+  },
+  {
+    "location_slug": "el-pueblo",
+    "title": "The Founding of Los Angeles",
+    "passing_score": 70,
+    "points_reward": 50,
+    "questions": [
+      {
+        "question_text": "The settlers who founded Los Angeles came from many different racial and cultural backgrounds. What does this tell us about the city's origins?",
+        "question_type": "multiple_choice",
+        "option_a": "Los Angeles was founded as an exclusively Spanish colony",
+        "option_b": "The founding was more diverse than most people realize",
+        "option_c": "Only Indigenous people played a role in building the city",
+        "option_d": "The settlers all shared the same culture and traditions",
+        "correct_answer": "b",
+        "explanation": "The 44 founding pobladores came from Sonora and Sinaloa and represented Indigenous, African, and Spanish ancestry — reflecting the mixed demographics of New Spain's frontier.",
+        "wrong_explanation_a": "The settlers were not exclusively Spanish — they were a mixed group recruited from frontier provinces, with most born in New Spain rather than in Spain itself.",
+        "wrong_explanation_c": "Indigenous people were among the founders, but the group also included settlers of African and Spanish heritage. Crediting any single group alone misses the documented diversity.",
+        "wrong_explanation_d": "The settlers came from different regions and backgrounds with distinct family histories. Treating them as culturally uniform erases the documented complexity of the founding.",
+        "order_index": 0
+      },
+      {
+        "question_text": "Why was the central plaza important to the pueblo?",
+        "question_type": "multiple_choice",
+        "option_a": "It served as the center of community life, government, and trade",
+        "option_b": "It was used only for religious ceremonies",
+        "option_c": "It was built to honor the original Tongva inhabitants",
+        "option_d": "It was only used by Spanish military leaders",
+        "correct_answer": "a",
+        "explanation": "Like other Spanish colonial settlements, the plaza was the civic heart of the pueblo — the place where community life, government, and trade all converged, while also expressing colonial order on the land.",
+        "wrong_explanation_b": "Religious life was important at the plaza, but it also hosted government, daily commerce, and gatherings. Limiting it to ceremony misses its central civic role.",
+        "wrong_explanation_c": "The plaza was a colonial design imposed on the landscape. It was not built to honor Tongva inhabitants whose lives the colonial project was actively disrupting.",
+        "wrong_explanation_d": "The plaza was a civilian town's center, open to settlers and used for commerce and community life — not a restricted military space.",
+        "order_index": 1
+      },
+      {
+        "question_text": "True or False: The pueblo was founded while Alta California was under Spanish colonial rule.",
+        "question_type": "true_false",
+        "option_a": "True",
+        "option_b": "False",
+        "correct_answer": "a",
+        "explanation": "True. Los Angeles was founded in 1781 as part of New Spain. It did not become Mexican territory until Mexican independence in 1821.",
+        "wrong_explanation_b": "In 1781, Alta California was firmly part of the Spanish colonial empire. Mexico did not gain independence from Spain until 1821 — forty years after the pueblo's founding.",
+        "order_index": 2
+      },
+      {
+        "question_text": "When Mexico gained independence in 1821, the plaza remained the center of the settlement. What does this suggest?",
+        "question_type": "multiple_choice",
+        "option_a": "Mexico and Spain governed in exactly the same way",
+        "option_b": "The settlers rejected Mexican rule entirely",
+        "option_c": "Some things in daily life stayed the same even as governments changed",
+        "option_d": "Independence immediately transformed every aspect of the pueblo",
+        "correct_answer": "c",
+        "explanation": "Political authority shifted from Spain to Mexico, but the plaza, the homes, and the rhythms of daily life carried on. Continuity at the local level often outlasts changes at the top.",
+        "wrong_explanation_a": "Mexican governance differed from Spanish rule in important ways — including the eventual secularization of the missions. Continuity of the plaza does not mean identical government.",
+        "wrong_explanation_b": "The pueblo became part of Mexico without rejecting Mexican rule — its residents were largely Mexican-born already.",
+        "wrong_explanation_d": "Independence did not transform every aspect of pueblo life overnight. The continuing role of the plaza shows just how much daily life persisted across regimes.",
+        "order_index": 3
+      }
+    ]
+  },
+  {
+    "location_slug": "mission-san-gabriel",
+    "title": "Mission San Gabriel and the Mission System",
+    "passing_score": 70,
+    "points_reward": 50,
+    "questions": [
+      {
+        "question_text": "What happened to Tongva people under mission control?",
+        "question_type": "multiple_choice",
+        "option_a": "They were baptized, renamed, and required to live and work under mission control",
+        "option_b": "They were given land and allowed to govern themselves",
+        "option_c": "They traded freely with the mission and maintained their independence",
+        "option_d": "They were forced to leave the region entirely",
+        "correct_answer": "a",
+        "explanation": "Tongva people brought into the mission system were baptized, given Spanish names, and required to live and labor inside the mission — a process that transformed identity, family life, and labor.",
+        "wrong_explanation_b": "Far from self-governance, Tongva people inside the mission were subject to strict religious and labor discipline. Land was held by the mission, not granted to Indigenous communities.",
+        "wrong_explanation_c": "The mission system was not a trading partnership. It absorbed Tongva people into a coercive religious and labor structure, not an independent commercial relationship.",
+        "wrong_explanation_d": "Tongva people were not forced out of the region — they were forced into the mission system itself, which is what made population loss within those walls so devastating.",
+        "order_index": 0
+      },
+      {
+        "question_text": "What caused devastating population loss among Indigenous communities at the mission?",
+        "question_type": "multiple_choice",
+        "option_a": "Warfare with neighboring villages",
+        "option_b": "Forced relocation to other missions",
+        "option_c": "Crowded conditions and disease",
+        "option_d": "Drought and famine",
+        "correct_answer": "c",
+        "explanation": "Crowded mission quarters created ideal conditions for the spread of European diseases against which Indigenous communities had no immunity. The toll on Tongva populations was catastrophic.",
+        "wrong_explanation_a": "Inter-village warfare was not the driver of mission-era population loss. The cause was disease in close quarters, paired with disrupted traditional food and family systems.",
+        "wrong_explanation_b": "Movement between missions occurred but did not by itself produce mass mortality. The decisive factor was disease in densely populated mission settings.",
+        "wrong_explanation_d": "Drought and famine added stress, but the proximate cause of the population collapse was epidemic disease in crowded mission communities.",
+        "order_index": 1
+      },
+      {
+        "question_text": "What did Mexico do to the missions in 1833?",
+        "question_type": "multiple_choice",
+        "option_a": "Expanded their power and gave them more land",
+        "option_b": "Returned all mission land to Native communities",
+        "option_c": "Burned them down and removed the church entirely",
+        "option_d": "Secularized them, ending church control over their land",
+        "correct_answer": "d",
+        "explanation": "In 1833, Mexico secularized the missions, ending church control over much of their land. In practice, however, the land flowed to private ranch owners rather than to the Native communities whose labor had built mission wealth.",
+        "wrong_explanation_a": "Secularization was specifically about reducing the missions' power, not expanding it. Mexico's policy aimed to break church dominance over land and labor.",
+        "wrong_explanation_b": "Although secularization promised to free Indigenous neophytes, the land was overwhelmingly transferred to private ranch owners — Native communities saw very little of it.",
+        "wrong_explanation_c": "Secularization was a legal and administrative shift, not a destruction of buildings. Mission San Gabriel's church still stands today.",
+        "order_index": 2
+      },
+      {
+        "question_text": "True or False: The mission's wealth came partly from organized agriculture and access to Indigenous labor.",
+        "question_type": "true_false",
+        "option_a": "True",
+        "option_b": "False",
+        "correct_answer": "a",
+        "explanation": "True. Mission San Gabriel's productivity in crops, cattle, and wine rested on organized agriculture sustained by the coerced labor of Tongva people drawn into the mission system.",
+        "wrong_explanation_b": "Mission wealth in California depended directly on Indigenous labor. Erasing that connection misrepresents how mission economies actually functioned.",
+        "order_index": 3
+      }
+    ]
+  },
+  {
+    "location_slug": "fort-moore-hill",
+    "title": "The American Takeover of Los Angeles",
+    "passing_score": 70,
+    "points_reward": 50,
+    "questions": [
+      {
+        "question_text": "Why was raising the flag on July 4 symbolically important?",
+        "question_type": "multiple_choice",
+        "option_a": "It was a random date chosen by chance",
+        "option_b": "It linked conquest to American ideals",
+        "option_c": "It marked a new political era for the city",
+        "option_d": "Only July 4 ceremonies were allowed under wartime law",
+        "correct_answer": "c",
+        "explanation": "Raising the American flag at Fort Moore on July 4, 1847, marked a new political era for Los Angeles — the formal arrival of American authority over a city that had been Mexican.",
+        "wrong_explanation_a": "The choice of July 4 was deliberate, not random. Independence Day carried clear political meaning that U.S. forces wanted to attach to their occupation.",
+        "wrong_explanation_b": "The date did connect conquest to symbols of American identity, but the most direct point of the ceremony was political — marking the start of a new era of authority over the city.",
+        "wrong_explanation_d": "There was no rule restricting ceremonies to July 4. The choice reflected a political message, not a legal requirement.",
+        "order_index": 0
+      },
+      {
+        "question_text": "Why was the fort eventually abandoned?",
+        "question_type": "multiple_choice",
+        "option_a": "It was destroyed in a battle",
+        "option_b": "Military officials saw little need for a permanent fortification",
+        "option_c": "The Mexican army recaptured the hill",
+        "option_d": "A fire burned it to the ground",
+        "correct_answer": "b",
+        "explanation": "Military officials concluded that a permanent fortification was unnecessary as American control over Los Angeles was secured. The fort was abandoned within a few years of being built.",
+        "wrong_explanation_a": "Fort Moore was not destroyed in combat. It was simply judged unnecessary once American authority was established in the city.",
+        "wrong_explanation_c": "After the Treaty of Guadalupe Hidalgo in 1848, California was U.S. territory. The Mexican army did not recapture Los Angeles or the hill.",
+        "wrong_explanation_d": "There is no record of a fire ending the fort. It was decommissioned because military officials decided it was no longer needed.",
+        "order_index": 1
+      },
+      {
+        "question_text": "True or False: Fort Moore was a major military site for decades.",
+        "question_type": "true_false",
+        "option_a": "True",
+        "option_b": "False",
+        "correct_answer": "b",
+        "explanation": "False. The fort was short-lived — built in 1847 and abandoned only a few years later. Its symbolic meaning, however, far outlasted its physical presence.",
+        "wrong_explanation_a": "Fort Moore operated for only a few years before being abandoned. It is remembered for what it symbolized, not for any long military life.",
+        "order_index": 2
+      },
+      {
+        "question_text": "What did the Treaty of Guadalupe Hidalgo in 1848 officially do?",
+        "question_type": "multiple_choice",
+        "option_a": "Ended Spanish rule over California",
+        "option_b": "Returned land to Native communities",
+        "option_c": "Established Los Angeles as a city",
+        "option_d": "Made California part of the United States",
+        "correct_answer": "d",
+        "explanation": "The Treaty of Guadalupe Hidalgo, signed in 1848, ended the Mexican-American War and made California part of the United States — bringing new laws, language, and land systems to families who had lived under Spanish and Mexican rule.",
+        "wrong_explanation_a": "Spanish rule over California ended in 1821 when Mexico won independence — more than two decades before the treaty was signed.",
+        "wrong_explanation_b": "The treaty did not return land to Native communities. In fact, the new American legal regime created new pressures on Indigenous and Mexican landholders alike.",
+        "wrong_explanation_c": "Los Angeles had been a pueblo since 1781 — its existence as a settlement long predated the treaty.",
+        "order_index": 3
+      }
+    ]
+  },
+  {
+    "location_slug": "old-chinatown",
+    "title": "Los Angeles's Original Chinatown",
+    "passing_score": 70,
+    "points_reward": 50,
+    "questions": [
+      {
+        "question_text": "Why did many Chinese immigrants come to Los Angeles in the 1870s?",
+        "question_type": "multiple_choice",
+        "option_a": "They had previously worked on the transcontinental railroad",
+        "option_b": "They were invited by the Spanish government",
+        "option_c": "They came to work at Mission San Gabriel",
+        "option_d": "They were fleeing a major drought in China",
+        "correct_answer": "a",
+        "explanation": "Many Chinese immigrants who settled near the Los Angeles Plaza in the 1870s had previously worked on the transcontinental railroad, then sought economic opportunities further south.",
+        "wrong_explanation_b": "Spanish rule had ended decades earlier, and the Spanish government had no role in inviting Chinese immigrants. The migration of the 1870s was tied to railroad labor markets.",
+        "wrong_explanation_c": "Mission San Gabriel had been secularized in 1833 and was no longer the labor center it had been. Chinese immigrants did not come to work there.",
+        "wrong_explanation_d": "Economic hardship played a role for many migrants, but the specific 1870s wave to Los Angeles is most directly tied to railroad construction and its aftermath.",
+        "order_index": 0
+      },
+      {
+        "question_text": "Why was the neighborhood especially important to Chinese residents?",
+        "question_type": "multiple_choice",
+        "option_a": "It was the wealthiest area in Los Angeles",
+        "option_b": "They had limited places where they were allowed to live",
+        "option_c": "It was the only place with access to the railroad",
+        "option_d": "The city government provided them special protections there",
+        "correct_answer": "b",
+        "explanation": "Discrimination and exclusion sharply limited where Chinese residents could live. Chinatown therefore became an essential refuge — a place where business, family, and community life could persist together.",
+        "wrong_explanation_a": "Chinatown was not a wealthy district. Its importance came from being one of the few places where Chinese residents were able to live and build community at all.",
+        "wrong_explanation_c": "Several parts of the city had access to the railroad. Chinese settlement near the Plaza was driven by community ties and limited housing options, not exclusive rail access.",
+        "wrong_explanation_d": "The city did not extend special protections to Chinese residents — the 1871 mass attack and the 1933 demolition both demonstrate the opposite. The neighborhood mattered because of community, not state protection.",
+        "order_index": 1
+      },
+      {
+        "question_text": "True or False: Chinese immigrants began settling near the Los Angeles Plaza in the 1870s.",
+        "question_type": "true_false",
+        "option_a": "True",
+        "option_b": "False",
+        "correct_answer": "a",
+        "explanation": "True. Chinese immigrants began building a neighborhood near the Plaza in the 1870s, after many had worked on the transcontinental railroad.",
+        "wrong_explanation_b": "The community formed in the 1870s near the original Los Angeles Plaza, growing into the neighborhood later known as Old Chinatown.",
+        "order_index": 2
+      },
+      {
+        "question_text": "Why was Old Chinatown condemned in 1933?",
+        "question_type": "multiple_choice",
+        "option_a": "It was destroyed in a fire",
+        "option_b": "The city wanted to build a new city hall",
+        "option_c": "To make way for Union Station",
+        "option_d": "Residents chose to relocate voluntarily",
+        "correct_answer": "c",
+        "explanation": "The city condemned Old Chinatown to clear the land for Union Station. Residents and businesses were displaced, and the community rebuilt several blocks away as New Chinatown.",
+        "wrong_explanation_a": "Old Chinatown was demolished by city order, not destroyed by fire. The displacement was deliberate, not accidental.",
+        "wrong_explanation_b": "City Hall already existed and was not the project that displaced Chinatown. The land was cleared for a major new train station.",
+        "wrong_explanation_d": "Residents and businesses were forced out by condemnation, not relocating by choice. They rebuilt elsewhere because they had no option to stay.",
+        "order_index": 3
+      }
+    ]
+  },
+  {
+    "location_slug": "bradbury-building",
+    "title": "LA's Boom Era and the Bradbury Building",
+    "passing_score": 70,
+    "points_reward": 50,
+    "questions": [
+      {
+        "question_text": "What makes the Bradbury Building's exterior unusual compared to its interior?",
+        "question_type": "multiple_choice",
+        "option_a": "The exterior is colorful while the interior is plain",
+        "option_b": "The exterior is plain while the interior is filled with ornate details",
+        "option_c": "The exterior is made of glass while the interior is made of adobe",
+        "option_d": "The exterior is modern while the interior is medieval",
+        "correct_answer": "b",
+        "explanation": "The Bradbury Building's modest exterior gives little hint of what's inside: a soaring atrium full of ornate ironwork, open elevators, skylights, and natural light. The contrast is part of what makes it iconic.",
+        "wrong_explanation_a": "The relationship is reversed — the plain side faces the street, while the elaborate detailing waits inside.",
+        "wrong_explanation_c": "The Bradbury is a brick-and-iron commercial building, not a glass-and-adobe hybrid. The contrast that matters is plainness outside, ornate detail inside.",
+        "wrong_explanation_d": "Both exterior and interior are products of the late nineteenth century. The contrast is in ornamentation, not in time period.",
+        "order_index": 0
+      },
+      {
+        "question_text": "Who designed much of the Bradbury Building's striking interior?",
+        "question_type": "multiple_choice",
+        "option_a": "Lewis Bradbury",
+        "option_b": "A Spanish colonial designer",
+        "option_c": "Union Station architects",
+        "option_d": "George Wyman",
+        "correct_answer": "d",
+        "explanation": "Draftsman George Wyman designed much of the Bradbury Building's celebrated interior. The result was unlike anything else in Los Angeles at the time.",
+        "wrong_explanation_a": "Lewis Bradbury commissioned the building, but he did not design its interior — that work was George Wyman's.",
+        "wrong_explanation_b": "The Bradbury Building belongs to the late nineteenth-century commercial era, not the Spanish colonial period. Its design was firmly American Gilded Age.",
+        "wrong_explanation_c": "Union Station was built decades later by different architects and has no design connection to the Bradbury Building.",
+        "order_index": 1
+      },
+      {
+        "question_text": "True or False: The Bradbury Building was demolished during a period of redevelopment in the twentieth century.",
+        "question_type": "true_false",
+        "option_a": "True",
+        "option_b": "False",
+        "correct_answer": "b",
+        "explanation": "False. The Bradbury Building has survived economic shifts and redevelopment and remains standing on Broadway as one of LA's most celebrated historic structures.",
+        "wrong_explanation_a": "The Bradbury Building was not demolished — it remains a working historic landmark in downtown Los Angeles.",
+        "order_index": 2
+      },
+      {
+        "question_text": "What was driving the rapid growth of Los Angeles when the Bradbury Building was constructed?",
+        "question_type": "multiple_choice",
+        "option_a": "The discovery of gold nearby",
+        "option_b": "The founding of new missions",
+        "option_c": "Railroad expansion and land speculation",
+        "option_d": "A large wave of immigration from China",
+        "correct_answer": "c",
+        "explanation": "Railroad expansion and aggressive land speculation drove a population boom in late-nineteenth-century Los Angeles, transforming the city into a major commercial center — exactly the climate that produced the Bradbury Building.",
+        "wrong_explanation_a": "The major California gold rush was decades earlier and centered in Northern California. It was not the driver of LA's 1880s–1890s boom.",
+        "wrong_explanation_b": "The mission system had been secularized in 1833. By the 1890s, growth was driven by railroads and real estate, not mission founding.",
+        "wrong_explanation_d": "Chinese immigration shaped the city, but the broader population boom that fueled commercial development came from railroads and land promotion drawing migrants from across the country.",
+        "order_index": 3
+      }
+    ]
+  },
+  {
+    "location_slug": "hollenbeck-park",
+    "title": "Boyle Heights and Hollenbeck Park",
+    "passing_score": 70,
+    "points_reward": 50,
+    "questions": [
+      {
+        "question_text": "What distinction does Hollenbeck Park hold in Los Angeles history?",
+        "question_type": "multiple_choice",
+        "option_a": "It was the largest park ever built in California",
+        "option_b": "It was the first park to have a public lake",
+        "option_c": "It was Los Angeles's first public park",
+        "option_d": "It was the first park built specifically for immigrant communities",
+        "correct_answer": "c",
+        "explanation": "Hollenbeck Park, opened in 1892, became Los Angeles's first public park — a milestone in the city's civic life and a foundation for what would become the LA park system.",
+        "wrong_explanation_a": "Hollenbeck Park is not the largest park in California — Griffith Park, donated four years later, is far bigger. Hollenbeck's distinction is being first, not biggest.",
+        "wrong_explanation_b": "While the lake is iconic, what makes Hollenbeck historically significant is that it was the city's first public park, not a specific feature like its lake.",
+        "wrong_explanation_d": "Hollenbeck Park was a general public park. It was not designed specifically for immigrant communities — it became important to them because of who lived in Boyle Heights.",
+        "order_index": 0
+      },
+      {
+        "question_text": "Why did many diverse communities end up living near Hollenbeck Park in Boyle Heights?",
+        "question_type": "multiple_choice",
+        "option_a": "The land was cheaper because it flooded regularly",
+        "option_b": "It was the only neighborhood near railroad jobs",
+        "option_c": "The city government assigned immigrants to live there",
+        "option_d": "Other neighborhoods excluded them",
+        "correct_answer": "d",
+        "explanation": "Restrictive covenants and other forms of housing discrimination shut Jewish, Japanese, Mexican, Russian Molokan, and African American families out of much of Los Angeles. Boyle Heights — open in ways other neighborhoods were not — became a rare home.",
+        "wrong_explanation_a": "Flooding wasn't the central reason. Communities settled in Boyle Heights primarily because exclusion elsewhere left them few alternatives.",
+        "wrong_explanation_b": "Many neighborhoods had access to railroad work. The defining factor in Boyle Heights was housing access — who could live where, given racial covenants in other areas.",
+        "wrong_explanation_c": "There was no government program assigning immigrants to Boyle Heights. Settlement patterns reflected exclusion from other neighborhoods, not assignment.",
+        "order_index": 1
+      },
+      {
+        "question_text": "True or False: Hollenbeck Park was named after Elizabeth Hollenbeck, who donated the land.",
+        "question_type": "true_false",
+        "option_a": "True",
+        "option_b": "False",
+        "correct_answer": "b",
+        "explanation": "False. Elizabeth Hollenbeck donated the land, but the park was named in memory of her late husband — the donation was a memorial gift.",
+        "wrong_explanation_a": "Elizabeth Hollenbeck did make the donation, but the park's name honors her husband. The naming reflects the memorial nature of the gift, not the donor herself.",
+        "order_index": 2
+      },
+      {
+        "question_text": "What made the park's lake and open space significant to the community?",
+        "question_type": "multiple_choice",
+        "option_a": "It was used exclusively for religious ceremonies",
+        "option_b": "It provided a shared gathering place for communities with different languages and traditions",
+        "option_c": "It was the only source of fresh water in the neighborhood",
+        "option_d": "It was reserved for wealthy residents of the city",
+        "correct_answer": "b",
+        "explanation": "In a city marked by social divisions, Hollenbeck Park offered something rare: shared public space where Boyle Heights's many communities could gather across language, religion, and tradition.",
+        "wrong_explanation_a": "Hollenbeck was a public park, not a religious site. Its value was in being open and shared across many different communities.",
+        "wrong_explanation_c": "The lake added beauty but was not the neighborhood's water supply. Its meaning was social: a place to gather, not a utility.",
+        "wrong_explanation_d": "The whole point of a public park was that it was open to everyone, not reserved for wealthy residents. That openness is what made it significant.",
+        "order_index": 3
+      }
+    ]
+  },
+  {
+    "location_slug": "la-placita-church",
+    "title": "La Placita and the Latino Catholic Tradition",
+    "passing_score": 70,
+    "points_reward": 50,
+    "questions": [
+      {
+        "question_text": "What makes the current adobe structure of La Placita Church historically significant?",
+        "question_type": "multiple_choice",
+        "option_a": "It is the oldest surviving church in Los Angeles",
+        "option_b": "It is the largest church ever built in California",
+        "option_c": "It was built by the Tongva people before Spanish arrival",
+        "option_d": "It was personally designed by a Spanish king",
+        "correct_answer": "a",
+        "explanation": "Completed in 1822, the current adobe church is the oldest surviving church building in Los Angeles — a physical link from the Mexican period to the present-day city.",
+        "wrong_explanation_b": "La Placita is historically significant for its age, not its size. Other California churches are larger.",
+        "wrong_explanation_c": "The Tongva did not build churches — La Placita was a colonial Catholic chapel established in 1784, after Spanish missionization had already begun.",
+        "wrong_explanation_d": "Spanish kings did not personally design colonial chapels. La Placita was built by local labor under church direction during the Mexican period.",
+        "order_index": 0
+      },
+      {
+        "question_text": "Which institution was La Placita Church closely tied to during the colonial era?",
+        "question_type": "multiple_choice",
+        "option_a": "Fort Moore",
+        "option_b": "The Los Angeles pueblo government",
+        "option_c": "Mission San Gabriel",
+        "option_d": "The Mexican army",
+        "correct_answer": "c",
+        "explanation": "During the colonial era, La Placita was closely tied to Mission San Gabriel — the regional center of the Franciscan mission system that shaped religious life across the LA region.",
+        "wrong_explanation_a": "Fort Moore was a U.S. military post built in 1847 — long after La Placita's colonial-era origins. The two belong to entirely different periods and systems.",
+        "wrong_explanation_b": "The pueblo government was a civilian institution, while La Placita's colonial-era ties were primarily religious — anchored in Mission San Gabriel.",
+        "wrong_explanation_d": "The Mexican army existed only after Mexican independence in 1821. La Placita's earliest decades pre-date the Mexican era and were tied to the Franciscan mission system.",
+        "order_index": 1
+      },
+      {
+        "question_text": "True or False: The current La Placita church building was completed in the 20th century.",
+        "question_type": "true_false",
+        "option_a": "True",
+        "option_b": "False",
+        "correct_answer": "b",
+        "explanation": "False. The present adobe church was completed in 1822, during the Mexican period — making it the oldest surviving church in Los Angeles, well before the 20th century began.",
+        "wrong_explanation_a": "The current building dates to 1822, not the 20th century. That early date is exactly what makes it the oldest surviving church in the city.",
+        "order_index": 2
+      },
+      {
+        "question_text": "What kinds of events did La Placita Church host for the community over the years?",
+        "question_type": "multiple_choice",
+        "option_a": "Military ceremonies and political debates",
+        "option_b": "Baptisms, weddings, funerals, and community gatherings",
+        "option_c": "Trade markets and land auctions",
+        "option_d": "Railroad planning meetings and city council sessions",
+        "correct_answer": "b",
+        "explanation": "Across multiple political eras, La Placita has hosted baptisms, weddings, funerals, and community gatherings — the rituals that have anchored generations of Latino families near the Plaza.",
+        "wrong_explanation_a": "La Placita is a parish church, not a political or military venue. Its central role has been in religious and community life.",
+        "wrong_explanation_c": "Trade and land sales took place in the city's commercial spaces, not inside the parish church. La Placita's role has been ritual and pastoral.",
+        "wrong_explanation_d": "Civic governance happened in city buildings, not at La Placita. The church's significance is rooted in religious life and the rhythm of family events.",
+        "order_index": 3
+      }
+    ]
+  },
+  {
+    "location_slug": "watts-towers",
+    "title": "The Watts Towers and South LA",
+    "passing_score": 70,
+    "points_reward": 50,
+    "questions": [
+      {
+        "question_text": "What does the source say about Rodia's departure from Los Angeles?",
+        "question_type": "multiple_choice",
+        "option_a": "He left in 1954 and never returned",
+        "option_b": "He returned in 1965 to repair the towers",
+        "option_c": "He left because of the uprising",
+        "option_d": "He continued building towers elsewhere in California",
+        "correct_answer": "a",
+        "explanation": "Rodia left Los Angeles in 1954 — the same year he completed the towers — and never returned. The towers stayed with the neighborhood that came to protect them.",
+        "wrong_explanation_b": "Rodia did not come back to repair the towers. After he left in 1954, neighbors and preservationists — not Rodia himself — took up their care.",
+        "wrong_explanation_c": "Rodia left in 1954, more than a decade before the 1965 uprising. The two events are separate in time.",
+        "wrong_explanation_d": "There is no record of Rodia continuing similar work elsewhere. He left the towers complete and moved on from the project entirely.",
+        "order_index": 0
+      },
+      {
+        "question_text": "Why did neighbors protect the towers in 1965?",
+        "question_type": "multiple_choice",
+        "option_a": "They were indifferent to them",
+        "option_b": "They saw them as a symbol worth saving",
+        "option_c": "They opposed all protests",
+        "option_d": "They were untouched by unrest",
+        "correct_answer": "b",
+        "explanation": "During the 1965 uprising, neighbors actively shielded the towers because they recognized them as a symbol of creativity, perseverance, and community pride worth saving.",
+        "wrong_explanation_a": "Indifference would not have led to protection. Neighbors acted because the towers meant something to them.",
+        "wrong_explanation_c": "The protection of the towers was about valuing what they represented, not about opposing protest. The two are separate questions.",
+        "wrong_explanation_d": "Watts was at the center of the unrest, not untouched by it. Even amid disruption, residents made a point of preserving the towers.",
+        "order_index": 1
+      },
+      {
+        "question_text": "True or False: The 1965 Watts Uprising was only an isolated criminal event.",
+        "question_type": "true_false",
+        "option_a": "True",
+        "option_b": "False",
+        "correct_answer": "b",
+        "explanation": "False. The uprising was sparked by accumulated tensions over inequality and policing — not an isolated criminal incident. It exposed deeper, structural conditions in South LA.",
+        "wrong_explanation_a": "Treating the uprising as merely criminal misses the point. It grew out of long-running grievances about inequality and policing, which is why it forced national reckoning.",
+        "order_index": 2
+      },
+      {
+        "question_text": "What happened to the Watts Towers after the 1965 uprising?",
+        "question_type": "multiple_choice",
+        "option_a": "They were destroyed during the unrest",
+        "option_b": "Rodia returned to repair them",
+        "option_c": "The city removed them for safety reasons",
+        "option_d": "They survived because neighbors protected them",
+        "correct_answer": "d",
+        "explanation": "The towers survived 1965 because neighbors protected them. That act of protection became part of the towers' meaning as a symbol of community pride.",
+        "wrong_explanation_a": "The towers were not destroyed in 1965 — they came through the uprising intact, thanks to community protection.",
+        "wrong_explanation_b": "Rodia had left LA in 1954 and never came back. He played no role in the towers' fate during or after the 1965 events.",
+        "wrong_explanation_c": "The city did not remove the towers. They remained standing, defended by the surrounding neighborhood.",
+        "order_index": 3
+      }
+    ]
+  },
+  {
+    "location_slug": "griffith-observatory",
+    "title": "Griffith Park and the Public Observatory",
+    "passing_score": 70,
+    "points_reward": 50,
+    "questions": [
+      {
+        "question_text": "Why does the source mention that Griffith intended the park for 'all residents to enjoy'?",
+        "question_type": "multiple_choice",
+        "option_a": "To show only wealthy people could visit",
+        "option_b": "To suggest the gift came with strict private conditions",
+        "option_c": "To prove Griffith later regretted his gift",
+        "option_d": "To highlight the observatory's public and inclusive purpose",
+        "correct_answer": "d",
+        "explanation": "The phrase 'all residents to enjoy' frames Griffith Park and its observatory as a public, inclusive space — open to everyone, with free telescope access from the start.",
+        "wrong_explanation_a": "The phrase points the opposite way: it stresses that the park was meant for everyone, not just the wealthy.",
+        "wrong_explanation_b": "The gift was intended as public parkland, not a privately conditioned space. The framing emphasizes openness, not restriction.",
+        "wrong_explanation_c": "There is no indication Griffith regretted the gift. The phrase highlights the original public intent, not later regret.",
+        "order_index": 0
+      },
+      {
+        "question_text": "What does the panoramic view from the observatory symbolize?",
+        "question_type": "multiple_choice",
+        "option_a": "Height is always the truth",
+        "option_b": "Seeing many layers of city history at once",
+        "option_c": "The observatory is the most important place in LA",
+        "option_d": "Only high places matter in history",
+        "correct_answer": "b",
+        "explanation": "Looking out over the basin from Griffith Observatory, a viewer can take in centuries of overlapping history at once — Indigenous land, rancho boundaries, modern city — collapsed into a single panorama.",
+        "wrong_explanation_a": "A high view is not automatically the 'truth' of a place. Its value is letting many overlapping histories be seen together.",
+        "wrong_explanation_c": "The observatory is significant, but the panorama symbolizes layered history. Treating one place as more important than all others misses the point.",
+        "wrong_explanation_d": "Low and high places both shape history. The view reveals layers, not a hierarchy of locations.",
+        "order_index": 1
+      },
+      {
+        "question_text": "True or False: Telescope viewing at the Griffith Observatory requires paid admission.",
+        "question_type": "true_false",
+        "option_a": "True",
+        "option_b": "False",
+        "correct_answer": "b",
+        "explanation": "False. From its 1935 opening, the Griffith Observatory has offered free telescope viewing — fulfilling Griffith's vision of a public space accessible to all residents.",
+        "wrong_explanation_a": "Charging for telescope access would contradict the observatory's founding intent: a free, public scientific resource for everyone in the city.",
+        "order_index": 2
+      },
+      {
+        "question_text": "What does the land's layered history reveal?",
+        "question_type": "multiple_choice",
+        "option_a": "Land has only one meaning at a time",
+        "option_b": "Places hold multiple overlapping histories",
+        "option_c": "Only rancho history matters in this area",
+        "option_d": "Land history is unimportant",
+        "correct_answer": "b",
+        "explanation": "The Griffith Observatory's site moved through Indigenous stewardship, Mexican rancho ownership, private speculation, and finally public parkland — a reminder that places hold multiple overlapping histories at once.",
+        "wrong_explanation_a": "A single place can carry many meanings simultaneously. The observatory's site is exactly the kind of layered space that resists single-meaning readings.",
+        "wrong_explanation_c": "Rancho history matters, but it is one layer among many — including Indigenous stewardship before it and public parkland after.",
+        "wrong_explanation_d": "If land history were unimportant, there would be little to learn from places like the observatory. The site's value is precisely in its accumulated histories.",
+        "order_index": 3
+      }
+    ]
+  },
+  {
+    "location_slug": "chavez-ravine",
+    "title": "Chavez Ravine: Community, Displacement, and Dodger Stadium",
+    "passing_score": 70,
+    "points_reward": 50,
+    "questions": [
+      {
+        "question_text": "What does the source say the site of Dodger Stadium remains connected to?",
+        "question_type": "multiple_choice",
+        "option_a": "Only the excitement of baseball",
+        "option_b": "Only the memory of displaced families",
+        "option_c": "Both the excitement of baseball and the memory of displaced families",
+        "option_d": "Neither, because the site was abandoned",
+        "correct_answer": "c",
+        "explanation": "The site holds two truths at once: it is home to a beloved ballpark and to the memory of three displaced communities — Palo Verde, La Loma, and Bishop. Both meanings coexist.",
+        "wrong_explanation_a": "Limiting the site's meaning to baseball erases the displacement that cleared the land. The two stories belong together.",
+        "wrong_explanation_b": "Treating the site only as a memorial misses that it is also an active baseball stadium. Both threads of history are present.",
+        "wrong_explanation_d": "The site is far from abandoned — Dodger Stadium has been in continuous use since 1962. The question is what that use means alongside what came before.",
+        "order_index": 0
+      },
+      {
+        "question_text": "What happened after the public housing project at Chavez Ravine was canceled?",
+        "question_type": "multiple_choice",
+        "option_a": "The land sat empty, then was offered to the Brooklyn Dodgers",
+        "option_b": "Residents returned to their homes",
+        "option_c": "The city built a new school on the site",
+        "option_d": "The city gave the land back to displaced families",
+        "correct_answer": "a",
+        "explanation": "After cancellation, the cleared land sat empty for years. In 1958, the city offered it to the Brooklyn Dodgers as part of the team's move to Los Angeles, leading eventually to Dodger Stadium.",
+        "wrong_explanation_b": "Residents could not return — most had already sold their homes under promises of replacement housing that never came.",
+        "wrong_explanation_c": "No school was built on the cleared site. The land was eventually transferred to the Dodgers, not used for public schools.",
+        "wrong_explanation_d": "The city did not return the land to displaced families. Instead, it offered the cleared land to a baseball team relocating from Brooklyn.",
+        "order_index": 1
+      },
+      {
+        "question_text": "True or False: Families displaced from Chavez Ravine received the new housing they were promised.",
+        "question_type": "true_false",
+        "option_a": "True",
+        "option_b": "False",
+        "correct_answer": "b",
+        "explanation": "False. The promised housing project was canceled, leaving displaced families without the replacement homes they had been told to expect.",
+        "wrong_explanation_a": "Cancellation of the housing project meant the promise went unfulfilled. Families had already given up their homes by the time the project died.",
+        "order_index": 2
+      },
+      {
+        "question_text": "How does Chavez Ravine connect to Old Chinatown?",
+        "question_type": "multiple_choice",
+        "option_a": "There is no connection",
+        "option_b": "Both communities were removed for major projects",
+        "option_c": "Both communities moved voluntarily",
+        "option_d": "Both communities benefited equally from displacement",
+        "correct_answer": "b",
+        "explanation": "Both Old Chinatown and Chavez Ravine were cleared to make way for major civic projects — Union Station and Dodger Stadium. The pattern of displacing immigrant and working-class communities recurs across LA's twentieth century.",
+        "wrong_explanation_a": "The two stories share a clear pattern: condemnation, displacement, and a major project replacing a community. Reading them as unconnected misses that pattern.",
+        "wrong_explanation_c": "Neither community moved voluntarily. Both faced condemnation and displacement they could not refuse.",
+        "wrong_explanation_d": "Neither community benefited from displacement. The projects that replaced them brought benefits to others, not to the people forced out.",
+        "order_index": 3
+      }
+    ]
+  },
+  {
+    "location_slug": "macarthur-park",
+    "title": "MacArthur Park and LA's Immigrant Communities",
+    "passing_score": 70,
+    "points_reward": 50,
+    "questions": [
+      {
+        "question_text": "What contradictions surface at MacArthur Park?",
+        "question_type": "multiple_choice",
+        "option_a": "Geography only",
+        "option_b": "City ideals versus exclusion and policing",
+        "option_c": "Only cultural conflict",
+        "option_d": "Beauty versus neglect only",
+        "correct_answer": "b",
+        "explanation": "MacArthur Park reveals the gap between civic ideals — public space, freedom of assembly — and the realities of exclusion and aggressive policing experienced by immigrant communities, most starkly in 2007.",
+        "wrong_explanation_a": "Geography alone doesn't capture the contradiction. The tensions at MacArthur Park are about who gets to use public space and how authority responds to them.",
+        "wrong_explanation_c": "Cultural conflict is part of the picture, but the deeper contradiction is between stated public ideals and the use of police power against marginalized communities.",
+        "wrong_explanation_d": "Beauty versus neglect is too narrow. The 2007 rally shows the contradiction is also about civic ideals versus exclusionary enforcement.",
+        "order_index": 0
+      },
+      {
+        "question_text": "Why does the source mention that Central American refugees settled near MacArthur Park by the 1980s?",
+        "question_type": "multiple_choice",
+        "option_a": "To show that the park became abandoned",
+        "option_b": "To prove only one group used the park",
+        "option_c": "To argue that refugees avoided the park",
+        "option_d": "To explain that the park was shaped by many cultures, including commerce and daily life",
+        "correct_answer": "d",
+        "explanation": "Central American refugee settlement around the park transformed surrounding neighborhoods. The park became a hub of commerce, gathering, and daily life — shaped by many cultures together.",
+        "wrong_explanation_a": "Far from being abandoned, the park became more central to community life as the surrounding neighborhood grew dense with new arrivals.",
+        "wrong_explanation_b": "MacArthur Park has long been used by many groups. The point of mentioning the 1980s wave is layered settlement, not exclusive use.",
+        "wrong_explanation_c": "Refugees did not avoid the park — they made it part of daily life. The source highlights settlement and use, not avoidance.",
+        "order_index": 1
+      },
+      {
+        "question_text": "True or False: MacArthur Park was always a working-class immigrant neighborhood.",
+        "question_type": "true_false",
+        "option_a": "True",
+        "option_b": "False",
+        "correct_answer": "b",
+        "explanation": "False. The area began as an upscale destination ringed by luxury hotels and fashionable neighborhoods. Its transformation into a working-class immigrant hub came only as Los Angeles expanded outward.",
+        "wrong_explanation_a": "MacArthur Park's earliest decades attracted wealthy residents and luxury hotels. Its identity as a working-class immigrant area emerged through later demographic change.",
+        "order_index": 2
+      },
+      {
+        "question_text": "How does the 2007 rally response connect to other histories?",
+        "question_type": "multiple_choice",
+        "option_a": "It was an isolated event",
+        "option_b": "It reflects recurring suppression of marginalized communities",
+        "option_c": "It had no significance beyond the day itself",
+        "option_d": "It was unrelated to immigration history",
+        "correct_answer": "b",
+        "explanation": "The 2007 police response fits a longer pattern in LA history: marginalized communities — from Old Chinatown to Chavez Ravine to MacArthur Park — experiencing suppression when they assert their place in public life.",
+        "wrong_explanation_a": "Treating the event as isolated misses the pattern. It echoes earlier moments of force used against marginalized communities in the city.",
+        "wrong_explanation_c": "The day shaped national debate about policing and protest. Its significance reaches well beyond the immediate event.",
+        "wrong_explanation_d": "The rally was specifically about immigration rights, and the violent response targeted an immigrant-rooted community gathered in public space — the connection to immigration history is direct.",
+        "order_index": 3
+      }
+    ]
+  },
+  {
+    "location_slug": "hollywood-sign",
+    "title": "The Hollywood Sign and the Film Industry",
+    "passing_score": 70,
+    "points_reward": 50,
+    "questions": [
+      {
+        "question_text": "What 'truth' did the sign eventually come to represent?",
+        "question_type": "multiple_choice",
+        "option_a": "Ads are always false",
+        "option_b": "Los Angeles can transform itself beyond its commercial origins",
+        "option_c": "Film is more honest than real estate",
+        "option_d": "Old signs are inherently truthful",
+        "correct_answer": "b",
+        "explanation": "A real estate billboard for a housing development became, over time, a global symbol of fame, reinvention, and entertainment. The sign embodies LA's tendency to transform itself far beyond what it originally claimed to be.",
+        "wrong_explanation_a": "The sign isn't really about advertising being false — it's about a commercial object outgrowing its original purpose to mean something larger.",
+        "wrong_explanation_c": "Pitting film against real estate misses the point. The sign came from real estate and became a film icon, showing transformation rather than contrast.",
+        "wrong_explanation_d": "Age alone doesn't make a sign truthful. What matters here is how the sign's meaning shifted, not how long it has stood.",
+        "order_index": 0
+      },
+      {
+        "question_text": "What happened to the Hollywood Sign in the 1970s?",
+        "question_type": "multiple_choice",
+        "option_a": "It fell into disrepair, then was replaced through a fundraising campaign in 1978",
+        "option_b": "The film industry abandoned it",
+        "option_c": "It was moved to a different mountain",
+        "option_d": "It was demolished permanently",
+        "correct_answer": "a",
+        "explanation": "By the 1970s the sign had badly deteriorated. A 1978 fundraising campaign replaced the letters, restoring the landmark for the decades that followed.",
+        "wrong_explanation_b": "The film industry didn't abandon the sign — quite the opposite, since by the 1970s the sign had become tightly identified with Hollywood itself.",
+        "wrong_explanation_c": "The sign has stayed on Mount Lee throughout its history. It was repaired in place, not relocated.",
+        "wrong_explanation_d": "The sign was not demolished — the 1978 campaign rebuilt it. It still stands today as one of the most photographed landmarks in the world.",
+        "order_index": 1
+      },
+      {
+        "question_text": "True or False: The sign was originally intended as a permanent civic landmark.",
+        "question_type": "true_false",
+        "option_a": "True",
+        "option_b": "False",
+        "correct_answer": "b",
+        "explanation": "False. The sign was built as a temporary advertisement for a housing development. Its civic and global meaning came later, as Hollywood's identity grew.",
+        "wrong_explanation_a": "The sign was a real estate ad, not a civic monument. It became permanent and iconic by accident of cultural history, not original design.",
+        "order_index": 2
+      },
+      {
+        "question_text": "What was the original purpose of the Hollywoodland sign in 1923?",
+        "question_type": "multiple_choice",
+        "option_a": "A civic monument to the film industry",
+        "option_b": "A tribute to silent film stars",
+        "option_c": "A welcome sign for tourists",
+        "option_d": "An advertisement for a housing development",
+        "correct_answer": "d",
+        "explanation": "The original 'HOLLYWOODLAND' sign was an advertisement for a hillside housing development. Its later identity as a film-industry symbol was an unintended afterlife.",
+        "wrong_explanation_a": "Civic recognition of the film industry came later. In 1923 the sign was simply real estate marketing — its civic meaning grew over time.",
+        "wrong_explanation_b": "The sign did not honor specific film stars. It promoted a real estate subdivision and only later took on cultural meaning.",
+        "wrong_explanation_c": "The sign was not built to greet tourists — it was meant to attract home buyers to a specific hillside development.",
+        "order_index": 3
+      }
+    ]
+  }
+]
