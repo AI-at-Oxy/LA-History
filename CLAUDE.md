@@ -28,11 +28,11 @@ Requires a local Ollama instance running `gemma4:latest` at `http://localhost:11
 
 Flask 3 with modular blueprints, SQLAlchemy ORM, Flask-Login auth, CSRF protection, Flask-Limiter rate limiting, and Flask-Mail for password reset.
 
-- `app/__init__.py` — `create_app()` factory; registers all blueprints; applies runtime `ALTER TABLE` migrations for columns added after initial schema (image_caption, video_url, reset token fields, era_order on chat_sessions, insight_uses on concept_maps, generated_questions on memory_challenge_attempts)
-- `app/models/` — SQLAlchemy models: User (reset token hashing via SHA-256), Location (`video_url`/`video_caption` for YouTube embeds, `image_caption`), UserProgress, Badge, UserBadge, Quiz, QuizQuestion (with per-option wrong explanations `wrong_explanation_a/b/c/d`), ChatSession, ChatMessage, ConceptMap (stores `graph_json` as cy.json string, `insight_uses` token counter), MemoryChallengeAttempt (`generated_questions` stores full AI-generated question JSON including answers for server-side grading; `question_ids` is DB-fallback path)
-- `app/routes/` — Blueprints: `auth` (login/register/logout/forgot-password/reset-password), `map`, `progress`, `quiz`, `chat`, `concept_map`, `memory_challenge`
+- `app/__init__.py` — `create_app()` factory; registers all blueprints; applies runtime `ALTER TABLE` migrations for columns added after initial schema (image_caption, video_url, reset token fields, era_order on chat_sessions, insight_uses on concept_maps)
+- `app/models/` — SQLAlchemy models: User (reset token hashing via SHA-256), Location (`video_url`/`video_caption` for YouTube embeds, `image_caption`), UserProgress, Badge, UserBadge, Quiz, QuizQuestion (with per-option wrong explanations `wrong_explanation_a/b/c/d`), ChatSession, ChatMessage, ConceptMap (stores `graph_json` as cy.json string, `insight_uses` token counter)
+- `app/routes/` — Blueprints: `auth` (login/register/logout/forgot-password/reset-password), `map`, `progress`, `quiz`, `chat`, `concept_map`
 - `app/services/gamification.py` — All points/badge/era-unlock logic
-- `app/services/ollama_service.py` — All Ollama interactions: Socratic tutor, quiz hints, concept map insights, concept map evaluation, Memory Challenge question generation; each is a separate prompt function returning `(result, error)`
+- `app/services/ollama_service.py` — All Ollama interactions: Socratic tutor, quiz hints, concept map insights, concept map evaluation; each is a separate prompt function returning `(result, error)`
 
 ### Points & Economy
 
@@ -43,16 +43,12 @@ Flask 3 with modular blueprints, SQLAlchemy ORM, Flask-Login auth, CSRF protecti
 | Pass quiz, retry | +`quiz.points_reward // 2` |
 | Score ≥90% on any pass | +20 bonus |
 | Submit concept map | +75 (+25 bonus) |
-| Memory Challenge start cost | −30 |
-| Memory Challenge pass reward | +120 |
 | Quiz hint | −5 (also reduces quiz reward proportionally) |
 | Concept map insight | −15 (max 3 uses per era) |
 
 ### Era Unlock Rules
 
 Era 1 (Tongva/Native) is always unlocked. Each subsequent era requires **all quizzes in the previous era passed AND the previous era's concept map submitted**. Enforced in `is_location_unlocked()` and `is_era_unlocked_for_user()` in `gamification.py`.
-
-Memory Challenge eligibility: all quizzes passed + concept map submitted for that era. One attempt per era, non-refundable 30 pt cost.
 
 ### Ollama Service Details
 
@@ -62,14 +58,13 @@ All Ollama calls in `ollama_service.py` are stateless functions — no shared st
 - **Quiz hints**: 2-3 sentence contextual clue without revealing the answer; points refunded on Ollama failure
 - **Concept map insights**: direct hints (not Socratic), max 3 per era
 - **Concept map evaluation**: returns JSON with `edge_feedback`, `overall_comment`, `synthesis_score` (0-100), `follow_up_question`; has JSON decode fallback
-- **Memory Challenge generation**: uses `format: 'json'` in payload; validates all required keys and `correct_answer ∈ {a,b,c,d}`; falls back to sampling existing DB quiz questions if AI fails
 
 ### Frontend (`static/js/`)
 
 Vanilla JS, no bundler. Each file is a self-contained IIFE or set of globals loaded via `<script>` tags.
 
 - `map.js` — Leaflet map init, marker rendering, era filter, location detail panel, visit API calls
-- `quiz.js` — Quiz modal and Memory Challenge modal (shared file); per-question answer checking via `/api/quiz/check_answer`; hint loading; challenge confirm overlay
+- `quiz.js` — Quiz modal (shared file); per-question answer checking via `/api/quiz/check_answer`; hint loading
 - `music.js` — `MusicPlayer` IIFE; Web Audio API synthesized ambient loops (no audio files, pure oscillators); one loop per era; ducks during SFX; persists enabled/volume to localStorage; resumes on user gesture or tab visibility change
 - `sounds.js` — `SFX` object for UI sound effects
 - `concept_map.js` — Cytoscape-based concept map; per-era; Ollama-evaluated on submit; insight token UI; calls `window.refreshMapMarkers()` after a successful submit so next-era locations unlock immediately without a page reload
@@ -88,7 +83,6 @@ Vanilla JS, no bundler. Each file is a self-contained IIFE or set of globals loa
 4. Quiz: `/api/quiz/<id>` → per-question `/api/quiz/check_answer` → `/api/quiz/<id>/submit`; hints via `/api/quiz/<id>/hint`
 5. Chat: `/api/chat` with location context + rolling 6-message history → Ollama
 6. Concept map: auto-saved to `/api/concept_map/<era>/save`; insights via `/api/concept_map/<era>/insight`; submitted to `/api/concept_map/<era>/submit` for Ollama evaluation
-7. Memory Challenge: `/api/memory_challenge/<era>/start` (costs 30 pts, generates AI questions, strips answers before sending to client) → `/api/memory_challenge/<era>/submit` (grades server-side against stored question data)
 
 ## Key Files
 
