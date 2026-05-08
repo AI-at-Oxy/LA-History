@@ -1,6 +1,30 @@
 # LA-History
 
-LA-History is an educational web game that guides players through 15 historical locations across Los Angeles, spanning the Tongva/Native, Spanish, Rancho, and Modern eras. Players explore an interactive Leaflet map, read location histories, take quizzes, build concept maps, and chat with a Socratic AI tutor powered by a local Ollama LLM. Features a points/badge economy, era-unlock progression, Memory Challenge mode, and ambient era-themed music — all built with Flask, SQLAlchemy, and vanilla JavaScript.
+LA-History is an educational web game that guides players through 15 historical locations across Los Angeles, spanning the Tongva/Native, Spanish, Rancho, and Modern eras. Players explore an interactive Leaflet map, read location histories, take quizzes, build concept maps, and chat with a Socratic AI tutor powered by a local Ollama LLM. Features a points/badge economy, era-unlock progression, and ambient era-themed music — all built with Flask, SQLAlchemy, and vanilla JavaScript.
+
+---
+
+## Learning Theory
+
+LA-History is grounded in constructivism, Vygotsky's Zone of Proximal Development (ZPD), and schema theory. Rather than presenting static information, the app has students actively build knowledge by exploring locations, completing quizzes, and constructing concept maps — because making connections is what produces lasting understanding, not reading facts once and moving on. The Socratic AI tutor operationalizes ZPD by responding to each student's current map state with a guiding question rather than an answer, giving just enough scaffolding to move the student forward while keeping the thinking theirs.
+
+---
+
+## Team
+
+Eduardo Rebollar, Miranda Samayoa-Cobon, Joy Botros
+Occidental College — COMP 395: AI and Learning Technologies
+
+---
+
+## AI Disclosure
+
+The following AI tools were used in the development of this project:
+
+- **Ollama** — Local inference engine powering the in-app AI tutor, quiz hint generator, concept map evaluator, and insight generator.
+- **Claude Pro (Anthropic)** — Used to generate and edit code, brainstorm prompt rules, and debug.
+
+All AI-generated code was reviewed, tested, and modified before implementation.
 
 ---
 
@@ -39,7 +63,7 @@ Open `http://localhost:5000` in your browser.
 
 ### 2. AI Chat (Ollama)
 
-The chat, quiz hints, concept map insights, and Memory Challenge features require Ollama running locally:
+The chat, quiz hints, and concept map features require Ollama running locally:
 
 ```bash
 ollama serve                   # starts the Ollama server on port 11434
@@ -81,58 +105,100 @@ OLLAMA_MODEL=gemma4:latest
 
 ```text
 LA-History/
-├── run.py                  # Flask entry point
-├── seed_db.py              # Populates the DB from data/ JSON files
-├── download_images.py      # Fetches Wikipedia images for locations
-├── requirements.txt        # Python dependencies
-├── .env                    # Environment variable template
+├── run.py                      # Flask entry point
+├── seed_db.py                  # Populates the DB from data/ JSON files
+├── download_images.py          # Fetches Wikipedia images for locations
+├── requirements.txt            # Python dependencies
+├── .env                        # Environment variable template
+├── .env.example                # Example env file with placeholder values
 │
-├── app/                    # Flask application package
-│   ├── __init__.py         # App factory (create_app), blueprint registration, migrations
-│   ├── config.py           # Dev/prod configuration classes
-│   ├── extensions.py       # Shared Flask extensions (db, login_manager, bcrypt, csrf, mail, limiter)
-│   ├── models/             # SQLAlchemy ORM models
-│   │   ├── user.py         # User account and authentication (SHA-256 reset tokens)
-│   │   ├── location.py     # Historical location (video_url, image_caption)
-│   │   ├── progress.py     # UserProgress, Badge, UserBadge, ChatSession, ChatMessage,
-│   │   │                   #   ConceptMap (graph_json, insight_uses), MemoryChallengeAttempt
-│   │   └── quiz.py         # Quiz and QuizQuestion (per-option wrong_explanation fields)
-│   ├── routes/             # Flask blueprints
-│   │   ├── auth.py         # /login, /register, /logout, /forgot-password, /reset-password
-│   │   ├── map.py          # /map (Flask-rendered template), /api/locations
-│   │   ├── progress.py     # /api/progress
-│   │   ├── quiz.py         # /api/quiz/<id>, /api/quiz/check_answer, /api/quiz/<id>/submit, /hint
-│   │   ├── chat.py         # /api/chat
-│   │   ├── concept_map.py  # /api/concept_map/<era>/save, /insight, /submit
-│   │   └── memory_challenge.py  # /api/memory_challenge/<era>/start, /submit
-│   └── services/           # Business logic
-│       ├── gamification.py     # Points, badges, era-unlock rules
-│       └── ollama_service.py   # Socratic tutor, quiz hints, concept map insights/evaluation,
-│                               #   Memory Challenge question generation
+├── app/                        # Flask application package
+│   ├── __init__.py             # App factory (create_app), blueprint registration, runtime migrations
+│   ├── config.py               # Dev/prod configuration classes
+│   ├── extensions.py           # Shared Flask extensions (db, login_manager, bcrypt, csrf, mail, limiter)
+│   ├── models/
+│   │   ├── user.py             # User account and auth (SHA-256 reset tokens)
+│   │   ├── location.py         # Historical location (video_url, image_caption)
+│   │   ├── progress.py         # UserProgress, Badge, UserBadge, ChatSession, ChatMessage
+│   │   ├── concept_map.py      # ConceptMap (graph_json, insight_uses)
+│   │   └── quiz.py             # Quiz and QuizQuestion (per-option wrong_explanation fields)
+│   ├── routes/
+│   │   ├── auth.py             # /login, /register, /logout, /forgot-password, /reset-password
+│   │   ├── map.py              # /map (rendered template), /api/locations
+│   │   ├── progress.py         # /api/progress
+│   │   ├── quiz.py             # /api/quiz/<id>, /check_answer, /submit, /hint
+│   │   ├── chat.py             # /api/chat
+│   │   └── concept_map.py      # /api/concept_map/<era>/save, /insight, /submit
+│   ├── services/
+│   │   ├── gamification.py     # Points, badges, era-unlock rules
+│   │   └── ollama_service.py   # Socratic tutor, quiz hints, concept map insights/evaluation
+│   └── utils/                  # Shared app utilities
 │
-├── data/                   # Seed data (source of truth)
-│   ├── locations.json      # 15 historical locations with coordinates and descriptions
-│   └── quizzes.json        # Quiz questions with per-option wrong explanations
+├── data/                       # Seed data and course documentation
+│   ├── locations.json          # 15 historical locations with coordinates and descriptions
+│   ├── quizzes.json            # Quiz questions with per-option wrong explanations
+│   ├── scenarios.md            # 17 test scenarios used to evaluate all prompt versions
+│   ├── user_testing_protocol.md # Structured protocol for user testing sessions
+│   ├── user_testing_notes.md   # Anonymized observation notes (P1–P4)
+│   ├── rubric.md               # Four-criterion scoring rubric (C1–C4, 1–4 scale)
+│   ├── scores.md               # Per-version, per-scenario scores
+│   └── README.md               # Data directory overview
+│
+├── docs/
+│   ├── LA_History_Report.pdf   # Final course report
+│   └── productionization.md    # Plan for deploying the app to production
+│
+├── prompts/                    # System prompt version history for the Socratic tutor
+│   ├── system_prompt_v0.txt
+│   ├── system_prompt_v1.txt
+│   ├── system_prompt_v2.txt
+│   ├── system_prompt_v3.txt
+│   └── CHANGELOG.md            # What changed in each version and why
 │
 ├── static/
-│   ├── img/                # Location images (fetched by download_images.py)
+│   ├── favicon.svg
+│   ├── css/
+│   │   ├── main.css            # Global styles and theming
+│   │   ├── map.css             # Map page layout and marker styles
+│   │   ├── chat.css            # Chat panel styles
+│   │   ├── quiz.css            # Quiz modal styles
+│   │   ├── concept_map.css     # Concept map canvas styles
+│   │   ├── tutorial.css        # Onboarding spotlight overlay styles
+│   │   ├── auth.css            # Login/register page styles
+│   │   └── animations.css      # Shared keyframe animations
+│   ├── img/                    # Location images (fetched by download_images.py)
 │   └── js/
-│       ├── map.js          # Leaflet map, marker rendering, era filter, location detail panel
-│       ├── quiz.js         # Quiz modal and Memory Challenge modal
-│       ├── concept_map.js  # Cytoscape-based concept map with Ollama evaluation
-│       ├── chat.js         # Socratic tutor chat panel
-│       ├── music.js        # Web Audio API ambient music (one synthesized loop per era)
-│       ├── sounds.js       # UI sound effects
-│       ├── tutorial.js     # First-time onboarding walkthrough with spotlight overlays
-│       ├── tts.js          # Text-to-speech for location descriptions
-│       ├── voice.js        # Voice input for chat
-│       ├── settings.js     # Settings modal (theme, TTS, SFX, music, font/marker size, reset)
-│       └── utils.js        # Shared apiFetch wrapper and toast notifications
+│       ├── map.js              # Leaflet map, marker rendering, era filter, location detail panel
+│       ├── quiz.js             # Quiz modal
+│       ├── concept_map.js      # Cytoscape-based concept map with Ollama evaluation
+│       ├── chat.js             # Socratic tutor chat panel
+│       ├── progress.js         # Progress dashboard UI
+│       ├── music.js            # Web Audio API ambient music (one synthesized loop per era)
+│       ├── sounds.js           # UI sound effects
+│       ├── tutorial.js         # First-time onboarding walkthrough with spotlight overlays
+│       ├── tts.js              # Text-to-speech for location descriptions
+│       ├── voice.js            # Voice input for chat
+│       ├── settings.js         # Settings modal (theme, TTS, SFX, music, font/marker size, reset)
+│       └── utils.js            # Shared apiFetch wrapper and toast notifications
 │
-├── templates/              # Jinja2 HTML templates
+├── templates/                  # Jinja2 HTML templates
+│   ├── base.html               # Base layout (nav, scripts, modals)
+│   ├── auth/
+│   │   ├── login.html
+│   │   ├── register.html
+│   │   ├── forgot_password.html
+│   │   └── reset_password.html
+│   ├── map/
+│   │   └── index.html          # Main map page
+│   └── dashboard/
+│       └── index.html          # Progress dashboard page
 │
-└── instance/               # Auto-created by Flask (gitignored)
-    └── la_history.db       # SQLite database (dev only)
+├── tests/
+│   ├── conftest.py             # Pytest fixtures (app factory, test client)
+│   └── test_app.py             # Auth, registration, era-unlock, and points guard tests
+│
+└── instance/                   # Auto-created by Flask (gitignored)
+    └── la_history.db           # SQLite database (dev only)
 ```
 
 ---
@@ -146,8 +212,6 @@ LA-History/
 | Era 3 — Rancho | All Era 2 quizzes passed **and** Era 2 concept map submitted |
 | Era 4 — Modern | All Era 3 quizzes passed **and** Era 3 concept map submitted |
 
-Memory Challenge eligibility: all quizzes passed + concept map submitted for that era. One attempt per era.
-
 ---
 
 ## Points & Economy
@@ -159,7 +223,5 @@ Memory Challenge eligibility: all quizzes passed + concept map submitted for tha
 | Pass a quiz, retry | +quiz reward ÷ 2 |
 | Score ≥ 90% on any pass | +20 bonus |
 | Submit a concept map | +75 (+25 synthesis bonus) |
-| Start a Memory Challenge | −30 (non-refundable) |
-| Pass a Memory Challenge | +120 |
 | Use a quiz hint | −5 (also reduces quiz reward proportionally) |
 | Use a concept map insight | −15 (max 3 uses per era) |

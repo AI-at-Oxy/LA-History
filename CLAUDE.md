@@ -2,9 +2,14 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Team
+
+Eduardo Rebollar, Miranda Samayoa-Cobon, Joy Botros
+Occidental College — COMP 395: AI and Learning Technologies
+
 ## Project Overview
 
-LA-History is an educational web game about Los Angeles history. Users explore a Leaflet map of 15 historical locations across 4 eras (Tongva/Native, Spanish, Rancho, Modern), read descriptions, take quizzes, earn points/badges, and chat with a Socratic AI tutor powered by a local Ollama LLM.
+LA-History is an educational web game about Los Angeles history grounded in constructivism, Vygotsky's Zone of Proximal Development, and schema theory. Users explore a Leaflet map of 15 historical locations across 4 eras (Tongva/Native, Spanish, Rancho, Modern), read descriptions, take quizzes, build concept maps, earn points/badges, and chat with a Socratic AI tutor powered by a local Ollama LLM. The era-lock progression and concept map tool are the core pedagogical features — the tutor responds to each student's current map state rather than answering questions directly.
 
 ## Running the App
 
@@ -73,6 +78,7 @@ Vanilla JS, no bundler. Each file is a self-contained IIFE or set of globals loa
 - `tts.js` — Text-to-speech for location descriptions
 - `voice.js` — Voice input (mic button in chat)
 - `settings.js` — Settings modal (theme, TTS, SFX, music toggle/volume, font/marker size, reset progress)
+- `progress.js` — Progress dashboard UI
 - `utils.js` — Shared `apiFetch` wrapper and toast notifications
 
 ### Data Flow
@@ -95,6 +101,39 @@ Vanilla JS, no bundler. Each file is a self-contained IIFE or set of globals loa
 | `data/locations.json` | Source of truth for 15 historical locations |
 | `data/quizzes.json` | Quiz questions per location (includes `wrong_explanation_a/b/c/d`) |
 | `download_images.py` | Fetches Wikipedia images for locations, saves to `static/img/` |
+
+## Repository Structure (Course Requirements)
+
+### `prompts/`
+
+System prompt version history for the Socratic tutor: `system_prompt_v0.txt` through `system_prompt_v3.txt`, plus `CHANGELOG.md` documenting what changed in each iteration and why.
+
+### `data/`
+
+| File | Purpose |
+| ---- | ------- |
+| `locations.json` | Seed data for 15 locations |
+| `quizzes.json` | Quiz questions with per-option wrong explanations |
+| `scenarios.md` | 17 test scenarios used to evaluate all prompt versions |
+| `user_testing_protocol.md` | Structured protocol followed in all four user testing sessions |
+| `user_testing_notes.md` | Anonymized observation notes (participants identified as P1–P4) |
+| `rubric.md` | Four-criterion scoring rubric (C1–C4, 1–4 scale) |
+| `scores.md` | Per-version, per-scenario scores |
+
+### `tests/`
+
+Pytest suite covering core application logic (no LLM calls). Run with `pytest tests/`. Tests cover:
+
+- Auth redirect for unauthenticated API access
+- Registration validation (password mismatch, duplicate username, weak password)
+- Password reset token expiry
+- `spend_points` insufficient balance guard
+- Era 1 starter location always-unlocked invariant
+
+## AI Disclosure
+
+- **Ollama** — Local inference engine powering the in-app AI tutor, quiz hint generator, concept map evaluator, and insight generator.
+- **Claude Pro (Anthropic)** — Used to generate and edit code, brainstorm prompt rules, and debug. All AI-generated code was reviewed, tested, and modified before implementation.
 
 ## Environment Variables
 
